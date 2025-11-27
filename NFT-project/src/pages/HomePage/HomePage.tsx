@@ -1,5 +1,11 @@
+import {MainMenu} from '../../shared/MainMenu'
+
 export function HomePage(){
   return (
-    <div>Home page</div>
+    <>
+      <MainMenu />
+      <div>Home page</div>
+    </>
+    
   )
 }

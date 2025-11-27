@@ -1,10 +1,17 @@
 import express from "express";
+import cors from 'cors'
+
 const app = express();
 const PORT = 3000;
 
-app.get('/', (req,res) =>{
-  console.log('GET request');
-  res.sendStatus(200);
+
+app.use(cors({
+  origin: 'http://localhost:5000'
+}))
+
+app.get('/menu', (req,res) =>{
+  console.log('login');
+  res.json({data: ['login','dawdad']}).status(200);
 })
 
 

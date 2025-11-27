@@ -1,0 +1,22 @@
+@import "tailwindcss";
+
+
+@layer components{
+  .button-primary{
+    @apply bg-purple-500 rounded-[40px] p-3 text-white font-semibold flex justify-center  w-[10vw] text-[17px] bg-linear-to-br from-sky-400 to-indigo-600;
+  }
+
+  .input-primary{
+    @apply w-full bg-gray-600 text-gray-100 p-[10px] rounded-[8px] mt-[10px] font-normal
+  }
+}
+
+.login-page-container{
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translateX(-50%) translateY(-50%);
+}
+
+
+
