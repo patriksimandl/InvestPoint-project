@@ -2,13 +2,27 @@
 
 
 @layer components{
+  .main-menu-link{
+    @apply font-semibold text-[17px] text-gray-900 tracking-normal hover:text-gray-600 hover:text-sky-600 transition-colors duration-150
+  }
+  
   .button-primary{
-    @apply bg-purple-500 rounded-[40px] p-3 text-white font-semibold flex justify-center  w-[10vw] text-[17px] bg-linear-to-br from-sky-400 to-indigo-600;
+    @apply rounded-[40px] p-3 text-white font-semibold flex justify-center  w-[10vw] text-[17px] bg-linear-to-br from-sky-400 to-indigo-600 cursor-pointer bg-sky-800;
+  }
+
+  .input-container{
+    @apply relative w-full
   }
 
   .input-primary{
-    @apply w-full bg-gray-600 text-gray-100 p-[10px] rounded-[8px] mt-[10px] font-normal
+    @apply w-full bg-gray-200 text-gray-800 p-[14px] rounded-[8px] mt-[12px] font-normal outline-none outline-offset-0 focus:outline-[2px] 
   }
+
+
+  .input-label{
+    @apply absolute top-6.5 left-3.5 text-gray-400
+  }
+  
 }
 
 .login-page-container{
