@@ -11,16 +11,32 @@
   }
 
   .input-container{
-    @apply relative w-full
+    @apply relative w-full my-[6px]
   }
 
   .input-primary{
-    @apply w-full bg-gray-200 text-gray-800 p-[14px] rounded-[8px] mt-[12px] font-normal outline-none outline-offset-0 focus:outline-[2px] 
+    @apply w-full bg-gray-200 text-gray-800 p-[15px] rounded-[8px]  text-[15.5px] font-normal outline-none outline-offset-0 focus:outline-[2px] 
+  }
+
+  .input-primary:focus + .input-label,
+  .input-primary:not(:placeholder-shown).input-primary:not(:focus) + .input-label/*There between first two selectors there is logic and so it will be true only when of these two are true*/
+  {
+    @apply text-[10.5px];
+    top: 13.5px;
+    
   }
 
 
   .input-label{
-    @apply absolute top-6.5 left-3.5 text-gray-400
+    @apply absolute  left-3.5 text-gray-400 text-nowrap cursor-text transition-all duration-150 pointer-events-none;
+    top:50%;
+    transform: translateY(-50%)
+
+  }
+
+  .visibility-icon{
+    @apply absolute right-5 top-[50%] cursor-pointer;
+    transform: translateY(-50%);
   }
   
 }

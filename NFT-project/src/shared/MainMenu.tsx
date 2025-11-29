@@ -14,7 +14,7 @@ export function MainMenu() {
         </NavLink>
         {menuLinks.map((item) => {
           return (
-            <NavLink className='main-menu-link' to={`/${item.toLowerCase()}`}>
+            <NavLink key={item} className='main-menu-link' to={`/${item.toLowerCase()}`}>
               {item}
             </NavLink>
           )
