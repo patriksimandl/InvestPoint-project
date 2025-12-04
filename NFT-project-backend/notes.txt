@@ -1,0 +1,11 @@
+Prisma client generation v7
+
+1. install prisma and prisma/client
+2. npx prisma init
+    creates schema
+    generates prisma.config.ts
+3. set .env variables
+4. install dotenv for prisma.config.ts => allow prisma client see env variables
+5. npx prisma generate => generates prismaClient constructor 
+6. Create prismaClient file and there import primaClient from generated folder and import adpater
+7. create new instance of prismaClient
