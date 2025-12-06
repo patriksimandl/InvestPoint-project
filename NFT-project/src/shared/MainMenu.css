@@ -1,7 +1,7 @@
-/*.main-menu{
-  background-color: lightblue;
-  display: flex;
-  flex-direction: row;
-  justify-content: space-between;
+@import "tailwindcss";
+
+@layer components {
+  .main-menu-link {
+    @apply font-semibold text-[17px] text-gray-900 tracking-normal hover:text-gray-600 hover:text-sky-600 transition-colors duration-150;
+  }
 }
-*/
