@@ -245,11 +245,11 @@ export function LoginPage() {
   return (
     <>
       <title>{isRegistrating ? 'Create account' : 'Login'}</title>
-      <div className="login-page-container flex flex-row rounded-[30px] w-[70%] shadow-xl h-[662px]" >
-        <div className="w-[55%]">
+      <div className="login-page-container flex flex-row rounded-[30px] w-[70%] shadow-xl h-154" >
+        <div className="image-container w-[55%] hidden lg:inline ">
           <img className="h-[100%] object-cover rounded-l-[30px]" src="/Login-page-img.png" />
         </div>
-        <div className=" flex flex-col justify-center items-center bg-white  p-[100px]  w-[50%] rounded-r-[30px]">
+        <div className=" flex flex-col justify-center items-center bg-white  p-[80px] lg:p-[90px]  lg:w-[45%] md:w-full rounded-[30px]  lg:rounded-r-[30px] lg:rounded-l-[0px]">
           <div className="flex content-start  w-full">
             <img className="w-[150px]" src="/InvestPoint-logo-removebg-preview.png" alt="invest-point-logo" />
           </div>

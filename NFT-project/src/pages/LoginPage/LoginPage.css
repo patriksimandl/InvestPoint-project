@@ -1,6 +1,16 @@
 @import "../../index.css";
 
+
+
+
+
 @layer components{
+
+  @media (max-width: 1050px){
+    
+  }
+
+
   .input-container{
     @apply relative w-full my-[6px];
   }
