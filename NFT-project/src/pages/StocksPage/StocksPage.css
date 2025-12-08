@@ -1,0 +1,16 @@
+@import "../../index.css";
+
+
+
+
+
+@layer components{
+  .stocks-grid{
+    @apply grid grid-rows-10 gap-6
+  }
+
+
+  .stock-container{
+    @apply bg-gray-200 flex justify-between p-7 rounded-[8px]
+  }
+}

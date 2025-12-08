@@ -1,0 +1,80 @@
+import axios from 'axios';
+import db from './prismaClient.ts';
+import dayjs from 'dayjs';
+
+export default async function fetchStocks() {
+  const todaysDate  = dayjs().startOf('day').toISOString();
+
+
+  try {
+    //get last time fetched
+    const lastFetchDate = await db.lastFetch.findUnique({
+      where: {
+        id: 1,
+      },
+    })
+
+    //if it was today
+    if (lastFetchDate && lastFetchDate.lastFetch === todaysDate) {
+      return;
+    }
+
+    //get all the symbols
+    const symbols = await db.Stocks.findMany({
+      select: {
+        symbol: true,
+      },
+    });
+
+
+    //actual fetch from server
+    const fetchFromServer = await fetchFromStocksServer(symbols);
+
+    //update the last time fetch or create if it is first time
+    if(lastFetchDate){
+      await db.lastFetch.update({
+        where:{
+          id: 1
+        },
+        data:{
+          lastFetch: todaysDate
+        }
+      })
+    }
+    else{
+      await db.lastFetch.create({
+        data:{
+          lastFetch: todaysDate
+        }
+      })
+    }
+
+  } catch (error : any) {
+    console.log(error.message);
+  }
+
+}
+
+
+function fetchFromStocksServer(symbols: {symbol: string}[]){
+  symbols.forEach(async(item : {symbol:string})=>{
+      const symbol = item.symbol;
+
+
+      //need to replace it with actual key from .env
+      //use 'demo' as a key for testing or if need
+      const response = await axios.get(`https://www.alphavantage.co/query?function=TIME_SERIES_DAILY&symbol=${'IBM'}&apikey=${'demo'}`);
+
+      await db.Stocks.update({
+        where:{
+          symbol
+        },
+        data: {
+          data: response.data
+        }
+        
+      })
+
+  })
+  return 0;
+}

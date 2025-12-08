@@ -1,6 +1,7 @@
 import express, { json } from "express";
 import cors from 'cors'
 import authRoutes from './Routes/authRoutes.js'
+import fetchStocks  from "./fetchStocks.ts";
 
 const app = express();
 const PORT = 3000;
@@ -12,9 +13,16 @@ app.use(cors({
 
 app.use(express.json());
 
-app.get('/menu', (req,res) =>{
-  console.log('login');
-  res.json({data: ['login','dawdad']}).status(200);
+fetchStocks();
+
+
+
+
+app.get('/stocks', (req,res) =>{
+
+
+
+
 })
 
 app.use('/api',authRoutes);

@@ -19,3 +19,16 @@ model User {
   email     String     @unique
   password  String
 }
+
+model lastFetch{
+  id          Int        @id @default(autoincrement())
+  lastFetch   DateTime
+}
+
+
+model Stocks {
+  id        Int       @id @default(autoincrement())
+  name      String
+  symbol    String    @unique
+  data      Json?
+}
