@@ -2,6 +2,7 @@ import express, { json } from "express";
 import cors from 'cors'
 import authRoutes from './Routes/authRoutes.js'
 import fetchStocks  from "./fetchStocks.ts";
+import db from "./prismaClient.ts";
 
 const app = express();
 const PORT = 3000;
@@ -18,11 +19,10 @@ fetchStocks();
 
 
 
-app.get('/stocks', (req,res) =>{
+app.get('/stocks', async(req,res) =>{
+  const tableStocksData = await db.stocks.findMany();
 
-
-
-
+  res.send(tableStocksData).status(200);
 })
 
 app.use('/api',authRoutes);

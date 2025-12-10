@@ -3,7 +3,7 @@
 
 @layer components{
   .stocks-page-container{
-    @apply pt-[150px] px-[10%]
+    @apply pt-[170px] px-[8%]
   }
 
 
@@ -18,7 +18,7 @@
 
 
   .button-primary{
-    @apply rounded-[40px] p-3 text-white font-semibold flex justify-center  w-[10vw] text-[17px] bg-linear-to-br from-sky-400 to-indigo-600 cursor-pointer bg-sky-800;
+    @apply rounded-[40px] p-3 text-white font-semibold flex justify-center  w-[10vw] text-[17px] bg-blue-900 cursor-pointer ;
   }
 
   .button-primary-inactive{

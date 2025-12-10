@@ -11,6 +11,10 @@
 
 
   .stock-container{
-    @apply bg-gray-200 flex justify-between p-7 rounded-[8px]
+    @apply bg-white grid grid-cols-3 p-7 rounded-[8px]
+  }
+
+  .labels{
+    width: 69%
   }
 }
