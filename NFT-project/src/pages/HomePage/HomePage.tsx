@@ -1,10 +1,10 @@
 import {MainMenu} from '../../shared/MainMenu'
 import './HomePage.css'
 
-export function HomePage(){
+export function HomePage({logged}:{logged:boolean}){
   return (
     <>
-      <MainMenu />
+      <MainMenu logged={logged} />
     </>
     
   )

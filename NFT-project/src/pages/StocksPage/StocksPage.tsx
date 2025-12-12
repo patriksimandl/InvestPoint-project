@@ -2,12 +2,16 @@ import { MainMenu } from "../../shared/MainMenu";
 import './StocksPage.css'
 import { StockContainer } from "./StockContainer";
 import dayjs from "dayjs";
+import { useQuery } from "@tanstack/react-query";
+import axios from "axios";
+import { useEffect, useState } from "react";
+import LoadingIcon from '/LoadingIcon.svg'
 
 
 type StocksPageProps =
   {
     logged: boolean,
-    tableStocksData: {
+    /*tableStocksData: {
 
       name: string,
       symbol: string,
@@ -16,19 +20,39 @@ type StocksPageProps =
         "Time Series (Daily)": any
       }
 
-    }[]
+    }[],*/
   }
 
 
 
-export function StocksPage({ logged, tableStocksData }: StocksPageProps) {
+export function StocksPage({ logged }: StocksPageProps) {
+  //const tableStocksDataFromLocal = JSON.parse(localStorage.getItem('tableStocksData')) || null; 
+  
+  const [tableStocksData,setTableStocksData] = useState(JSON.parse(localStorage.getItem('tableStocksData')!) || null);
 
-  const dateForPrice = dayjs().format('YYYY-MM-DD');
+  
+  let dateForPrice = dayjs().format('YYYY-MM-DD');
+  //univerzal date
+  dateForPrice = '2025-12-10';
 
 
+
+
+  useQuery({
+    queryKey: ["stocksData"],
+    queryFn: async () =>{
+      const response = await axios.get('http://localhost:3000/stocks')
+      setTableStocksData(response.data);
+      localStorage.setItem('tableStocksData',JSON.stringify(response.data));
+    },
+    //To refetch every hour
+    staleTime: 1000 * 10,
+  });
+
+  
   return (
     <>
-      <MainMenu />
+      <MainMenu logged={logged} />
       {logged ? <div className="w-[25%] bg-white h-[82vh] rounded-[8px] fixed right-[8%] z-2 top-[130px] p-[20px] flex flex-col shadow-lg">
         <div className="font-semibold text-[22px]">Portfolio</div>
         <div className="">
@@ -47,32 +71,38 @@ export function StocksPage({ logged, tableStocksData }: StocksPageProps) {
         </div>
 
       </div> : ''}
-      <div className="w-full bg-sky-200 bg-linear-to-br from-sky-300 to-blue-800 fixed top-[0px] h-[160px] content-end px-[8%] z-[0] text-white ">
+      <div className="w-full bg-white bg-linear-to-br from-sky-300 to-blue-800 fixed top-[0px] h-[160px] content-end px-[8%] z-[1] text-white ">
         <div className={`grid grid-cols-3  mb-[10px] font-semibold ${logged ? 'w-[69%]' : `w-full`}`}>
           <div className="ml-[90px]">Share</div>
           <div className="ml-[98px]">Price</div>
           <div></div>
         </div>
       </div>
-      <div className="stocks-page-container bg-gray-100 flex ">
+      <div className="stocks-page-container  flex ">
         <div className={logged ? `w-[68%]` : `w-full`}>
 
-          <div className="stocks-grid ">
-            {tableStocksData.map((Stock: {
+          <div className={`stocks-grid relative  ${tableStocksData? '' :`h-[calc(100vh-170px)]`}`}>
+            {tableStocksData ? tableStocksData.map((Stock: {
               symbol: string,
               name: string,
               logoURL: string,
               data: {
                 "Time Series (Daily)": any
-                  
-                
+
+
               }
             }) => {
               return <StockContainer name={Stock.name} symbol={Stock.symbol} logoURL={Stock.logoURL} prices={Stock.data["Time Series (Daily)"][dateForPrice]} />
-            })}
+            }) :
+            <div className="absolute top-[50%] left-[50%] translate-x-[-50%] translate-y-[-50%] flex flex-col justify-center items-center">
+              <img className="w-[80px]" src={LoadingIcon}></img>
+              <div className="text-[25px] font-semibold"></div>
+            </div> 
+            }
 
           </div>
         </div>
+        
 
       </div>
     </>

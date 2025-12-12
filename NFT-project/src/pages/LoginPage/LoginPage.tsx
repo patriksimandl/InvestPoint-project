@@ -1,5 +1,6 @@
 import { useEffect, useState } from "react";
 import './LoginPage.css';
+import { MainMenu } from '../../shared/MainMenu';
 
 import VisibilityIcon from '../../assets/visibility-icon.svg';
 import VisibilityOffIcon from '../../assets/visibility-off-icon.svg';
@@ -17,7 +18,7 @@ export type eventProps = {
 
 let passwordArray: string[];
 
-export function LoginPage() {
+export function LoginPage({logged}:{logged:boolean}) {
   const [isRegistrating, setIsRegistrating] = useState(false);
   const [passwordShown, setPasswordShown] = useState(false);
   const [email, setEmail] = useState('');
@@ -244,6 +245,7 @@ export function LoginPage() {
 
   return (
     <>
+      <MainMenu logged={logged} />
       <title>{isRegistrating ? 'Create account' : 'Login'}</title>
       <div className="login-page-container flex flex-row rounded-[30px] w-[70%] shadow-xl h-154" >
         <div className="image-container w-[55%] hidden lg:inline ">

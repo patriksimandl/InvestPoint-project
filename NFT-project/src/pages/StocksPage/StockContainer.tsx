@@ -40,7 +40,7 @@ export function StockContainer({name, symbol, logoURL, prices}: StockContainer) 
         </div>
       </div>
       <div className="flex items-center justify-end">
-        <button className="rounded-[40px] p-3 text-white font-semibold flex justify-center  w-[10vw] text-[17px]  bg-linear-to-br from-sky-400 to-indigo-600 cursor-pointer">Select</button>
+        <button className="button-secondary">Select</button>
       </div>
     </div>
   )

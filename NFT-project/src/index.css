@@ -2,11 +2,17 @@
 
 
 @layer components{
-  .stocks-page-container{
-    @apply pt-[170px] px-[8%]
+  html{
+    @apply pt-[160px] 
   }
 
+  .stocks-page-container,
+  .portfolio-page-container
+  {
+    @apply px-[8%] bg-slate-100 pt-[10px]
+  }
 
+  
 
 
 
@@ -24,6 +30,11 @@
   .button-primary-inactive{
     @apply rounded-[40px] p-3 text-white font-semibold flex justify-center  w-[10vw] text-[17px]  cursor-pointer bg-gray-400;
   }
+
+  .button-secondary{
+    @apply rounded-[40px] p-3 text-white font-semibold flex justify-center  w-[10vw] text-[17px]  bg-linear-to-br from-sky-400 to-indigo-600 cursor-pointer
+  }
+
 }
 
 

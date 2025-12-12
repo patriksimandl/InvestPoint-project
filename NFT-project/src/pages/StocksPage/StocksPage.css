@@ -6,7 +6,8 @@
 
 @layer components{
   .stocks-grid{
-    @apply grid grid-rows-10 gap-6
+    @apply grid grid-rows-10 gap-6;
+
   }
 
 
@@ -17,4 +18,6 @@
   .labels{
     width: 69%
   }
+
+
 }

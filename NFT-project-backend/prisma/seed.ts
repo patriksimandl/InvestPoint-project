@@ -1,5 +1,6 @@
 import db from "../prismaClient.ts";
 
+type Database= any;
 
 const stocks = [
   // 🟦 Tech
@@ -11,7 +12,8 @@ const stocks = [
   { symbol: "META", name: "Meta Platforms", logoURL: "https://res.cloudinary.com/dqdwgkwfn/image/upload/v1765392370/meta_rp0p45.svg" },
   { symbol: "TSLA", name: "Tesla", logoURL: "https://res.cloudinary.com/dqdwgkwfn/image/upload/v1765392366/tesla_b4j8ck.svg" },
   { symbol: "ADBE", name: "Adobe", logoURL: "https://res.cloudinary.com/dqdwgkwfn/image/upload/v1765392365/adobe_t4hgvc.svg" },
-  { symbol: "NFLX", name: "Netflix", logoURL: "https://res.cloudinary.com/dqdwgkwfn/image/upload/v1765392364/Netflix_v1i929.svg" },
+  { symbol: "NFLX", name: "Netflix", logoURL: "https://res.cloudinary.com/dqdwgkwfn/image/upload/v1765440987/Netflix_alhll3.svg" },
+  
 
   // 🟩 Finance
   { symbol: "JPM", name: "JPMorgan Chase", logoURL: "https://res.cloudinary.com/dqdwgkwfn/image/upload/v1765392365/JPMorganChase_bhh62a.svg" },
