@@ -42,7 +42,7 @@ export function MainMenu({logged}: {logged: boolean}) {
             <div></div>
           </div> : ''
         }
-        <div className='text-[20px] font-semibold'>Portfolio overview</div>
+        <div className='ml-[20px] text-[17px] font-semibold '>Portfolio overview</div>
       </div>
     </>
 

@@ -3,7 +3,7 @@ import db from './prismaClient.ts';
 import dayjs from 'dayjs';
 
 export default async function fetchStocks() {
-  const todaysDate  = dayjs().startOf('day').toISOString();
+  const todaysDate  = dayjs().startOf('day');
 
 
   try {
@@ -14,8 +14,10 @@ export default async function fetchStocks() {
       },
     })
 
+    
     //if it was today
-    if (lastFetchDate && lastFetchDate.lastFetch === todaysDate) {
+    if (lastFetchDate && todaysDate.isSame(lastFetchDate.lastFetch)) {
+      console.log('exit');
       return;
     }
 
@@ -56,6 +58,11 @@ export default async function fetchStocks() {
 }
 
 
+/*async function delay(ms){
+  return new Promise(resolve => setTimeout(resolve, ms));
+}
+*/
+
 function fetchFromStocksServer(symbols: {symbol: string}[]){
   symbols.forEach(async(item : {symbol:string})=>{
       const symbol = item.symbol;
@@ -74,6 +81,8 @@ function fetchFromStocksServer(symbols: {symbol: string}[]){
         }
         
       })
+
+      //await delay(1000);
 
   })
   return 0;

@@ -24,7 +24,6 @@ type StocksPageProps =
   }
 
 
-
 export function StocksPage({ logged }: StocksPageProps) {
   //const tableStocksDataFromLocal = JSON.parse(localStorage.getItem('tableStocksData')) || null; 
   
@@ -36,7 +35,9 @@ export function StocksPage({ logged }: StocksPageProps) {
   dateForPrice = '2025-12-10';
 
 
-
+  /*useEffect(()=>{
+    console.log(tableStocksData);
+  },[tableStocksData]);*/
 
   useQuery({
     queryKey: ["stocksData"],
@@ -49,6 +50,10 @@ export function StocksPage({ logged }: StocksPageProps) {
     staleTime: 1000 * 10,
   });
 
+  useEffect(()=>{
+    console.log(tableStocksData);
+  },[]);
+  
   
   return (
     <>
