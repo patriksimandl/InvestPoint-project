@@ -14,10 +14,11 @@ datasource db {
 }
 
 
-model User { 
+model User {  
   id        Int        @id @default(autoincrement())
   email     String     @unique
   password  String
+  stocks    userPortfolio[]
 }
 
 model lastFetch{
@@ -33,3 +34,14 @@ model Stocks {
   logoURL      String
   data      Json?
 }
+
+model userPortfolio{
+  id                     Int       @id @default(autoincrement())
+  userId                 Int  
+  totalBalanceInUSD          Decimal   @default(0)@db.Decimal(18,8)
+  totalBalanceHistoryInUSD    Json 
+  stockHoldings          Json?
+  user                   User      @relation(fields: [userId], references: [id])
+}
+
+//make the whole user portfolio

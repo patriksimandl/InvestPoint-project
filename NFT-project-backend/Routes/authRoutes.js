@@ -8,35 +8,56 @@ const router = express.Router();
 
 router.post('/register', async (req, res) => {
   const { email, password } = req.body;
+  try {
 
-  if (
-    await db.User.findUnique({
+    if (
+      await db.User.findUnique({
+        where: {
+          email
+        }
+      })
+    ) {
+      return res.status(304).send('User already exists');
+    }
+
+    const hashedPassword = bcrypt.hashSync(password, 4);
+
+
+    await db.User.create({
+      data: {
+        email,
+        password: hashedPassword
+      }
+    })
+
+    //get the created user
+    const createdUser = await db.User.findUnique({
       where: {
         email
       }
     })
-  ) {
-    return res.send('User already exists');
+
+    console.log(createdUser.id);
+    //create porfolio
+    await db.userPortfolio.create({
+      data: {
+        userId: createdUser.id,
+        totalBalanceHistoryInUSD: { today: 0 }
+      }
+    })
+
+  }catch (err) {
+    console.log(err.message);
   }
-
-  const hashedPassword = bcrypt.hashSync(password, 4);
-
-
-  await db.User.create({
-    data: {
-      email,
-      password: hashedPassword
-    }
-  })
 
 
   res.status(201).send('Register a user');
 
 })
 
-router.post('/login', async (req,res) =>{
-  const {email, password } = req.body;
-  
+router.post('/login', async (req, res) => {
+  const { email, password } = req.body;
+
 
 
   const user = await db.User.findUnique({
@@ -45,14 +66,14 @@ router.post('/login', async (req,res) =>{
     }
   })
 
-  if(!user){
-    return res.send({message:'User not found'});
+  if (!user) {
+    return res.send({ message: 'User not found' });
   }
 
-  const passwordIsValid = bcrypt.compareSync(password,user.password);
+  const passwordIsValid = bcrypt.compareSync(password, user.password);
 
 
-  if(!passwordIsValid){
+  if (!passwordIsValid) {
     return res.sendStatus(401);
   }
 

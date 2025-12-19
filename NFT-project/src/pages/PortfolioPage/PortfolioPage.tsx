@@ -7,13 +7,15 @@ import InfoIcon from '/InfoIcon.svg'
 
 
 
-export function PortfolioPage({ logged }: { logged: boolean }) {
+export function PortfolioPage({ islogged }: { islogged: boolean }) {
   const [activeZoomButton, setActiveZoomButton] = useState('All');
   const historicalGraphContainer = useRef(null);
   const holdingsGraphContainer = useRef(null);
   const todaysDate = dayjs().format('DD. MM');
 
   const zoomButtons = ['1Y', '1M', 'All'];
+
+  
 
   const historyGraphOptions = {
     chart: {
@@ -103,18 +105,18 @@ export function PortfolioPage({ logged }: { logged: boolean }) {
       toolbar: {
         show: false,
       },
-      events:{
-        legendClick: function (chartContext, seriesIndex, config){
+      events: {
+        legendClick: function (chartContext, seriesIndex, config) {
           const seriesName = config.global.seriesNames[seriesIndex];
           console.log(seriesName);
 
         }
 
-        
+
       }
     },
-    series: [44, 100, 41, 17, 15,20,19],
-    
+    series: [44, 100, 41, 17, 15, 20, 19],
+
     labels: ['Tech', 'Finance', 'Consumer & Retail', 'Healthcare', 'Energy', 'Automotive & Industrials', 'Entertainment'],
 
     plotOptions: {
@@ -144,9 +146,9 @@ export function PortfolioPage({ logged }: { logged: boolean }) {
       '#775DD0', // purple
       '#3F51B5', // indigo
       '#546E7A', // gray-blue
-      ],
-    onItemClick:{
-      
+    ],
+    onItemClick: {
+
     },
   }
 
@@ -176,7 +178,7 @@ export function PortfolioPage({ logged }: { logged: boolean }) {
 
   return (
     <>
-      <MainMenu logged={logged} />
+      <MainMenu islogged={islogged} />
       <div className="portfolio-page-container ">
         <div className="grid grid-cols-3 gap-[20px] pb-[20px]">
           <div className="pl-[50px] shadow-lg rounded-[8px] p-[30px] w-full bg-white flex flex-col">

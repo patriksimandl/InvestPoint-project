@@ -11,9 +11,8 @@ import { PortfolioPage } from './pages/PortfolioPage/PortfolioPage'
 
 function App() {
   const [menuItems, setMenuItems] = useState([]);
-  const [logged, setLogged] = useState(true);
-  //const [tableStocksData, setTableStocksData] = useState(null);
-
+  const [islogged, setIslogged] = useState(false);
+  const [tableStocksData,setTableStocksData] = useState(JSON.parse(localStorage.getItem('tableStocksData')!) || null);
 
   //finish to fetch every hour
   /*useEffect(() => {
@@ -30,11 +29,15 @@ function App() {
 
   
 
-  const { data: tableStocksData, isLoading } = useQuery({
+  useQuery({
     queryKey: ["stocksData"],
-    queryFn: () => axios.get('http://localhost:3000/stocks').then(response => response.data),
-    //To refetch every hour
-    staleTime: 1000 * 60 *60,
+    queryFn: async () => {
+      const response = await axios.get('http://localhost:3000/stocks')
+      setTableStocksData(response.data);
+      localStorage.setItem('tableStocksData', JSON.stringify(response.data));
+    },
+    //To refetch every 20 min
+    staleTime: 1000 * 60 * 20,
   });
 
   
@@ -48,10 +51,10 @@ function App() {
   return (
     
       <Routes>
-        <Route path='/' element={<HomePage logged={logged} />} />
-        <Route path='/login' element={<LoginPage logged={logged} />} />
-        <Route path='/stocks' element={<StocksPage logged={logged} />} />
-        <Route path='/portfolio' element={<PortfolioPage logged={logged}/>} />
+        <Route path='/' element={<HomePage islogged={islogged} />} />
+        <Route path='/login' element={<LoginPage islogged={islogged} setIsLogged={setIslogged}/>} />
+        <Route path='/stocks' element={<StocksPage islogged={islogged} tableStocksData={tableStocksData} setTableStocksData={setTableStocksData}/>} />
+        <Route path='/portfolio' element={<PortfolioPage islogged={islogged}/>} />
       </Routes>
   )
 

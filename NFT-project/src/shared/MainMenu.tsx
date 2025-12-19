@@ -1,10 +1,11 @@
 import './MainMenu.css'
 import { NavLink } from 'react-router'
 import SearchIcon from '../assets/search-icon.svg'
+import AccountIcon from '/accountIcon.svg'
 
-export function MainMenu({logged}: {logged: boolean}) {
+export function MainMenu({ islogged }: { islogged: boolean }) {
   const menuLinks = ['Portfolio', 'Stocks', 'ETF'];
-  
+
   const winUrl = window.location.pathname;
 
 
@@ -28,15 +29,22 @@ export function MainMenu({logged}: {logged: boolean}) {
             <input className="rounded-[30px] p-[8px] h-[49.5px] pl-[22px] bg-gray-100 outline-none text-[14.5px] " placeholder='Search for Stock' />
             <img src={SearchIcon} className='w-7 absolute search-icon cursor-pointer'></img>
           </div>
-          <NavLink className='button-primary' to={'/login'}>
-            Log in
-          </NavLink>
+          {islogged ?
+            <div>
+              <img className="cursor-pointer h-[40px] " src={AccountIcon} />
+            </div> :
+            <NavLink className='button-primary' to={'/login'}>
+              Log in
+            </NavLink>
+          }
+
+
         </div>
 
       </div>
       <div className="w-full bg-white bg-linear-to-br from-sky-300 to-blue-800 fixed top-[0px] h-[160px] content-end px-[8%] z-[1] text-white pb-[10px] ">
-        {winUrl === '/stocks'? 
-          <div className={`grid grid-cols-3   font-semibold ${logged ? 'w-[69%]' : `w-full`}`}>
+        {winUrl === '/stocks' ?
+          <div className={`grid grid-cols-3   font-semibold ${islogged ? 'w-[69%]' : `w-full`}`}>
             <div className="ml-[90px]">Share</div>
             <div className="ml-[98px]">Price</div>
             <div></div>
