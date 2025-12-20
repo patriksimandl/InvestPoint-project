@@ -15,7 +15,11 @@ app.use(cors({
 
 app.use(express.json());
 
-fetchStocks();
+//fetch live stocks from 
+setInterval(()=>{
+  fetchStocks();
+},1000*60*60);
+
 
 
 

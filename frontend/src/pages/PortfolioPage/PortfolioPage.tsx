@@ -1,13 +1,17 @@
 import dayjs from "dayjs";
 import { MainMenu } from "../../shared/MainMenu";
 import ApexCharts from "apexcharts";
-import { use, useEffect, useRef, useState } from "react";
+import { use, useEffect, useRef, useState, type Dispatch, type SetStateAction } from "react";
 import './PortfolioPage.css'
 import InfoIcon from '/InfoIcon.svg'
 
+type PortfolioPageProps ={
+  isLogged: boolean , 
+  setIsLogged: Dispatch<SetStateAction<boolean>>;
+   
+}
 
-
-export function PortfolioPage({ islogged }: { islogged: boolean }) {
+export function PortfolioPage({ isLogged,setIsLogged }:PortfolioPageProps ) {
   const [activeZoomButton, setActiveZoomButton] = useState('All');
   const historicalGraphContainer = useRef(null);
   const holdingsGraphContainer = useRef(null);
@@ -178,7 +182,7 @@ export function PortfolioPage({ islogged }: { islogged: boolean }) {
 
   return (
     <>
-      <MainMenu islogged={islogged} />
+      <MainMenu isLogged={isLogged} setIsLogged={setIsLogged}/>
       <div className="portfolio-page-container ">
         <div className="grid grid-cols-3 gap-[20px] pb-[20px]">
           <div className="pl-[50px] shadow-lg rounded-[8px] p-[30px] w-full bg-white flex flex-col">

@@ -4,13 +4,13 @@ import { StockContainer } from "./StockContainer";
 import dayjs from "dayjs";
 import { useQuery } from "@tanstack/react-query";
 import axios from "axios";
-import { useEffect, useState } from "react";
+import { useEffect, useState, type Dispatch, type SetStateAction } from "react";
 import LoadingIcon from '/LoadingIcon.svg'
 
 
 type StocksPageProps =
   {
-    islogged: boolean,
+    isLogged: boolean,
     
     tableStocksData: null | {
       symbol: string,
@@ -24,6 +24,7 @@ type StocksPageProps =
       
     }[],
     setTableStocksData: (tableStocksData : any) => void;
+    setIsLogged: Dispatch<SetStateAction<boolean>>;
     /*tableStocksData: {
 
       name: string,
@@ -37,7 +38,7 @@ type StocksPageProps =
   }
 
 
-export function StocksPage({ islogged, tableStocksData, setTableStocksData }: StocksPageProps) {
+export function StocksPage({ isLogged, tableStocksData, setTableStocksData, setIsLogged }: StocksPageProps) {
   //const tableStocksDataFromLocal = JSON.parse(localStorage.getItem('tableStocksData')) || null; 
 
 
@@ -69,8 +70,8 @@ export function StocksPage({ islogged, tableStocksData, setTableStocksData }: St
 
   return (
     <>
-      <MainMenu islogged={islogged} />
-      {islogged ? <div className="w-[25%] bg-white h-[82vh] rounded-[8px] fixed right-[8%] z-2 top-[130px] p-[20px] flex flex-col shadow-lg">
+      <MainMenu isLogged={isLogged} setIsLogged={setIsLogged} />
+      {isLogged ? <div className="w-[25%] bg-white h-[82vh] rounded-[8px] fixed right-[8%] z-2 top-[130px] p-[20px] flex flex-col shadow-lg">
         <div className="font-semibold text-[22px]">Portfolio</div>
         <div className="">
           <div className="text-[15px] text-gray-600 mt-[15px]">Your Balance</div>
@@ -89,14 +90,14 @@ export function StocksPage({ islogged, tableStocksData, setTableStocksData }: St
 
       </div> : ''}
       <div className="w-full bg-white bg-linear-to-br from-sky-300 to-blue-800 fixed top-[0px] h-[160px] content-end px-[8%] z-[1] text-white ">
-        <div className={`grid grid-cols-3  mb-[10px] font-semibold ${islogged ? 'w-[69%]' : `w-full`}`}>
+        <div className={`grid grid-cols-3  mb-[10px] font-semibold ${isLogged ? 'w-[69%]' : `w-full`}`}>
           <div className="ml-[90px]">Share</div>
           <div className="ml-[98px]">Price</div>
           <div></div>
         </div>
       </div>
       <div className="stocks-page-container  flex ">
-        <div className={islogged ? `w-[68%]` : `w-full`}>
+        <div className={isLogged ? `w-[68%]` : `w-full`}>
 
           <div className={`stocks-grid relative  ${tableStocksData ? '' : `h-[calc(100vh-170px)]`}`}>
             {tableStocksData ? tableStocksData.map((Stock) => {

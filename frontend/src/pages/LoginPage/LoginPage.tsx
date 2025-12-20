@@ -1,7 +1,6 @@
 import { useEffect, useState } from "react";
 import './LoginPage.css';
 
-
 import { defLength, defNumber, defSpecialChar, defUpperCase } from "./authPassword";
 import { authEmail } from "./authEmail";
 
@@ -9,6 +8,7 @@ import { sendInfo } from "./sendInfo";
 import { PasswordInput } from "./PasswordInput";
 import { EmailInput } from "./EmailInput";
 import { NameInputs } from "./NamesInput";
+import { useNavigate } from "react-router";
 
 export type eventProps = {
   target: {
@@ -24,6 +24,7 @@ type LoginPageProps = {
 let passwordArray: string[];
 
 export function LoginPage({ isLogged, setIsLogged }: LoginPageProps) {
+  const navigate = useNavigate();
   const [isRegistrating, setIsRegistrating] = useState(false);
   const [passwordShown, setPasswordShown] = useState(false);
   const [email, setEmail] = useState('');
@@ -107,11 +108,12 @@ export function LoginPage({ isLogged, setIsLogged }: LoginPageProps) {
 
 
   async function registerUser() {
-    console.log('register');
+    
     const result = await sendInfo(email, password, isRegistrating);
 
     if (result === 0) {
       setIsLogged(true);
+      navigate(-1);
     }
     else {
       setErrorMessage(result);

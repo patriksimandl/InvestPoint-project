@@ -11,7 +11,7 @@ import { PortfolioPage } from './pages/PortfolioPage/PortfolioPage'
 
 function App() {
   const [menuItems, setMenuItems] = useState([]);
-  const [islogged, setIslogged] = useState(false);
+  const [isLogged, setIsLogged] = useState<boolean>(false);
   const [tableStocksData,setTableStocksData] = useState(JSON.parse(localStorage.getItem('tableStocksData')!) || null);
 
   //finish to fetch every hour
@@ -51,10 +51,10 @@ function App() {
   return (
     
       <Routes>
-        <Route path='/' element={<HomePage islogged={islogged} />} />
-        <Route path='/login' element={<LoginPage islogged={islogged} setIsLogged={setIslogged}/>} />
-        <Route path='/stocks' element={<StocksPage islogged={islogged} tableStocksData={tableStocksData} setTableStocksData={setTableStocksData}/>} />
-        <Route path='/portfolio' element={<PortfolioPage islogged={islogged}/>} />
+        <Route path='/' element={<HomePage isLogged={isLogged} setIsLogged={setIsLogged} />} />
+        <Route path='/login' element={<LoginPage isLogged={isLogged} setIsLogged={setIsLogged}/>} />
+        <Route path='/stocks' element={<StocksPage isLogged={isLogged} tableStocksData={tableStocksData} setTableStocksData={setTableStocksData} setIsLogged={setIsLogged}/>} />
+        <Route path='/portfolio' element={<PortfolioPage isLogged={isLogged} setIsLogged={setIsLogged}/>} />
       </Routes>
   )
 

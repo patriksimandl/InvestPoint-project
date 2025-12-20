@@ -1,7 +1,10 @@
 import axios from "axios";
 
+
+
 //Register or login a user
   export async function sendInfo(email : string,password : string, isRegistrating : boolean) {
+    
 
 
 
@@ -26,6 +29,7 @@ import axios from "axios";
       console.log('un');
       return response.data;
     }
+    
     return 0
     
   }
