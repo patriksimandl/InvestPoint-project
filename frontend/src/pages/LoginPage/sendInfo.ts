@@ -10,7 +10,7 @@ import axios from "axios";
 
     let response;
     if (isRegistrating) {
-      response = await axios.post('http://localhost:3000/api/register', {
+      response = await axios.post('http://localhost:3000/auth/register', {
         email,
         password
       },
@@ -18,7 +18,7 @@ import axios from "axios";
       {withCredentials:true});
     }
     else {
-      response = await axios.post('http://localhost:3000/api/login', {
+      response = await axios.post('http://localhost:3000/auth/login', {
         email,
         password
       },

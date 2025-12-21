@@ -59,8 +59,16 @@ router.post('/register', async (req, res) => {
 
   const token = assignWebToken(createdUser);
 
+  res.cookie("accessToken",token, {
+    httpOnly: true,
+    secure: false,
+    sameSite: 'Strict',
+    path: '/',
+    maxAge: 1000 * 60* 20
+  })
 
-  res.status(201).send({token,message:'Register a user'});
+
+  return res.json({message : 'Register a user'}).status(204);
 
 })
 
@@ -76,7 +84,7 @@ router.post('/login', async (req, res) => {
   })
 
   if (!user) {
-    return res.send({ message: 'User not found' });
+    return res.status(401).send({ message: 'User not found' });
   }
 
   const passwordIsValid = bcrypt.compareSync(password, user.password);
@@ -102,10 +110,26 @@ router.post('/login', async (req, res) => {
     //if the sites are requested each from backend strict wont work
     //if it navige from client site from frontend => like react router 'strict' setting will work and it is most secured
     sameSite: 'Strict',
+    path: '/',
     //how long the cookie will be in the browser
     maxAge: 1000 * 60* 20
   });
-  return res.json({token, message : 'Logging was succesful'}).status(204);
+
+  return res.json({message : 'Logging was succesful'}).status(204);
+})
+
+router.post('/logout', (req,res)=>{
+
+  res.clearCookie("accessToken",{
+    
+    httpOnly: true,
+    //In production has to be on
+    secure: false,
+    sameSite: 'strict',
+    path: "/",
+  })
+
+  return res.status(200).send('succesfully logged out');
 })
 
 export default router;

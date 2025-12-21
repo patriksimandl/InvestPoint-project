@@ -1,180 +1,45 @@
 import dayjs from "dayjs";
 import { MainMenu } from "../../shared/MainMenu";
-import ApexCharts from "apexcharts";
-import { use, useEffect, useRef, useState, type Dispatch, type SetStateAction } from "react";
+import { useEffect, useState, type Dispatch, type SetStateAction } from "react";
 import './PortfolioPage.css'
 import InfoIcon from '/InfoIcon.svg'
+import HoldingsGraph from './HoldingsGraph';
+import HistoryGraph from './HistoryGraph';
+import { useQuery } from "@tanstack/react-query";
+import axios from "axios";
+import LoadingOverlay from './LoadingOverlay';
 
-type PortfolioPageProps ={
-  isLogged: boolean , 
+
+type PortfolioPageProps = {
+  isLogged: boolean,
   setIsLogged: Dispatch<SetStateAction<boolean>>;
-   
+
 }
 
-export function PortfolioPage({ isLogged,setIsLogged }:PortfolioPageProps ) {
-  const [activeZoomButton, setActiveZoomButton] = useState('All');
-  const historicalGraphContainer = useRef(null);
-  const holdingsGraphContainer = useRef(null);
+export function PortfolioPage({ isLogged, setIsLogged }: PortfolioPageProps) {
+  const [activeZoomButton, setActiveZoomButton] = useState<string>('All');
   const todaysDate = dayjs().format('DD. MM');
 
   const zoomButtons = ['1Y', '1M', 'All'];
 
-  
-
-  const historyGraphOptions = {
-    chart: {
-      type: 'area',
-      width: "100%",
-      height: "95%",
-      toolbar: {
-        show: false,
-
-      },
-      zoom: {
-        enabled: false,
-      }
-
+  const { data: userPortfolio, isLoading, error } = useQuery({
+    queryKey: ["userPortfolio"],
+    queryFn: async () => {
+      const response = await axios.get('http://localhost:3000/api/portfolio', { withCredentials: true })
+      return response.data;
     },
-    dataLabels: {
-      enabled: false,
-    },
-    grid: {
-      show: true,
-      xaxis: {
-        lines: { show: false },  // vertical grid lines
-
-      },
-    },
-    markers: {
-      strokeColor: 'inherited',
-    },
+  });
 
 
-    series: [{
-      name: 'sales',
-      data: [30, 40, 35, 50, 49, 60, 70, 91, 125]
-    }],
-    xaxis: {
-      categories: [1991, 1992, 1993, 1994, 1995, 1996, 1997, 1998, 1999],
-      tooltip: {
-        enabled: false,
-      }
-
-    },
-    yaxis: {
-      title: {
-        text: 'Portfolio value ($)',
-        style: {
-          fontWeight: '600',
-          fontSize: '15px'
-        }
-      },
-
-    },
-    stroke: {
-      curve: 'straight',
-    },
-    subtitle: {
-      text: '',
-      align: '',
-      style: {
-        fontSize: '15px'
 
 
-      }
-    },
-    tooltip: {
-      custom: function ({ series, seriesIndex, dataPointIndex, w }: { series: any, seriesIndex: number, dataPointIndex: number, w: any }) {
-        return (`<div class="p-[7px] text-[14px] flex">
-                  <div class="font-semibold">
-                    ${series[seriesIndex][dataPointIndex]} USD 
-                  </div>
-                  <div class="text-gray-500 ml-[5px]">
-                    ${w.globals.categoryLabels[dataPointIndex]}
-                  </div>
-                </div>`)
-
-      },
-      marker: false,
-      y: {
-        show: true
-      }
-    }
-
-  }
-
-  const holdingsGraphOptions = {
-    chart: {
-      type: 'donut',
-      toolbar: {
-        show: false,
-      },
-      events: {
-        legendClick: function (chartContext, seriesIndex, config) {
-          const seriesName = config.global.seriesNames[seriesIndex];
-          console.log(seriesName);
-
-        }
-
-
-      }
-    },
-    series: [44, 100, 41, 17, 15, 20, 19],
-
-    labels: ['Tech', 'Finance', 'Consumer & Retail', 'Healthcare', 'Energy', 'Automotive & Industrials', 'Entertainment'],
-
-    plotOptions: {
-      pie: {
-        expandOnClick: false,
-        customScale: 1,
-        donut: {
-          size: '50%'
-        }
-      }
-    },
-    legend: {
-      position: 'bottom',
-      fontSize: '12px',
-    },
-    states: {
-      active: {
-        filter: {
-          //type: 'none'
-        }
-      }
-    },
-    colors: ['#008FFB', // blue
-      '#00E396', // green
-      '#FEB019', // yellow
-      '#FF4560', // red
-      '#775DD0', // purple
-      '#3F51B5', // indigo
-      '#546E7A', // gray-blue
-    ],
-    onItemClick: {
-
-    },
-  }
 
 
 
   useEffect(() => {
-    const chart = new ApexCharts(historicalGraphContainer.current, historyGraphOptions);
+    console.log(userPortfolio);
 
-    chart.render();
-
-  }, [historicalGraphContainer]);
-
-  useEffect(() => {
-    console.log(holdingsGraphContainer);
-    const holdingsChart = new ApexCharts(holdingsGraphContainer.current, holdingsGraphOptions);
-
-    holdingsChart.render();
-  }, [holdingsGraphContainer]);
-
-
-
-
+  }, [userPortfolio]);
 
 
 
@@ -182,13 +47,17 @@ export function PortfolioPage({ isLogged,setIsLogged }:PortfolioPageProps ) {
 
   return (
     <>
-      <MainMenu isLogged={isLogged} setIsLogged={setIsLogged}/>
+      <MainMenu isLogged={isLogged} setIsLogged={setIsLogged} />
+      {isLoading ? <LoadingOverlay /> : null}
+
+      
       <div className="portfolio-page-container ">
+
         <div className="grid grid-cols-3 gap-[20px] pb-[20px]">
           <div className="pl-[50px] shadow-lg rounded-[8px] p-[30px] w-full bg-white flex flex-col">
             <div className="font-semibold headings-portfolio-page">Total portfolio value</div>
             <div className="text-[32px] font-semibold text-green-700 flex items-center h-full">
-              $12,578.204
+              ${isLoading || error ? '0' : userPortfolio.totalBalanceInUSD}
             </div>
 
           </div>
@@ -217,7 +86,7 @@ export function PortfolioPage({ isLogged,setIsLogged }:PortfolioPageProps ) {
           </div>
           <div className="shadow-lg row-span-2 rounded-[8px] p-[20px] w-full bg-white flex flex-col">
             <div className="font-semibold headings-portfolio-page">Portfolio holdings</div>
-            <div className="mt-[5%]" ref={holdingsGraphContainer} ></div>
+            <HoldingsGraph isLoading={isLoading}/>
           </div>
           <div className="col-span-2 relative w-full h-[500px] p-[20px] shadow-lg bg-white rounded-[8px] flex flex-col">
             <div className="headings-portfolio-page pl-[30px] grid grid-cols-2">
@@ -231,7 +100,7 @@ export function PortfolioPage({ isLogged,setIsLogged }:PortfolioPageProps ) {
               </div>
             </div>
 
-            <div id="chart" className="w-full h-full" ref={historicalGraphContainer}></div>
+            <HistoryGraph isLoading={isLoading} />
           </div>
 
         </div>

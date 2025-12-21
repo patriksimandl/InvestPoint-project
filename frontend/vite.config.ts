@@ -13,7 +13,7 @@ export default defineConfig({
       /*'/stocks':{
         target:'http://localhost:3000'
       },*/
-      '/api':{
+      '/auth':{
         target: 'http://localhost:3000'
       }
     },

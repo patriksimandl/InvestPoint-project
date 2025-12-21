@@ -3,15 +3,24 @@ import cors from 'cors'
 import authRoutes from './Routes/authRoutes.js'
 import fetchStocks  from "./fetchStocks.ts";
 import db from "./prismaClient.ts";
+import authMiddlewere from "./middlewere/authMiddlewere.js";
+import apiRoutes from './Routes/apiRoutes.js'
+import cookieParser from 'cookie-parser';
+
+
 
 const app = express();
 const PORT = 3000;
 
+app.use(cookieParser());
 
 app.use(cors({
   origin: 'http://localhost:5000',
   credentials: true
 }))
+
+//to allow to check cookies
+
 
 app.use(express.json());
 
@@ -30,7 +39,9 @@ app.get('/stocks', async(req,res) =>{
   res.send(tableStocksData).status(200);
 })
 
-app.use('/api',authRoutes);
+app.use('/auth',authRoutes);
+
+app.use('/api',authMiddlewere,apiRoutes);
 
 
 app.listen(PORT, () => {
