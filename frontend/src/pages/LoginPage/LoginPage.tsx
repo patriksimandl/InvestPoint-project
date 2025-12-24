@@ -9,6 +9,7 @@ import { PasswordInput } from "./PasswordInput";
 import { EmailInput } from "./EmailInput";
 import { NameInputs } from "./NamesInput";
 import { useNavigate } from "react-router";
+import { useQueryClient } from "@tanstack/react-query";
 
 export type eventProps = {
   target: {
@@ -30,8 +31,8 @@ export function LoginPage({ isLogged, setIsLogged }: LoginPageProps) {
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
   const [emailCredentials, setEmailCredentials] = useState(false);
-  const [errorMessage, setErrorMessage] = useState(null);
-
+  const [errorMessage, setErrorMessage] = useState<undefined | string>();
+  const [resetKey,setResetKey] = useState(0);
   const [NamesValidation, setNamesValidation] = useState({
     firstName: false,
     secondName: false
@@ -47,7 +48,7 @@ export function LoginPage({ isLogged, setIsLogged }: LoginPageProps) {
   });
 
 
-
+  const queryClient = useQueryClient();
   useEffect(() => {
 
     setPasswordShown(false);
@@ -71,9 +72,11 @@ export function LoginPage({ isLogged, setIsLogged }: LoginPageProps) {
 
 
   function setRegistration() {
-    
+
     //when the page is login page
     setIsRegistrating(!isRegistrating);
+
+    setResetKey(resetKey + 1);
 
     setPassword('');
     setEmail('');
@@ -83,7 +86,10 @@ export function LoginPage({ isLogged, setIsLogged }: LoginPageProps) {
 
   //auth email
   useEffect(() => {
-    setEmailCredentials(authEmail(email));
+      setEmailCredentials(authEmail(email));
+
+
+
   }, [email])
 
 
@@ -108,25 +114,32 @@ export function LoginPage({ isLogged, setIsLogged }: LoginPageProps) {
 
 
   async function registerUser() {
-    
+
     const result = await sendInfo(email, password, isRegistrating);
 
     if (result === 0) {
       setIsLogged(true);
+      queryClient.setQueryData(["verification"], () => true)
       navigate(-1);
     }
     else {
       setErrorMessage(result);
     }
 
-    setEmail('');
     setPassword('');
   }
+
+  
 
   return (
     <>
       <title>{isRegistrating ? 'Create account' : 'Login'}</title>
-      <div className="login-page-container flex flex-row rounded-[30px] w-[70%] shadow-xl h-154" >
+      <div className="login-page-container relative flex flex-row rounded-[30px] w-[70%] shadow-xl h-154" >
+        <button onClick={() => navigate(-1)} aria-label="Close" className="absolute top-3 right-3 p-2 rounded-full hover:bg-gray-100 cursor-pointer">
+          <svg xmlns="http://www.w3.org/2000/svg" className="w-6 h-6 text-gray-600" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2}>
+            <path strokeLinecap="round" strokeLinejoin="round" d="M6 18L18 6M6 6l12 12" />
+          </svg>
+        </button>
         <div className="image-container w-[55%] hidden lg:inline ">
           <img className="h-[100%] object-cover rounded-l-[30px]" src="/Login-page-img.png" />
         </div>
@@ -138,18 +151,18 @@ export function LoginPage({ isLogged, setIsLogged }: LoginPageProps) {
       pb-4">{isRegistrating ? `Let's create your InvestPoint account` : 'Log in to your InvestPoint account'}
           </div>
           {errorMessage ?
-            <div className="text-red-600 flex border-[1px] border-red-300 relative w-full h-[6vh] bg-red-200 justify-center items-center px-[15px] rounded-[8px] mb-[10px]" >
+            <div className="text-red-600 flex border-[1px] border-red-300 relative w-full h-[6vh] text-nowrap bg-red-200 justify-center items-center px-[15px] rounded-[8px] mb-[4px" >
 
-              <div className="absolute left-1/2 -translate-x-1/2">
+              <div className="">
                 {errorMessage}
               </div>
-              { errorMessage ?
-              <div className="ml-auto cursor-pointer ">
+
+              <div className="ml-auto cursor-pointer " onClick={() => { setErrorMessage(undefined) }}>
                 <svg xmlns="http://www.w3.org/2000/svg" height="24px" viewBox="0 -960 960 960" width="24px" className="fill-current hover:text-red-400" fill="#ff2626ff"><path d="m256-200-56-56 224-224-224-224 56-56 224 224 224-224 56 56-224 224 224 224-56 56-224-224-224 224Z" /></svg>
               </div>
-              :
-              ''
-              }
+
+
+
             </div>
             :
             ''
@@ -159,12 +172,12 @@ export function LoginPage({ isLogged, setIsLogged }: LoginPageProps) {
             {isRegistrating ?
               <>
 
-                <NameInputs NamesValidation={NamesValidation} setNamesValidation={setNamesValidation}/>
+                <NameInputs NamesValidation={NamesValidation} setNamesValidation={setNamesValidation} />
               </>
               : ''
             }
           </div>
-          <EmailInput email={email} setEmail={setEmail} />
+          <EmailInput email={email} setEmail={setEmail} emailCredentials={emailCredentials} resetKey={resetKey}/>
           <PasswordInput
             isRegistrating={isRegistrating}
             passwordShown={passwordShown}
@@ -172,6 +185,7 @@ export function LoginPage({ isLogged, setIsLogged }: LoginPageProps) {
             passwordValidations={passwordValidations}
             setPassword={setPassword}
             password={password}
+            resetKey={resetKey}
           />
 
           <button className={`${(Object.values(passwordValidations).every(Boolean) && emailCredentials && Object.values(NamesValidation).every(Boolean)) || (!isRegistrating && emailCredentials) ? 'button-primary' : 'button-primary-inactive pointer-events-none cursor-not-allowed'}  w-full p-2.5 rounded-[8px] mt-[6px]`} onClick={registerUser} >{isRegistrating ? 'Create account' : 'Log in'}

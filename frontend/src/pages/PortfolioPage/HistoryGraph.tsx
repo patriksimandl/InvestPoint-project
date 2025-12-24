@@ -1,7 +1,7 @@
 import ApexCharts from "apexcharts";
 import React, { useEffect, useRef } from "react";
 
-export default function HistoryGraph() {
+export default function HistoryGraph({isLogged} : {isLogged : boolean}) {
   const containerRef = useRef<HTMLDivElement | null>(null);
 
   const historyGraphOptions = {
@@ -31,11 +31,12 @@ export default function HistoryGraph() {
   };
 
   useEffect(() => {
+    if(!isLogged) return
     if (!containerRef.current) return;
     const chart = new ApexCharts(containerRef.current as any, historyGraphOptions);
     chart.render();
     return () => { chart.destroy(); };
-  }, []);
+  }, [isLogged]);
 
   return <div id="chart" className="w-full h-full " ref={containerRef} />;
 }

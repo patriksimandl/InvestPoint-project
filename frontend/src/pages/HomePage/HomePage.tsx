@@ -1,11 +1,20 @@
-import {MainMenu} from '../../shared/MainMenu'
+import { MainMenu } from '../../shared/MainMenu'
 import './HomePage.css'
 import type { Dispatch, SetStateAction } from 'react'
 
-export function HomePage({isLogged, setIsLogged}:{isLogged:boolean, setIsLogged: Dispatch<SetStateAction<boolean>>}){
+type HomePageProps = {
+  isLogged: boolean,
+  setIsLogged: Dispatch<SetStateAction<boolean>>,
+  user?: { email?: string } | null,
+}
+
+
+
+export function HomePage({ isLogged, setIsLogged, user }: HomePageProps) {
   return (
     <>
-      <MainMenu isLogged={isLogged} setIsLogged={setIsLogged} />
+      <title>Home</title>
+      <MainMenu isLogged={isLogged} setIsLogged={setIsLogged} user={user} />
     </>
 
   )

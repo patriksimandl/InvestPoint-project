@@ -1,3 +1,5 @@
+import { NavLink } from "react-router";
+
 type StockContainer = 
 {
   name: string,
@@ -40,7 +42,9 @@ export function StockContainer({name, symbol, logoURL, prices}: StockContainer) 
         </div>
       </div>
       <div className="flex items-center justify-end">
-        <button className="button-secondary">Select</button>
+        <NavLink to={`/stocks/${symbol}`} className="button-secondary">
+          Select
+        </NavLink>
       </div>
     </div>
   )

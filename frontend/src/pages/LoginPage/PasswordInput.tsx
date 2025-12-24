@@ -2,7 +2,7 @@ import VisibilityIcon from '/visibility-icon.svg';
 import VisibilityOffIcon from '/visibility-off-icon.svg';
 import CancelIcon from '/cancel-logo.svg'
 import type { eventProps } from './LoginPage';
-import type { Dispatch, SetStateAction } from 'react';
+import { useEffect, useState, type Dispatch, type SetStateAction } from 'react';
 
 type PasswordInputProps ={
   passwordValidations: {
@@ -15,11 +15,21 @@ type PasswordInputProps ={
   setPasswordShown: Dispatch<SetStateAction<boolean>>,
   setPassword: Dispatch<SetStateAction<string>>,
   passwordShown: boolean,
-  password: string
+  password: string,
+  resetKey?: number
 }
 
 
-export function PasswordInput({passwordValidations, isRegistrating,setPasswordShown,setPassword,passwordShown,password} : PasswordInputProps) {
+export function PasswordInput({passwordValidations, isRegistrating,setPasswordShown,setPassword,passwordShown,password,resetKey} : PasswordInputProps) {
+  const [haveBeenClicked,setHaveBeenClicked] = useState(false); 
+  const [isFocus, setIsFocus] = useState(false);
+
+  useEffect(()=>{
+    setHaveBeenClicked(false);
+  },[resetKey]);
+
+
+
    const passwordConditions = [
       {
         condition: passwordValidations.length,
@@ -47,12 +57,12 @@ export function PasswordInput({passwordValidations, isRegistrating,setPasswordSh
   return (
     <div className="input-container">
       <img className="visibility-icon" src={passwordShown ? VisibilityOffIcon : VisibilityIcon} onClick={showPassword}></img>
-      <input className="input-primary" value={password} onChange={updatePassword} type={passwordShown ? 'text' : "password"} placeholder="" />
+      <input className={`input-primary ${isRegistrating && haveBeenClicked && !Object.values(passwordValidations).every(Boolean) && !isFocus? 'outline-2 outline-red-700' : '' }`} value={password} onChange={updatePassword} onFocus={()=>{setIsFocus(true)}} onBlur={()=>{setIsFocus(false)}} type={passwordShown ? 'text' : "password"} onClick={() =>{setHaveBeenClicked(true)}} placeholder="" />
       <label className="input-label">Password</label>
       {
         Object.values(passwordValidations).every(Boolean) || !isRegistrating ?
           '' :
-          <div className="top-[58px] left-[-8px] right-[-8px] input-checker absolute flex-col bg-gray-200/40 backdrop-blur-[5px] px-[13px] py-[15px] transition-all rounded-[20px] text-[15.5px] text-red-800">
+          <div className="top-[58px] left-[-8px] right-[-8px] input-checker absolute flex-col bg-gray-200/40 backdrop-blur-[5px] px-[13px] py-[15px] transition-all rounded-[20px] text-[15px] text-red-800">
             {passwordConditions.map((obj) => {
               if (obj.condition) {
                 return;

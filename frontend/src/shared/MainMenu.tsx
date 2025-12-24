@@ -4,24 +4,23 @@ import SearchIcon from '../assets/search-icon.svg'
 import { AccountMenu } from './AccountMenu';
 import type { Dispatch, SetStateAction } from 'react';
 
-export type MainMenuProps ={
+export type MainMenuProps = {
   setIsLogged: Dispatch<SetStateAction<boolean>>;
   isLogged: boolean
+  user?: { email?: string } | null
 }
 
-export function MainMenu({ isLogged, setIsLogged }: MainMenuProps) {
+export function MainMenu({ isLogged, setIsLogged,user }: MainMenuProps) {
   const menuLinks = ['Portfolio', 'Stocks', 'ETF'];
 
-
-
-
+  
 
   const winUrl = window.location.pathname;
 
 
   return (
     <>
-      <div className="flex flex-row  justify-between bg-white   rounded-[60px] h-[88px] items-center px-[25px] shadow-lg fixed top-7 inset-x-[8%]  z-[100]" >
+      <div className="flex flex-row  justify-between bg-white   rounded-[60px] h-[88px] items-center px-[25px] shadow-lg fixed top-7 inset-x-[8%]  z-100" >
         <div className="main-menu-left-container flex items-center gap-[40px]">
           <NavLink to='/'>
             <img className='w-[10vw] c-sky-200' src="/InvestPoint-logo-with-blacktext-removebg-preview.png" alt="Invest-point-logo" />
@@ -40,7 +39,7 @@ export function MainMenu({ isLogged, setIsLogged }: MainMenuProps) {
             <img src={SearchIcon} className='w-7 absolute search-icon cursor-pointer'></img>
           </div>
           {isLogged ?
-            <AccountMenu setIsLogged={setIsLogged} isLogged={isLogged}/> 
+            <AccountMenu setIsLogged={setIsLogged} isLogged={isLogged} user={user}/>
             :
             <NavLink className='button-primary' to={'/login'}>
               Log in
@@ -51,7 +50,7 @@ export function MainMenu({ isLogged, setIsLogged }: MainMenuProps) {
         </div>
 
       </div>
-      <div className="w-full bg-white bg-linear-to-br from-sky-300 to-blue-800 fixed top-[0px] h-[160px] content-end px-[8%] z-[1] text-white pb-[10px] ">
+      <div className="w-full bg-white bg-linear-to-br from-sky-300 to-blue-800 fixed top-[0px] h-[160px] content-end px-[8%] z-98 text-white pb-[10px] ">
         {winUrl === '/stocks' ?
           <div className={`grid grid-cols-3   font-semibold ${isLogged ? 'w-[69%]' : `w-full`}`}>
             <div className="ml-[90px]">Share</div>
@@ -59,7 +58,10 @@ export function MainMenu({ isLogged, setIsLogged }: MainMenuProps) {
             <div></div>
           </div> : ''
         }
-        <div className='ml-[20px] text-[17px] font-semibold '>Portfolio overview</div>
+        {winUrl === '/portfolio' ?
+          <div className='ml-[20px] text-[17px] font-semibold '>Portfolio overview</div> : ''
+        }
+
       </div>
     </>
 

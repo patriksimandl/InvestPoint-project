@@ -8,56 +8,61 @@ import HistoryGraph from './HistoryGraph';
 import { useQuery } from "@tanstack/react-query";
 import axios from "axios";
 import LoadingOverlay from './LoadingOverlay';
+import { NotLoggedOverlay } from "./NotLoggedOverlay";
 
 
 type PortfolioPageProps = {
   isLogged: boolean,
   setIsLogged: Dispatch<SetStateAction<boolean>>;
-
+  user?: { email?: string } | null;
+  verification: boolean
 }
 
-export function PortfolioPage({ isLogged, setIsLogged }: PortfolioPageProps) {
+export function PortfolioPage({ isLogged, setIsLogged, verification, user }: PortfolioPageProps) {
   const [activeZoomButton, setActiveZoomButton] = useState<string>('All');
   const todaysDate = dayjs().format('DD. MM');
 
   const zoomButtons = ['1Y', '1M', 'All'];
 
+
   const { data: userPortfolio, isLoading, error } = useQuery({
     queryKey: ["userPortfolio"],
     queryFn: async () => {
       const response = await axios.get('http://localhost:3000/api/portfolio', { withCredentials: true })
+      
       return response.data;
     },
+    
   });
 
 
 
 
-
-
+  
+ 
 
   useEffect(() => {
     console.log(userPortfolio);
 
   }, [userPortfolio]);
 
-
-
-
-
+  
   return (
     <>
-      <MainMenu isLogged={isLogged} setIsLogged={setIsLogged} />
-      {isLoading ? <LoadingOverlay /> : null}
-
+      <title>Your Portfolio</title>
+      <MainMenu isLogged={isLogged} setIsLogged={setIsLogged} user={user} />
       
+      {verification ?   (verification &&!isLogged ? <LoadingOverlay  />: '') : <NotLoggedOverlay /> }
+
+
+
       <div className="portfolio-page-container ">
 
         <div className="grid grid-cols-3 gap-[20px] pb-[20px]">
           <div className="pl-[50px] shadow-lg rounded-[8px] p-[30px] w-full bg-white flex flex-col">
             <div className="font-semibold headings-portfolio-page">Total portfolio value</div>
             <div className="text-[32px] font-semibold text-green-700 flex items-center h-full">
-              ${isLoading || error ? '0' : userPortfolio.totalBalanceInUSD}
+              ${isLoading || !isLogged ? '0' : userPortfolio.totalBalanceInUSD}
             </div>
 
           </div>
@@ -86,7 +91,7 @@ export function PortfolioPage({ isLogged, setIsLogged }: PortfolioPageProps) {
           </div>
           <div className="shadow-lg row-span-2 rounded-[8px] p-[20px] w-full bg-white flex flex-col">
             <div className="font-semibold headings-portfolio-page">Portfolio holdings</div>
-            <HoldingsGraph isLoading={isLoading}/>
+            <HoldingsGraph isLogged={isLogged} />
           </div>
           <div className="col-span-2 relative w-full h-[500px] p-[20px] shadow-lg bg-white rounded-[8px] flex flex-col">
             <div className="headings-portfolio-page pl-[30px] grid grid-cols-2">
@@ -100,7 +105,7 @@ export function PortfolioPage({ isLogged, setIsLogged }: PortfolioPageProps) {
               </div>
             </div>
 
-            <HistoryGraph isLoading={isLoading} />
+            <HistoryGraph isLogged={isLogged} />
           </div>
 
         </div>

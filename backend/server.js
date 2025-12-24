@@ -6,6 +6,7 @@ import db from "./prismaClient.ts";
 import authMiddlewere from "./middlewere/authMiddlewere.js";
 import apiRoutes from './Routes/apiRoutes.js'
 import cookieParser from 'cookie-parser';
+import verifyRoutes from './Routes/verifyRoutes.js'
 
 
 
@@ -24,10 +25,14 @@ app.use(cors({
 
 app.use(express.json());
 
+
 //fetch live stocks from 
+fetchStocks();
 setInterval(()=>{
+  
   fetchStocks();
 },1000*60*60);
+
 
 
 
@@ -41,7 +46,11 @@ app.get('/stocks', async(req,res) =>{
 
 app.use('/auth',authRoutes);
 
+app.use('/verify',authMiddlewere,verifyRoutes);
+
 app.use('/api',authMiddlewere,apiRoutes);
+
+
 
 
 app.listen(PORT, () => {

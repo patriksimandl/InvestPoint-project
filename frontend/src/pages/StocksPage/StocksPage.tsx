@@ -6,11 +6,13 @@ import { useQuery } from "@tanstack/react-query";
 import axios from "axios";
 import { useEffect, useState, type Dispatch, type SetStateAction } from "react";
 import LoadingIcon from '/LoadingIcon.svg'
+import { NavLink } from "react-router";
 
 
 type StocksPageProps =
   {
     isLogged: boolean,
+    user?: { email?: string } | null,
     
     tableStocksData: null | {
       symbol: string,
@@ -38,7 +40,7 @@ type StocksPageProps =
   }
 
 
-export function StocksPage({ isLogged, tableStocksData, setTableStocksData, setIsLogged }: StocksPageProps) {
+export function StocksPage({ isLogged, tableStocksData, setTableStocksData, setIsLogged, user }: StocksPageProps) {
   //const tableStocksDataFromLocal = JSON.parse(localStorage.getItem('tableStocksData')) || null; 
 
 
@@ -70,8 +72,9 @@ export function StocksPage({ isLogged, tableStocksData, setTableStocksData, setI
 
   return (
     <>
-      <MainMenu isLogged={isLogged} setIsLogged={setIsLogged} />
-      {isLogged ? <div className="w-[25%] bg-white h-[82vh] rounded-[8px] fixed right-[8%] z-2 top-[130px] p-[20px] flex flex-col shadow-lg">
+      <title>Browse Stocks</title>
+      <MainMenu isLogged={isLogged} setIsLogged={setIsLogged} user={user} />
+      {isLogged ? <div className="w-[25%] bg-white h-[82vh] rounded-[8px] fixed right-[8%] z-99 top-[130px] p-[20px] flex flex-col shadow-lg">
         <div className="font-semibold text-[22px]">Portfolio</div>
         <div className="">
           <div className="text-[15px] text-gray-600 mt-[15px]">Your Balance</div>
@@ -80,12 +83,12 @@ export function StocksPage({ isLogged, tableStocksData, setTableStocksData, setI
 
         </div>
         <div className="flex  h-full justify-center">
-          <button className="button-primary  self-end w-[12vw]">
+          <NavLink to="/portfolio" className="button-primary self-end w-[12vw]">
             View More
             <div className="flex items-center ml-[4px]">
               <img className="h-[20px]" src="/arrow-right-icon-white.svg"></img>
             </div>
-          </button>
+          </NavLink>
         </div>
 
       </div> : ''}
@@ -101,7 +104,7 @@ export function StocksPage({ isLogged, tableStocksData, setTableStocksData, setI
 
           <div className={`stocks-grid relative  ${tableStocksData ? '' : `h-[calc(100vh-170px)]`}`}>
             {tableStocksData ? tableStocksData.map((Stock) => {
-              return <StockContainer name={Stock.name} symbol={Stock.symbol} logoURL={Stock.logoURL} prices={Stock.data["Time Series (Daily)"][dateForPrice]} />
+              return <StockContainer key={Stock.symbol} name={Stock.name} symbol={Stock.symbol} logoURL={Stock.logoURL} prices={Stock.data["Time Series (Daily)"][dateForPrice]} />
             }) :
               <div className="absolute top-[50%] left-[50%] translate-x-[-50%] translate-y-[-50%] flex flex-col justify-center items-center">
                 <img className="w-[80px]" src={LoadingIcon}></img>

@@ -1,7 +1,7 @@
 import ApexCharts from "apexcharts";
 import React, { useEffect, useRef } from "react";
 
-export default function HoldingsGraph() {
+export default function HoldingsGraph({isLogged} : {isLogged: boolean}) {
   const containerRef = useRef<HTMLDivElement | null>(null);
 
   const holdingsGraphOptions = {
@@ -30,11 +30,14 @@ export default function HoldingsGraph() {
   };
 
   useEffect(() => {
+    console.log(isLogged);
+    if(!isLogged)return;  
+    console.log('run');  
     if (!containerRef.current) return;
     const holdingsChart = new ApexCharts(containerRef.current as any, holdingsGraphOptions);
     holdingsChart.render();
     return () => { holdingsChart.destroy(); };
-  }, []);
+  }, [isLogged]);
 
   return <div className="mt-[5%] " ref={containerRef} />;
 }

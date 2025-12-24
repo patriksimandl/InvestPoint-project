@@ -1,6 +1,7 @@
 import axios from 'axios';
 import db from './prismaClient.ts';
 import dayjs from 'dayjs';
+import dotenv from 'dotenv'
 
 export default async function fetchStocks() {
   const todaysDate  = dayjs().startOf('day');
@@ -28,9 +29,8 @@ export default async function fetchStocks() {
       },
     });
 
-
     //actual fetch from server
-    const fetchFromServer = await fetchFromStocksServer(symbols);
+    await fetchFromStocksServer(symbols);
 
     //update the last time fetch or create if it is first time
     if(lastFetchDate){
@@ -58,20 +58,20 @@ export default async function fetchStocks() {
 }
 
 
-/*async function delay(ms){
+async function delay(ms : number){
   return new Promise(resolve => setTimeout(resolve, ms));
 }
-*/
 
-function fetchFromStocksServer(symbols: {symbol: string}[]){
-  symbols.forEach(async(item : {symbol:string})=>{
+async function fetchFromStocksServer(symbols: {symbol: string}[]){
+  for(const item of symbols){
+  //symbols.forEach(async(item : {symbol:string})=>{
       const symbol = item.symbol;
 
 
       //need to replace it with actual key from .env
       //use 'demo' as a key for testing or if need
-      const response = await axios.get(`https://www.alphavantage.co/query?function=TIME_SERIES_DAILY&symbol=${'IBM'}&apikey=${'demo'}`);
-
+      const response = await axios.get(`https://www.alphavantage.co/query?function=TIME_SERIES_DAILY&symbol=${symbol}&apikey=${process.env.ALPHA_VANTAGE_API_KEY}`);
+      console.log(response);
       await db.Stocks.update({
         where:{
           symbol
@@ -82,8 +82,9 @@ function fetchFromStocksServer(symbols: {symbol: string}[]){
         
       })
 
-      //await delay(1000);
-
-  })
+      console.log('This is time out');
+      await delay(1000);
+      
+  }//)
   return 0;
 }
