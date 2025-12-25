@@ -5,16 +5,16 @@ import type { Dispatch, SetStateAction } from 'react'
 type HomePageProps = {
   isLogged: boolean,
   setIsLogged: Dispatch<SetStateAction<boolean>>,
-  user?: { email?: string } | null,
+  userEmail: string | undefined;
 }
 
 
 
-export function HomePage({ isLogged, setIsLogged, user }: HomePageProps) {
+export function HomePage({ isLogged, setIsLogged, userEmail }: HomePageProps) {
   return (
     <>
       <title>Home</title>
-      <MainMenu isLogged={isLogged} setIsLogged={setIsLogged} user={user} />
+      <MainMenu isLogged={isLogged} setIsLogged={setIsLogged} userEmail={userEmail} />
     </>
 
   )

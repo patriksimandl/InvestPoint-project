@@ -1,4 +1,4 @@
-import { useEffect, useState } from "react";
+import { useEffect, useState, type Dispatch, type SetStateAction } from "react";
 import './LoginPage.css';
 
 import { defLength, defNumber, defSpecialChar, defUpperCase } from "./authPassword";
@@ -19,12 +19,13 @@ export type eventProps = {
 
 type LoginPageProps = {
   isLogged: boolean,
-  setIsLogged: (isLogged: boolean) => void
+  setIsLogged: Dispatch<SetStateAction<boolean>>
+  setUserEmail: Dispatch<SetStateAction<string | undefined>>
 }
 
 let passwordArray: string[];
 
-export function LoginPage({ isLogged, setIsLogged }: LoginPageProps) {
+export function LoginPage({ isLogged, setIsLogged, setUserEmail }: LoginPageProps) {
   const navigate = useNavigate();
   const [isRegistrating, setIsRegistrating] = useState(false);
   const [passwordShown, setPasswordShown] = useState(false);
@@ -117,9 +118,9 @@ export function LoginPage({ isLogged, setIsLogged }: LoginPageProps) {
 
     const result = await sendInfo(email, password, isRegistrating);
 
-    if (result === 0) {
+    if (typeof result === 'object' && result != null) {
+      setUserEmail(result.data.email);
       setIsLogged(true);
-      queryClient.setQueryData(["verification"], () => true)
       navigate(-1);
     }
     else {

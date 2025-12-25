@@ -9,50 +9,61 @@ import { useQuery } from "@tanstack/react-query";
 import axios from "axios";
 import LoadingOverlay from './LoadingOverlay';
 import { NotLoggedOverlay } from "./NotLoggedOverlay";
+import { verification } from "../../verification.ts";
 
 
 type PortfolioPageProps = {
   isLogged: boolean,
   setIsLogged: Dispatch<SetStateAction<boolean>>;
-  user?: { email?: string } | null;
-  verification: boolean
+  userEmail?: string|undefined;
 }
 
-export function PortfolioPage({ isLogged, setIsLogged, verification, user }: PortfolioPageProps) {
+export function PortfolioPage({ isLogged, setIsLogged, userEmail }: PortfolioPageProps) {
   const [activeZoomButton, setActiveZoomButton] = useState<string>('All');
   const todaysDate = dayjs().format('DD. MM');
 
   const zoomButtons = ['1Y', '1M', 'All'];
 
 
+  const {isLoading: isVerficationLoading} = useQuery({
+    queryKey: ['verification'],
+    queryFn: verification,
+    retry: false
+  })
+
+
+
   const { data: userPortfolio, isLoading, error } = useQuery({
     queryKey: ["userPortfolio"],
     queryFn: async () => {
       const response = await axios.get('http://localhost:3000/api/portfolio', { withCredentials: true })
-      
+
       return response.data;
     },
-    
+
   });
 
 
 
 
-  
- 
+
+
 
   useEffect(() => {
     console.log(userPortfolio);
 
   }, [userPortfolio]);
 
-  
+
   return (
     <>
       <title>Your Portfolio</title>
-      <MainMenu isLogged={isLogged} setIsLogged={setIsLogged} user={user} />
+      <MainMenu isLogged={isLogged} setIsLogged={setIsLogged} userEmail={userEmail} />
+
       
-      {verification ?   (verification &&!isLogged ? <LoadingOverlay  />: '') : <NotLoggedOverlay /> }
+
+      {isVerficationLoading ? <LoadingOverlay/> : isLogged ? '' : <NotLoggedOverlay/>}
+
 
 
 
@@ -65,6 +76,19 @@ export function PortfolioPage({ isLogged, setIsLogged, verification, user }: Por
               ${isLoading || !isLogged ? '0' : userPortfolio.totalBalanceInUSD}
             </div>
 
+          </div>
+          <div className="pl-[50px] shadow-lg rounded-[8px] p-[30px] w-full bg-white flex flex-col">
+            <div className="font-semibold headings-portfolio-page flex">
+              <div>
+                Cash Balance
+              </div>
+              
+            </div>
+            <div className="text-[32px] font-semibold text-blue-700 flex items-center h-full">
+              
+              ${/*isLoading || !isLogged ? '1000' : userPortfolio.totalBalanceInUSD*/}
+              {'1,000'}
+            </div>
           </div>
           <div className="pl-[50px] shadow-lg rounded-[8px] p-[30px] w-full bg-white flex flex-col">
             <div className="font-semibold headings-portfolio-page flex">
@@ -89,10 +113,7 @@ export function PortfolioPage({ isLogged, setIsLogged, verification, user }: Por
 
             </div>
           </div>
-          <div className="shadow-lg row-span-2 rounded-[8px] p-[20px] w-full bg-white flex flex-col">
-            <div className="font-semibold headings-portfolio-page">Portfolio holdings</div>
-            <HoldingsGraph isLogged={isLogged} />
-          </div>
+          
           <div className="col-span-2 relative w-full h-[500px] p-[20px] shadow-lg bg-white rounded-[8px] flex flex-col">
             <div className="headings-portfolio-page pl-[30px] grid grid-cols-2">
               <div className="grid-span-1 font-semibold ">Historical Portfolio Value</div>
@@ -106,6 +127,10 @@ export function PortfolioPage({ isLogged, setIsLogged, verification, user }: Por
             </div>
 
             <HistoryGraph isLogged={isLogged} />
+          </div>
+          <div className="shadow-lg row-span-1 rounded-[8px] p-[20px] w-full bg-white flex flex-col">
+            <div className="font-semibold headings-portfolio-page">Portfolio holdings</div>
+            <HoldingsGraph isLogged={isLogged} />
           </div>
 
         </div>

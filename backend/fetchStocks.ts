@@ -63,6 +63,7 @@ async function delay(ms : number){
 }
 
 async function fetchFromStocksServer(symbols: {symbol: string}[]){
+  let fetches = 0;
   for(const item of symbols){
   //symbols.forEach(async(item : {symbol:string})=>{
       const symbol = item.symbol;
@@ -70,7 +71,9 @@ async function fetchFromStocksServer(symbols: {symbol: string}[]){
 
       //need to replace it with actual key from .env
       //use 'demo' as a key for testing or if need
-      const response = await axios.get(`https://www.alphavantage.co/query?function=TIME_SERIES_DAILY&symbol=${symbol}&apikey=${process.env.ALPHA_VANTAGE_API_KEY}`);
+      //const response = await axios.get(`https://www.alphavantage.co/query?function=TIME_SERIES_DAILY&symbol=${symbol}&apikey=${process.env.ALPHA_VANTAGE_API_KEY}`);
+      const response = await axios.get(`https://api.stockdata.org/v1/data/eod?symbols=${symbol}&api_token=${process.env.STOCKDATA_API_KEY}`);
+      fetches++;
       console.log(response);
       await db.Stocks.update({
         where:{
@@ -86,5 +89,7 @@ async function fetchFromStocksServer(symbols: {symbol: string}[]){
       await delay(1000);
       
   }//)
+  console.log('fetches was: ');
+  console.log(fetches);
   return 0;
 }

@@ -7,10 +7,10 @@ import type { Dispatch, SetStateAction } from 'react';
 export type MainMenuProps = {
   setIsLogged: Dispatch<SetStateAction<boolean>>;
   isLogged: boolean
-  user?: { email?: string } | null
+  userEmail?: string| undefined
 }
 
-export function MainMenu({ isLogged, setIsLogged,user }: MainMenuProps) {
+export function MainMenu({ isLogged, setIsLogged,userEmail }: MainMenuProps) {
   const menuLinks = ['Portfolio', 'Stocks', 'ETF'];
 
   
@@ -39,7 +39,7 @@ export function MainMenu({ isLogged, setIsLogged,user }: MainMenuProps) {
             <img src={SearchIcon} className='w-7 absolute search-icon cursor-pointer'></img>
           </div>
           {isLogged ?
-            <AccountMenu setIsLogged={setIsLogged} isLogged={isLogged} user={user}/>
+            <AccountMenu setIsLogged={setIsLogged} isLogged={isLogged} userEmail={userEmail}/>
             :
             <NavLink className='button-primary' to={'/login'}>
               Log in

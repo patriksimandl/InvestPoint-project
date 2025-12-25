@@ -48,6 +48,7 @@ export async function sendInfo(email: string, password: string, isRegistrating: 
     return response.data;
   }
 
-  return 0
+  
+  return response
 
 }

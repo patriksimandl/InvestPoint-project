@@ -36,12 +36,14 @@ model Stocks {
 }
 
 model userPortfolio{
-  id                     Int       @id @default(autoincrement())
-  userId                 Int  
-  totalBalanceInUSD          Decimal   @default(0)@db.Decimal(18,8)
-  totalBalanceHistoryInUSD    Json 
-  stockHoldings          Json?
-  user                   User      @relation(fields: [userId], references: [id])
+  id                         Int       @id @default(autoincrement())
+  userId                     Int  
+  totalBalance          Decimal   @default(0)@db.Decimal(18,8)
+  cashBalance           Int       @default(1000)@db.Decimal(18,8)
+  totalBalanceHistory    Json 
+  cashBalanceHistory      Json
+  stockHoldings              Json?
+  user                       User      @relation(fields: [userId], references: [id])
 }
 
 //make the whole user portfolio

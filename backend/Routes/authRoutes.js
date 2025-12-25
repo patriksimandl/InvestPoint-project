@@ -57,7 +57,11 @@ router.post('/register', async (req, res) => {
     console.log(err.message);
   }
 
+  const userEmail = createdUser.email;
+
   const token = assignWebToken(createdUser);
+
+
 
   res.cookie("accessToken",token, {
     httpOnly: true,
@@ -68,7 +72,7 @@ router.post('/register', async (req, res) => {
   })
 
 
-  return res.json({message : 'Register a user'}).status(204);
+  return res.json({message : 'Register a user',email: userEmail}).status(204);
 
 })
 
@@ -84,7 +88,7 @@ router.post('/login', async (req, res) => {
   })
 
   if (!user) {
-    return res.status(401).send({ message: 'User not found' });
+    return res.status(401).send({ message: 'User not found' ,});
   }
 
   const passwordIsValid = bcrypt.compareSync(password, user.password);
@@ -96,7 +100,8 @@ router.post('/login', async (req, res) => {
 
   const token = assignWebToken(user);
 
-
+  const userEmail = user.email
+  
   //save the token in Http-only cookie
   res.cookie("accessToken",token, {
     //Client site js cannot read the cookies => document.cookies
@@ -115,7 +120,7 @@ router.post('/login', async (req, res) => {
     maxAge: 1000 * 60* 20
   });
 
-  return res.json({message : 'Logging was succesful'}).status(204);
+  return res.json({message : 'Logging was succesful',email:userEmail}).status(204);
 })
 
 router.post('/logout', (req,res)=>{

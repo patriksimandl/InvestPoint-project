@@ -13,8 +13,10 @@ router.get('/me',async(req,res)=>{
     }
   })
 
+  const userEmail = user.email;
+
   console.log('hit');
-  res.send({user}).status(200);
+  res.send({email:userEmail}).status(200);
 });
 
 export default router

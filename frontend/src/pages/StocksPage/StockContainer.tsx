@@ -1,48 +1,59 @@
 import { NavLink } from "react-router";
+import { calculatePriceChange } from "./calculatePriceChange";
 
-type StockContainer = 
-{
-  name: string,
-  symbol: string,
-  logoURL: string,
-  prices: {
-    "1. open": string
+type StockContainer =
+  {
+    stock: {
+      name: string,
+      symbol: string,
+      logoURL: string,
+      data: {
+        'data': {
+          close: number
+        }[]
+      }
+
+    }
   }
-}
 
 
 
-export function StockContainer({name, symbol, logoURL, prices}: StockContainer) {
+export function StockContainer({ stock }: StockContainer) {
+  const pricesToday = stock.data['data'][0];
+  const pricesYesterday = stock.data['data'][1];
 
-  console.log(prices);
-  
+
+
+  const dailyChange: number = pricesToday.close - pricesYesterday.close
+
   return (
     <div className="stock-container align-center p-[20px] shadow-lg h-[110px]">
       <div className="flex justify-end  flex-row-reverse">
         <div className="company-name flex justify-center flex-col ml-[20px]">
           <div className="font-bold text-[20px] p-[0] ">
-            {symbol}
+            {stock.symbol}
           </div>
           <div>
-            {name}
+            {stock.name}
           </div>
         </div>
         <div className="flex items-center w-[50px]">
-          <img src={logoURL} className="w-[50px] fill "></img>
+          <img src={stock.logoURL} className="w-[50px] fill "></img>
         </div>
 
 
       </div>
       <div className="flex flex-col justify-center ml-[90px]">
         <div className="font-semibold  text-[20px] flex">
-          ${(Number(prices["1. open"])).toFixed(2)}
+          ${(Number(pricesToday.close)).toFixed(2)}
         </div>
-        <div className="text-red-700 text-[17px] flex">
-          −0,89 (0,32 %)
+        <div className={`${dailyChange >= 0 ? 'text-green-700' : 'text-red-700'} text-[17px] flex`}>
+
+          {calculatePriceChange(dailyChange)} ({((dailyChange) / (pricesYesterday.close / 100)).toFixed(2)}%)
         </div>
       </div>
       <div className="flex items-center justify-end">
-        <NavLink to={`/stocks/${symbol}`} className="button-secondary">
+        <NavLink to={`/stocks/${stock.symbol}`} className="button-secondary">
           Select
         </NavLink>
       </div>

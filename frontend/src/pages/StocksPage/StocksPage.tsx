@@ -12,20 +12,25 @@ import { NavLink } from "react-router";
 type StocksPageProps =
   {
     isLogged: boolean,
-    user?: { email?: string } | null,
-    
+    userEmail: string | undefined;
+
     tableStocksData: null | {
-      symbol: string,
-      name: string,
-      logoURL: string,
+
+      logoURL: string
+      name: string
+      symbol: string
       data: {
-        "Time Series (Daily)": any
+        meta: {}
+        data: {
+          date: string,
+          close: number
 
 
-      },
-      
+        }[],
+      }
+
     }[],
-    setTableStocksData: (tableStocksData : any) => void;
+    setTableStocksData: (tableStocksData: any) => void;
     setIsLogged: Dispatch<SetStateAction<boolean>>;
     /*tableStocksData: {
 
@@ -40,40 +45,27 @@ type StocksPageProps =
   }
 
 
-export function StocksPage({ isLogged, tableStocksData, setTableStocksData, setIsLogged, user }: StocksPageProps) {
+export function StocksPage({ isLogged, tableStocksData, setTableStocksData, setIsLogged, userEmail }: StocksPageProps) {
   //const tableStocksDataFromLocal = JSON.parse(localStorage.getItem('tableStocksData')) || null; 
 
 
-
-  let dateForPrice = dayjs().format('YYYY-MM-DD');
-  //univerzal date
-  dateForPrice = '2025-12-10';
-
-
-  /*useEffect(()=>{
-    console.log(tableStocksData);
-  },[tableStocksData]);*/
 
   useQuery({
     queryKey: ["stocksData"],
     queryFn: async () => {
       const response = await axios.get('http://localhost:3000/stocks')
       setTableStocksData(response.data);
-      localStorage.setItem('tableStocksData', JSON.stringify(response.data));
+      //localStorage.setItem('tableStocksData', JSON.stringify(response.data));
     },
     //To refetch every hour
     staleTime: 1000 * 60 * 20,
   });
 
-  useEffect(() => {
-    console.log(tableStocksData);
-  }, []);
-
 
   return (
     <>
       <title>Browse Stocks</title>
-      <MainMenu isLogged={isLogged} setIsLogged={setIsLogged} user={user} />
+      <MainMenu isLogged={isLogged} setIsLogged={setIsLogged} userEmail={userEmail} />
       {isLogged ? <div className="w-[25%] bg-white h-[82vh] rounded-[8px] fixed right-[8%] z-99 top-[130px] p-[20px] flex flex-col shadow-lg">
         <div className="font-semibold text-[22px]">Portfolio</div>
         <div className="">
@@ -104,7 +96,8 @@ export function StocksPage({ isLogged, tableStocksData, setTableStocksData, setI
 
           <div className={`stocks-grid relative  ${tableStocksData ? '' : `h-[calc(100vh-170px)]`}`}>
             {tableStocksData ? tableStocksData.map((Stock) => {
-              return <StockContainer key={Stock.symbol} name={Stock.name} symbol={Stock.symbol} logoURL={Stock.logoURL} prices={Stock.data["Time Series (Daily)"][dateForPrice]} />
+              console.log(Stock.data["data"][0]['close']);
+              return <StockContainer key={Stock.symbol} stock={Stock}/>
             }) :
               <div className="absolute top-[50%] left-[50%] translate-x-[-50%] translate-y-[-50%] flex flex-col justify-center items-center">
                 <img className="w-[80px]" src={LoadingIcon}></img>
