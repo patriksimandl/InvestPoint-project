@@ -1,5 +1,5 @@
 import { NavLink } from "react-router";
-import { calculatePriceChange } from "./calculatePriceChange";
+import { formatPrice } from "./calculatePriceChange";
 
 type StockContainer =
   {
@@ -47,9 +47,9 @@ export function StockContainer({ stock }: StockContainer) {
         <div className="font-semibold  text-[20px] flex">
           ${(Number(pricesToday.close)).toFixed(2)}
         </div>
-        <div className={`${dailyChange >= 0 ? 'text-green-700' : 'text-red-700'} text-[17px] flex`}>
+        <div className={`${dailyChange >= 0 ? 'text-green-700' : 'text-red-700'} text-[17px] flex font-semibold`}>
 
-          {calculatePriceChange(dailyChange)} ({((dailyChange) / (pricesYesterday.close / 100)).toFixed(2)}%)
+          {formatPrice(dailyChange)} ({((dailyChange) / (pricesYesterday.close / 100)).toFixed(2)}%)
         </div>
       </div>
       <div className="flex items-center justify-end">

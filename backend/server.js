@@ -7,12 +7,15 @@ import authMiddlewere from "./middlewere/authMiddlewere.js";
 import apiRoutes from './Routes/apiRoutes.js'
 import cookieParser from 'cookie-parser';
 import verifyRoutes from './Routes/verifyRoutes.js'
-
+import cron from 'node-cron'
+import updatePortfolio from "./updatePortfolio.ts";
+import dayjs from "dayjs";
 
 
 const app = express();
 const PORT = 3000;
 
+//to allow to check cookies
 app.use(cookieParser());
 
 app.use(cors({
@@ -20,10 +23,19 @@ app.use(cors({
   credentials: true
 }))
 
-//to allow to check cookies
+
 
 
 app.use(express.json());
+
+
+
+
+cron.schedule('10 0 * * *',()=>{
+  updatePortfolio();
+})
+
+
 
 
 //fetch live stocks from 
@@ -36,12 +48,37 @@ setInterval(()=>{
 
 
 
-
+//stocks
 
 app.get('/stocks', async(req,res) =>{
   const tableStocksData = await db.stocks.findMany();
 
   res.send(tableStocksData).status(200);
+})
+
+//one symbol
+app.get('/stocks/:symbol',async(req,res) =>{
+  const {symbol} = req.params
+
+  const symbolData = await db.stocks.findUnique({
+    where: {
+      symbol
+    },
+    select: {
+      data: true,
+      symbol: true,
+      name: true,
+      logoURL: true
+    }
+  })
+
+  //data array
+  
+  console.log(symbolData);
+
+  res.send(symbolData).status(200);
+
+
 })
 
 app.use('/auth',authRoutes);

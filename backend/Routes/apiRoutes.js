@@ -11,9 +11,10 @@ router.get('/portfolio', async (req, res) => {
   try {
     const userPortfolio = await db.userPortfolio.findUnique({
       where: {
-        id: userId
+        userId
       }
     })
+
     
     return res.send(userPortfolio).status(200);
 

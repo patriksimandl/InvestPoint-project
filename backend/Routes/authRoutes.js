@@ -3,7 +3,7 @@ import db from "../prismaClient.ts";
 import bcrypt from 'bcryptjs'
 import dotenv from 'dotenv'
 import jwt from 'jsonwebtoken'
-import { triggerAsyncId } from "async_hooks";
+import dayjs from 'dayjs'
 
 
 function assignWebToken(user){
@@ -15,6 +15,11 @@ function assignWebToken(user){
 const router = express.Router();
 
 router.post('/register', async (req, res) => {
+
+  const todaysDate = dayjs().format('YYYY-MM-DD');
+  
+
+
   const { email, password } = req.body;
   try {
 
@@ -49,7 +54,9 @@ router.post('/register', async (req, res) => {
     await db.userPortfolio.create({
       data: {
         userId: createdUser.id,
-        totalBalanceHistoryInUSD: { today: 0 }
+        totalBalanceHistory: { [todaysDate]: 1000 },
+        cashBalanceHistory: {[todaysDate]: 1000}
+        
       }
     })
 

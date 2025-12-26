@@ -96,7 +96,6 @@ export function StocksPage({ isLogged, tableStocksData, setTableStocksData, setI
 
           <div className={`stocks-grid relative  ${tableStocksData ? '' : `h-[calc(100vh-170px)]`}`}>
             {tableStocksData ? tableStocksData.map((Stock) => {
-              console.log(Stock.data["data"][0]['close']);
               return <StockContainer key={Stock.symbol} stock={Stock}/>
             }) :
               <div className="absolute top-[50%] left-[50%] translate-x-[-50%] translate-y-[-50%] flex flex-col justify-center items-center">

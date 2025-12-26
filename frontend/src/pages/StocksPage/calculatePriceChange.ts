@@ -1,4 +1,4 @@
-export function calculatePriceChange(dailyChange: number) {
+export function formatPrice(dailyChange: number) {
   
 
   if(dailyChange < 0){

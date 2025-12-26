@@ -1,6 +1,6 @@
 import dayjs from "dayjs";
 import { MainMenu } from "../../shared/MainMenu";
-import { useEffect, useState, type Dispatch, type SetStateAction } from "react";
+import { use, useEffect, useState, type Dispatch, type SetStateAction } from "react";
 import './PortfolioPage.css'
 import InfoIcon from '/InfoIcon.svg'
 import HoldingsGraph from './HoldingsGraph';
@@ -40,6 +40,7 @@ export function PortfolioPage({ isLogged, setIsLogged, userEmail }: PortfolioPag
 
       return response.data;
     },
+    
 
   });
 
@@ -50,6 +51,7 @@ export function PortfolioPage({ isLogged, setIsLogged, userEmail }: PortfolioPag
 
 
   useEffect(() => {
+    console.log('userPortfolio');
     console.log(userPortfolio);
 
   }, [userPortfolio]);
@@ -73,7 +75,7 @@ export function PortfolioPage({ isLogged, setIsLogged, userEmail }: PortfolioPag
           <div className="pl-[50px] shadow-lg rounded-[8px] p-[30px] w-full bg-white flex flex-col">
             <div className="font-semibold headings-portfolio-page">Total portfolio value</div>
             <div className="text-[32px] font-semibold text-green-700 flex items-center h-full">
-              ${isLoading || !isLogged ? '0' : userPortfolio.totalBalanceInUSD}
+              ${isLoading || !isLogged ? '0' : userPortfolio.totalBalance}
             </div>
 
           </div>
@@ -86,8 +88,8 @@ export function PortfolioPage({ isLogged, setIsLogged, userEmail }: PortfolioPag
             </div>
             <div className="text-[32px] font-semibold text-blue-700 flex items-center h-full">
               
-              ${/*isLoading || !isLogged ? '1000' : userPortfolio.totalBalanceInUSD*/}
-              {'1,000'}
+              ${isLoading || !isLogged ? '1000' : userPortfolio.cashBalance}
+              
             </div>
           </div>
           <div className="pl-[50px] shadow-lg rounded-[8px] p-[30px] w-full bg-white flex flex-col">
@@ -105,10 +107,11 @@ export function PortfolioPage({ isLogged, setIsLogged, userEmail }: PortfolioPag
             </div>
             <div className="font-semibold text-green-700">
               <div className="text-[27px]  ">
-                +$273.36
+                {userPortfolio?.stockHoldings ? '+$273.36' : '$0'}
               </div>
               <div className="text-[20px] font-normal">
-                (+761.87 %)
+                {userPortfolio?.stockHoldings ? '(+761.87 %)' : '(0%)'}
+                
               </div>
 
             </div>

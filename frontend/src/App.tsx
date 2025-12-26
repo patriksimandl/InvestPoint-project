@@ -76,7 +76,7 @@ return (
     <Route path='/login' element={<LoginPage isLogged={isLogged} setIsLogged={setIsLogged} setUserEmail={setUserEmail} />} />
     <Route path='/stocks' element={<StocksPage isLogged={isLogged} tableStocksData={tableStocksData} setTableStocksData={setTableStocksData} setIsLogged={setIsLogged} userEmail={userEmail} />} />
     <Route path='/portfolio' element={<PortfolioPage isLogged={isLogged} setIsLogged={setIsLogged} userEmail={userEmail} />} />
-    <Route path='/stocks/:stock' element={<StockPage isLogged={isLogged} setIsLogged={setIsLogged} userEmail={userEmail} />} />
+    <Route path='/stocks/:symbol' element={<StockPage isLogged={isLogged} setIsLogged={setIsLogged} userEmail={userEmail} />} />
   </Routes>
 )
 
