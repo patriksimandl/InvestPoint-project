@@ -2,18 +2,47 @@ import { useEffect, type Dispatch, type SetStateAction } from "react";
 import { MainMenu } from "../../../shared/MainMenu";
 import { useParams } from "react-router";
 import axios from "axios";
-import { useQuery } from "@tanstack/react-query";
+import { QueryClient, useQuery, useQueryClient } from "@tanstack/react-query";
 import { StockGraph } from "./StockGraph";
 import './StockPage.css'
 import LoadingOverlay from "../../PortfolioPage/LoadingOverlay";
 import { OperationTab } from "./OperationTab";
+import { formatPrice } from "../formatPrice";
+import { MarketOpening } from "./MarketOpening";
+import dayjs from "dayjs";
+import utc from 'dayjs/plugin/utc'
+import timezone from "dayjs/plugin/timezone";
 
+dayjs.extend(utc);
+dayjs.extend(timezone);
+
+type stockDataProps = {
+
+  logoURL: string
+  name: string
+  symbol: string
+  data: {
+    meta: {}
+    data: {
+      date: string,
+      close: number
+
+
+    }[],
+  },
+  companyProfile: {
+    marketCapitalization: number
+  }
+
+}
 
 type StockPageProps = { isLogged: boolean; setIsLogged: Dispatch<SetStateAction<boolean>>; userEmail?: string | undefined; }
 
 export function StockPage({ isLogged, setIsLogged, userEmail }: StockPageProps) {
 
   const { symbol } = useParams();
+
+  const queryClient = useQueryClient();
 
   const { data: stockData, isLoading, isError } = useQuery({
     queryKey: ['stockData', symbol],
@@ -25,63 +54,144 @@ export function StockPage({ isLogged, setIsLogged, userEmail }: StockPageProps) 
     staleTime: 1000 * 60 * 60
   })
 
+  queryClient.setQueryData(['stockData', symbol], (oldData: stockDataProps) => {
+    //Convert market Cap to better unit
+    console.log(oldData?.companyProfile?.marketCapitalization)
+    if (oldData?.companyProfile?.marketCapitalization > 1000000000000) {
+      return ({
+        ...oldData,
+        companyProfile: {
+          ...oldData,
+          marketCapitalizationFormated: `${(oldData?.companyProfile.marketCapitalization / 1000000000000).toFixed(2)}T`
+        }
+      })
+    }
+    else if (oldData?.companyProfile?.marketCapitalization > 100000000000) {
+      console.log('low')
+      return ({
+        ...oldData,
+        companyProfile: {
+          ...oldData,
+          marketCapitalizationFormated: `${(oldData?.companyProfile.marketCapitalization / 1000000000).toFixed(2)}M`
+        }
+      })
+    }
+  })
+
   useEffect(() => {
+    //Convert market Cap to better unit
+    console.log('1');
     console.log(stockData);
   }, [stockData]);
 
-  const title =  `Invest Point - ${symbol}`
+
+
+  const { data: marketInfo, isLoading: isLoadingMarketInfo } = useQuery({
+    queryKey: ['marketInfo'],
+    queryFn: async () => {
+      const response = await axios.get('http://localhost:3000/market/info');
+      return response.data
+    },
+    staleTime: 1000 * 60 * 5
+  })
+
+  useEffect(() => {
+    if (marketInfo) {
+      console.log(marketInfo);
+    }
+  }, [marketInfo])
+
+
+
+  //price today - price yesterday
+
+  const dayChange = stockData?.data?.data && stockData?.data?.data.length > 1 ? stockData?.data.data[0].close - stockData?.data.data[0].open : null;
+
+  const marketStatus = marketInfo?.data.markets[0].status.status;
+  const nextOpeningTime = dayjs(marketInfo?.data.markets[0].status.nextChange).tz('Europe/Prague').format(`ddd DD/MM H:m`)
+
+  const title = `Invest Point - ${symbol}`
   return (
-    
+
     <>
-      
+
       {isLoading ? <LoadingOverlay /> : ''}
       <title>{title}</title>
       <MainMenu isLogged={isLogged} setIsLogged={setIsLogged} userEmail={userEmail} />
       <div className="stock-page-container">
-        <div className="w-full rounded-[8px] bg-white shadow-lg flex flex-col h-[75vh] p-[20px]">
+        <div className="w-full rounded-[8px] bg-white shadow-lg flex flex-col h-[75vh] p-[25px] ">
           <div className="flex flex-row h-[75vh]">
             <div className="w-[35%] flex flex-col">
-              <div className="flex flex">
-                <div>
-                  <img src={stockData?.logoURL} className='h-[100px]' />
+              <div className=" flex flex gap-4 border-b-1 pb-[45px] border-gray-300">
+                <div className="p-4 w-[100px] h-[140px] flex items-center">
+                  <img src={stockData?.logoURL} className='w-full fill' />
                 </div>
-                <div className="flex flex-col">
-                  <div className="flex">
-                    <div>
+                <div className="flex flex-col mt-6">
+                  <div className="flex  items-center gap-4">
+                    <div className="text-[26px] font-semibold tracking-wide">
                       {stockData?.name}
                     </div>
-                    <div>
+                    <div className="text-gray-500 text-lg">
                       ({stockData?.symbol})
                     </div>
                   </div>
-                  <div>
-                    ${stockData?.data.data[0].close}
+                  <div className="flex gap-5 items-center mt-[12px]">
+                    <div className="font-semibold text-3xl tracking-wide">
+                      ${stockData?.data.data[0].close}
+                    </div>
+                    <div className={`${dayChange ? dayChange >= 0 ? 'bg-green-600' : 'bg-red-600' : ''} text-white flex font-semibold px-3 py-[2px] rounded-[8px] text-lg h-[80%] text-nowrap items-center `}>
+                      {dayChange ? formatPrice(dayChange) : ''}
+                      <div className="font-normal ml-[10px]  flex align-center">
+                        {dayChange ? (dayChange / (stockData.data.data[1].close / 100)).toFixed(2) : ''}%
+                      </div>
+                    </div>
                   </div>
+                  <MarketOpening marketInfo={marketInfo} marketStatus={marketStatus} />
+
                 </div>
               </div>
-              <div className="flex">
+              <div className="border-b-1 border-gray-300 p-2 flex justify-between text-gray-700 text-md">
                 <div>
-                  <div>
-                    Prev close
+                  Next market opening:
+                </div>
+                <div className="text-black">
+                  {marketStatus && marketStatus === 'closed' ? `${nextOpeningTime}` : ''}
+                </div>
+              </div>
+              <div className="flex border-b-1 border-gray-300 p-3  tracking-wide ">
+
+                <div className="pl-2 pr-22 border-r-1 border-gray-300 text-lg  ">
+                  <div className="text-gray-700">
+                    Previous close
                   </div>
-                  <div>
+                  <div className="text-2xl p-1">
                     ${stockData?.data.data[1].close}
                   </div>
                 </div>
-                <div>
-                  <div className="">
+                <div className="pl-6">
+                  <div className="text-gray-700 text-lg">
                     Open
                   </div>
-                  <div className="">
-                    {stockData?.data.data[0].open}
+                  <div className="text-2xl p-1">
+                    ${stockData?.data.data[0].open}
+                  </div>
+                </div>
+              </div>
+              <div className="p-3 tracking-wide border-b-1 border-gray-300">
+                <div className=" pl-2">
+                  <div className="text-gray-700">
+                    Market cap.
+                  </div>
+                  <div className="text-xl">
+                    $ {stockData?.companyProfile.marketCapitalizationFormated}
                   </div>
                 </div>
               </div>
             </div>
             <div className="w-[65%] flex flex-col">
-              <div className="h-[20%]">
+              <div className="h-[10%]">
               </div>
-              <div className="h-[80%]">
+              <div className="h-[90%]">
                 <StockGraph stockData={stockData?.data.data} />
               </div>
             </div>

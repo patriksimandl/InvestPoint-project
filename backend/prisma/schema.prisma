@@ -28,11 +28,12 @@ model lastFetch{
 
 
 model Stocks {
-  id        Int       @id @default(autoincrement())
-  name      String
-  symbol    String    @unique
+  id          Int       @id @default(autoincrement())
+  name        String
+  symbol      String    @unique
   logoURL      String
-  data      Json?
+  data          Json?
+  companyProfile Json?  
 }
 
 model userPortfolio{

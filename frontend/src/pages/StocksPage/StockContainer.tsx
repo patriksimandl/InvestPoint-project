@@ -1,5 +1,5 @@
 import { NavLink } from "react-router";
-import { formatPrice } from "./calculatePriceChange";
+import { formatPrice } from "./formatPrice";
 
 type StockContainer =
   {
@@ -9,7 +9,8 @@ type StockContainer =
       logoURL: string,
       data: {
         'data': {
-          close: number
+          close: number,
+          open: number
         }[]
       }
 
@@ -24,7 +25,7 @@ export function StockContainer({ stock }: StockContainer) {
 
 
 
-  const dailyChange: number = pricesToday.close - pricesYesterday.close
+  const dailyChange: number = pricesToday.close - pricesToday.open
 
   return (
     <div className="stock-container align-center p-[20px] shadow-lg h-[110px]">
@@ -47,7 +48,7 @@ export function StockContainer({ stock }: StockContainer) {
         <div className="font-semibold  text-[20px] flex">
           ${(Number(pricesToday.close)).toFixed(2)}
         </div>
-        <div className={`${dailyChange >= 0 ? 'text-green-700' : 'text-red-700'} text-[17px] flex font-semibold`}>
+        <div className={`${dailyChange >= 0 ? 'text-green-600' : 'text-red-600'} text-[17px] flex font-semibold text-nowrap`}>
 
           {formatPrice(dailyChange)} ({((dailyChange) / (pricesYesterday.close / 100)).toFixed(2)}%)
         </div>

@@ -70,8 +70,8 @@ async function fetchFromStocksServer(symbols: {symbol: string}[]){
 
 
       //need to replace it with actual key from .env
-      //use 'demo' as a key for testing or if need
-      //const response = await axios.get(`https://www.alphavantage.co/query?function=TIME_SERIES_DAILY&symbol=${symbol}&apikey=${process.env.ALPHA_VANTAGE_API_KEY}`);
+      //fetching from stockdata.org      
+      //fetching stock history
       const response = await axios.get(`https://api.stockdata.org/v1/data/eod?symbols=${symbol}&api_token=${process.env.STOCKDATA_API_KEY}`);
       fetches++;
       console.log(response);
@@ -85,8 +85,24 @@ async function fetchFromStocksServer(symbols: {symbol: string}[]){
         
       })
 
-      console.log('This is time out');
-      await delay(1000);
+
+      const responseCompanyProfile = await axios.get(`https://finnhub.io/api/v1/stock/profile2?symbol=${symbol}&token=${process.env.FINNHUB_API_KEY}`);
+      //convert to default units from milions USD to USD
+      responseCompanyProfile.data.marketCapitalization *= 1000000;
+      await db.stocks.update({
+        where:{
+          symbol
+        },
+        data:{
+          companyProfile: responseCompanyProfile.data
+        }
+      })
+
+
+
+
+      //console.log('This is time out');
+      //await delay(1000);
       
   }//)
   console.log('fetches was: ');

@@ -6,7 +6,7 @@ const stocks = [
   // 🟦 Tech
   { symbol: "AAPL", name: "Apple", logoURL: "https://res.cloudinary.com/dqdwgkwfn/image/upload/v1765392356/apple_z6sxhw.svg" },
   { symbol: "MSFT", name: "Microsoft", logoURL: "https://res.cloudinary.com/dqdwgkwfn/image/upload/v1765393075/Microsoft_wgu1js.svg" },
-  { symbol: "GOOG", name: "Alphabet (Google)", logoURL: "https://res.cloudinary.com/dqdwgkwfn/image/upload/v1765392371/google_cl8o0b.svg" },
+  { symbol: "GOOG", name: "Alphabet (Google)", logoURL: "https://res.cloudinary.com/dqdwgkwfn/image/upload/v1766858093/Alphabet_Inc_Logo_2015_bco7q8.svg" },
   { symbol: "AMZN", name: "Amazon", logoURL: "https://res.cloudinary.com/dqdwgkwfn/image/upload/v1765392370/amazon_mxx8co.svg" },
   { symbol: "NVDA", name: "NVIDIA", logoURL: "https://res.cloudinary.com/dqdwgkwfn/image/upload/v1765392370/nvidia_epctwg.svg" },
   { symbol: "META", name: "Meta Platforms", logoURL: "https://res.cloudinary.com/dqdwgkwfn/image/upload/v1765392370/meta_rp0p45.svg" },

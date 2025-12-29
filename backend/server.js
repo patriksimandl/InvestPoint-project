@@ -10,7 +10,7 @@ import verifyRoutes from './Routes/verifyRoutes.js'
 import cron from 'node-cron'
 import updatePortfolio from "./updatePortfolio.ts";
 import dayjs from "dayjs";
-
+import marketRoutes from './Routes/marketRoutes.js'
 
 const app = express();
 const PORT = 3000;
@@ -38,6 +38,10 @@ cron.schedule('10 0 * * *',()=>{
 
 
 
+
+
+
+
 //fetch live stocks from 
 fetchStocks();
 setInterval(()=>{
@@ -49,7 +53,6 @@ setInterval(()=>{
 
 
 //stocks
-
 app.get('/stocks', async(req,res) =>{
   const tableStocksData = await db.stocks.findMany();
 
@@ -68,7 +71,8 @@ app.get('/stocks/:symbol',async(req,res) =>{
       data: true,
       symbol: true,
       name: true,
-      logoURL: true
+      logoURL: true,
+      companyProfile: true
     }
   })
 
@@ -80,6 +84,8 @@ app.get('/stocks/:symbol',async(req,res) =>{
 
 
 })
+
+app.use('/market',marketRoutes);
 
 app.use('/auth',authRoutes);
 

@@ -27,6 +27,9 @@ type StocksPageProps =
 
 
         }[],
+      },
+      companyProfile:{
+        marketCapitalization: number
       }
 
     }[],
