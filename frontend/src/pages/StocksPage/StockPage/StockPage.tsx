@@ -1,4 +1,4 @@
-import { useEffect, type Dispatch, type SetStateAction } from "react";
+import { useEffect, useState, type Dispatch, type SetStateAction } from "react";
 import { MainMenu } from "../../../shared/MainMenu";
 import { useParams } from "react-router";
 import axios from "axios";
@@ -12,6 +12,8 @@ import { MarketOpening } from "./MarketOpening";
 import dayjs from "dayjs";
 import utc from 'dayjs/plugin/utc'
 import timezone from "dayjs/plugin/timezone";
+import { StockDetails } from "./StockDetails";
+import { GraphZoom } from "./GraphZoom";
 
 dayjs.extend(utc);
 dayjs.extend(timezone);
@@ -39,6 +41,9 @@ type stockDataProps = {
 type StockPageProps = { isLogged: boolean; setIsLogged: Dispatch<SetStateAction<boolean>>; userEmail?: string | undefined; }
 
 export function StockPage({ isLogged, setIsLogged, userEmail }: StockPageProps) {
+  const [zoomButton, setZoomButton] = useState('6M');
+
+
 
   const { symbol } = useParams();
 
@@ -48,41 +53,61 @@ export function StockPage({ isLogged, setIsLogged, userEmail }: StockPageProps) 
     queryKey: ['stockData', symbol],
     queryFn: async () => {
       const response = await axios.get(`http://localhost:3000/stocks/${symbol}`)
+
+      //console.log(response.data);
       return response.data
+
+
     },
     enabled: !!symbol,
     staleTime: 1000 * 60 * 60
   })
 
-  queryClient.setQueryData(['stockData', symbol], (oldData: stockDataProps) => {
-    //Convert market Cap to better unit
-    console.log(oldData?.companyProfile?.marketCapitalization)
-    if (oldData?.companyProfile?.marketCapitalization > 1000000000000) {
-      return ({
-        ...oldData,
-        companyProfile: {
-          ...oldData,
-          marketCapitalizationFormated: `${(oldData?.companyProfile.marketCapitalization / 1000000000000).toFixed(2)}T`
-        }
-      })
-    }
-    else if (oldData?.companyProfile?.marketCapitalization > 100000000000) {
-      console.log('low')
-      return ({
-        ...oldData,
-        companyProfile: {
-          ...oldData,
-          marketCapitalizationFormated: `${(oldData?.companyProfile.marketCapitalization / 1000000000).toFixed(2)}M`
-        }
-      })
-    }
-  })
-
   useEffect(() => {
-    //Convert market Cap to better unit
-    console.log('1');
     console.log(stockData);
   }, [stockData]);
+
+  useEffect(() => {
+    queryClient.setQueryData(['stockData', symbol], (oldData: stockDataProps) => {
+      if(!oldData){
+        return oldData;
+      }
+
+      const isMarketCap = oldData?.companyProfile?.marketCapitalization;
+
+      if(!isMarketCap){
+        return oldData;
+      }
+
+
+
+      //Convert market Cap to better unit
+      if (oldData?.companyProfile?.marketCapitalization > 1000000000000) {
+        return ({
+          ...oldData,
+
+          marketCapitalizationFormated: `${(oldData?.companyProfile.marketCapitalization / 1000000000000).toFixed(2)}T`,
+        })
+      }
+      else if (oldData?.companyProfile?.marketCapitalization > 1000000000) {
+        return ({
+          ...oldData,
+
+
+          marketCapitalizationFormated: `${(oldData?.companyProfile.marketCapitalization / 1000000000).toFixed(2)}M`,
+
+        })
+      }
+      else{
+        return ({
+          ...oldData,
+          marketCapitalizationFormated: oldData?.companyProfile.marketCapitalization
+        })
+      }
+    })
+  }, [stockData])
+
+
 
 
 
@@ -97,13 +122,15 @@ export function StockPage({ isLogged, setIsLogged, userEmail }: StockPageProps) 
 
   useEffect(() => {
     if (marketInfo) {
-      console.log(marketInfo);
     }
   }, [marketInfo])
 
 
+  const dataLength = stockData?.data?.data.length
+  const lastIndex = dataLength - 1
 
-  //price today - price yesterday
+  //Daychange price today - price yesterday
+
 
   const dayChange = stockData?.data?.data && stockData?.data?.data.length > 1 ? stockData?.data.data[0].close - stockData?.data.data[0].open : null;
 
@@ -158,41 +185,15 @@ export function StockPage({ isLogged, setIsLogged, userEmail }: StockPageProps) 
                   {marketStatus && marketStatus === 'closed' ? `${nextOpeningTime}` : ''}
                 </div>
               </div>
-              <div className="flex border-b-1 border-gray-300 p-3  tracking-wide ">
-
-                <div className="pl-2 pr-22 border-r-1 border-gray-300 text-lg  ">
-                  <div className="text-gray-700">
-                    Previous close
-                  </div>
-                  <div className="text-2xl p-1">
-                    ${stockData?.data.data[1].close}
-                  </div>
-                </div>
-                <div className="pl-6">
-                  <div className="text-gray-700 text-lg">
-                    Open
-                  </div>
-                  <div className="text-2xl p-1">
-                    ${stockData?.data.data[0].open}
-                  </div>
-                </div>
-              </div>
-              <div className="p-3 tracking-wide border-b-1 border-gray-300">
-                <div className=" pl-2">
-                  <div className="text-gray-700">
-                    Market cap.
-                  </div>
-                  <div className="text-xl">
-                    $ {stockData?.companyProfile.marketCapitalizationFormated}
-                  </div>
-                </div>
-              </div>
+              <StockDetails prevClosePrice={stockData?.data.data[1].close} openPrice={stockData?.data.data[0].open} marketCap={stockData?.marketCapitalizationFormated} />
             </div>
             <div className="w-[65%] flex flex-col">
-              <div className="h-[10%]">
+
+              <div className="h-[8%]">
+                <GraphZoom zoomButton={zoomButton} setZoomButton={setZoomButton} lastIndex={lastIndex} />
               </div>
               <div className="h-[90%]">
-                <StockGraph stockData={stockData?.data.data} />
+                <StockGraph stockData={stockData?.data.data} lastIndex={lastIndex} setZoomButton={setZoomButton} />
               </div>
             </div>
           </div>

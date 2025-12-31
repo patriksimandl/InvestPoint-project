@@ -30,7 +30,6 @@ export default function HoldingsGraph({isLogged} : {isLogged: boolean}) {
   };
 
   useEffect(() => {
-    console.log(isLogged);
     if(!isLogged)return;  
     console.log('run');  
     if (!containerRef.current) return;

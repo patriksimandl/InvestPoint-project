@@ -50,11 +50,7 @@ export function PortfolioPage({ isLogged, setIsLogged, userEmail }: PortfolioPag
 
 
 
-  useEffect(() => {
-    console.log('userPortfolio');
-    console.log(userPortfolio);
 
-  }, [userPortfolio]);
 
 
   return (
