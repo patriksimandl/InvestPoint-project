@@ -15,6 +15,7 @@ import timezone from "dayjs/plugin/timezone";
 import { StockDetails } from "./StockDetails";
 import { GraphZoom } from "./GraphZoom";
 import { BuyOverlay } from "./BuyOverlay";
+import { LoginOverlay } from "./LoginOverlay";
 
 dayjs.extend(utc);
 dayjs.extend(timezone);
@@ -43,7 +44,10 @@ type StockPageProps = { isLogged: boolean; setIsLogged: Dispatch<SetStateAction<
 
 export function StockPage({ isLogged, setIsLogged, userEmail }: StockPageProps) {
   const [zoomButton, setZoomButton] = useState('6M');
-  const [isBuying, setIsBuying] = useState(true);
+  const [isBuying, setIsBuying] = useState(false);
+  const [showLogin, setShowLogin] = useState(false);
+  const [loginTransition,setLoginTransiton] = useState(false);
+  const [action,setAction] = useState('');
   const { symbol } = useParams();
 
   const queryClient = useQueryClient();
@@ -156,7 +160,9 @@ export function StockPage({ isLogged, setIsLogged, userEmail }: StockPageProps) 
 
       {isLoading ? <LoadingOverlay /> : ''}
       <title>{title}</title>
-      {isBuying ? <BuyOverlay setIsBuying={setIsBuying} todayClosePrice={stockData?.data.data[0].close} symbol={symbol} name={stockData?.name} userCashBalance={userPortfolio?.cashBalance} userTotalValue={userPortfolio?.totalBalance}/> : ''}
+      
+      {isBuying ? <BuyOverlay action={action} setIsBuying={setIsBuying} todayClosePrice={stockData?.data.data[0].close} symbol={symbol} name={stockData?.name} userCashBalance={userPortfolio?.cashBalance} userTotalValue={userPortfolio?.totalBalance}/> : ''}
+      <LoginOverlay setShowLogin={setShowLogin} loginTransition={loginTransition} showLogin={showLogin} setLoginTransition={setLoginTransiton}/>
       <MainMenu isLogged={isLogged} setIsLogged={setIsLogged} userEmail={userEmail} />
       <div className="stock-page-container">
         <div className="w-full rounded-[8px] bg-white shadow-lg flex flex-col h-[75vh] p-[25px] ">
@@ -210,7 +216,7 @@ export function StockPage({ isLogged, setIsLogged, userEmail }: StockPageProps) 
               </div>
             </div>
           </div>
-          <OperationTab setIsBuying={setIsBuying} />
+          <OperationTab setIsBuying={setIsBuying} isLogged={isLogged} setShowLogin={setShowLogin} showLogin={showLogin} setLoginTransition={setLoginTransiton} setAction={setAction}/>
         </div>
         <div className="bg-white rounded-[8px] mt-[20px] shadow-lg">
           dadw

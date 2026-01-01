@@ -1,21 +1,39 @@
 import { useState, type Dispatch, type SetStateAction } from "react"
 
 type OperationTabProps ={
-  setIsBuying: Dispatch<SetStateAction<boolean>>
+  setIsBuying: Dispatch<SetStateAction<boolean>>,
+  isLogged: boolean,
+  setShowLogin: Dispatch<SetStateAction<boolean>>
+  showLogin: boolean,
+  setLoginTransition: Dispatch<SetStateAction<boolean>>
+  setAction: Dispatch<SetStateAction<string>>
 }
 
 
-export function OperationTab({setIsBuying} : OperationTabProps) {
+export function OperationTab({setIsBuying,isLogged,setShowLogin,showLogin,setLoginTransition,setAction} : OperationTabProps) {
   const [buttonState,setButtonState] = useState('Overview');
+
+  function changeBuying(action :string) {
+    if(isLogged){
+      setAction(action);
+      setIsBuying(true)
+    }
+    else{
+      setShowLogin(true)
+      setLoginTransition(true);
+    }
+    
+  }
 
 
   return (
     <div className=" w-[100%] flex  justify-between mt-[10px]">
     <div className="flex gap-5">
-      <button onClick={ () =>{setIsBuying(true)}} className="button-primary rounded-[8px]">
+      
+      <button onClick={() =>{changeBuying('Buy')}} className="button-primary rounded-[8px]">
         Buy
       </button>
-      <button className="button-primary bg-slate-100 text-black rounded-[8px] font-normal hover:bg-slate-200 transition-all">
+      <button onClick={()=>{changeBuying('Sell')}} className="button-primary bg-slate-100 text-black rounded-[8px] font-normal hover:bg-slate-200 transition-all">
         Sell
       </button>
       <button className="button-primary bg-slate-100 text-black rounded-[8px] font-normal text-nowrap w-auto hover:bg-slate-200 transition-all">

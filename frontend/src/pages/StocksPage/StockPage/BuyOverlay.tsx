@@ -1,6 +1,7 @@
 import { useEffect, useState, type Dispatch, type SetStateAction } from "react";
 import './BuyOverlay.css'
 import { PortfolioOverlay } from "./PortfolioOverlay";
+import { ChangeUnit } from "./ChangeUnit";
 
 type BuyOverlayProps = {
   symbol: string | undefined,
@@ -9,15 +10,27 @@ type BuyOverlayProps = {
   userCashBalance: number,
   userTotalValue: number,
   todayClosePrice: number
+  action: string
 }
 
-export function BuyOverlay({ symbol, name, setIsBuying, userCashBalance, userTotalValue, todayClosePrice }: BuyOverlayProps) {
+export function BuyOverlay({ symbol, name, setIsBuying, userCashBalance, userTotalValue, todayClosePrice, action }: BuyOverlayProps) {
   const [activeButton, setActiveButton] = useState('Buy');
   const [sliderValue, setSliderValue] = useState('0');
   const [price, setPrice] = useState(0);
   const [numberOfShares, setNumberOfShares] = useState(0);
-
+  const [activeUnit, setActiveUnit] = useState('Value');
   const buttons = ['Buy', 'Sell'];
+
+  useEffect(() => {
+    if (action) {
+      if (action === 'Sell') {
+        setActiveButton('Sell');
+      }
+    }
+
+  }, [action])
+
+
 
   useEffect(() => {
     setPrice(userCashBalance * (Number(sliderValue) / 100));
@@ -76,21 +89,12 @@ export function BuyOverlay({ symbol, name, setIsBuying, userCashBalance, userTot
             )
           })}
         </div>
+        
+        <ChangeUnit activeUnit={activeUnit} setActiveUnit={setActiveUnit}/>
 
-        <div className="flex justify-center text-lg mt-5 w-full items-center">
-          <button className="flex px-3 py-1 bg-white rounded-[8px] shadow-lg hover:bg-gray-100 cursor-pointer">
-            <div>
-              Value
-            </div>
-
-            <div className="flex items-center w-[30px] relative">
-              <svg className='' xmlns="http://www.w3.org/2000/svg" height="30px" viewBox="0 -960 960 960" width="30px" fill="#000000"><path d="M480-344 240-584l56-56 184 184 184-184 56 56-240 240Z" /></svg>
-            </div>
-          </button>
-        </div>
         <div className="flex flex-col items-center font-normal text-3xl mt-[40px]">
           <div className="flex justify-center">
-            $<input value={price} type="number" className="w-[20%] text-nowrap outline-0" onChange={(event) => { changePrice(Number(event.currentTarget.value)) }} />
+            $<input value={price} type="number" className="w-[24%] text-nowrap max-w-[50%] outline-0" onChange={(event) => { changePrice(Number(event.currentTarget.value)) }} />
           </div>
 
           <div className="text-gray-500 text-xl mt-1">
@@ -99,7 +103,7 @@ export function BuyOverlay({ symbol, name, setIsBuying, userCashBalance, userTot
         </div>
         <div className="flex flex-col gap-3 mt-[40px] relative">
           <input onChange={(event) => { setSliderValue(event.currentTarget.value) }} value={sliderValue} className='value-selector' type="range" />
-          <div className="absolute slider-bar bg-blue-900 shadow-lg rounded-[8px] z-[-1] h-[10px]" style={{width: `${Number(sliderValue) + 0.2}%`}}></div>
+          <div className="absolute slider-bar bg-blue-900 shadow-lg rounded-[8px] z-[-1] h-[10px]" style={{ width: `${Number(sliderValue) + 0.2}%` }}></div>
           <div className="absolute slider-bar bg-white shadow-lg rounded-[8px] z-[-2] h-[10px] w-full" ></div>
 
         </div>
