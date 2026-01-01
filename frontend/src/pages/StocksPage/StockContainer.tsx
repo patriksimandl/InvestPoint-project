@@ -8,9 +8,11 @@ type StockContainer =
       symbol: string,
       logoURL: string,
       data: {
-        'data': {
+        meta:{}
+        data: {
+          date:string,
           close: number,
-          open: number
+          open: number,
         }[]
       }
 

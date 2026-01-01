@@ -1,0 +1,30 @@
+@import '../../../index.css';
+
+@layer components {
+
+
+  .value-selector {
+
+    -webkit-appearance: none;
+    appearance: none;
+    width: 100%;
+    height: 10px;
+    border-radius: 5px;
+    
+  }
+
+  .value-selector::-webkit-slider-thumb {
+     -webkit-appearance: none;
+  appearance: none;
+  width: 23px;
+  height: 24px;
+  
+
+  cursor: pointer;
+  @apply rounded-[20px] border-0 bg-blue-900
+  }
+
+  
+
+  .con {}
+}

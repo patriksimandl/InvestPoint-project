@@ -9,9 +9,9 @@ export function StockDetails({prevClosePrice, openPrice,marketCap} : StockDetail
 
   return (
     <>
-      <div className="flex border-b-1 border-gray-300 p-3  tracking-wide ">
+      <div className="flex border-b-1 border-gray-200 p-3  tracking-wide ">
 
-        <div className="pl-2 pr-22 border-r-1 border-gray-300 text-lg  ">
+        <div className="pl-2 pr-22 border-r-1 border-gray-200 text-lg  ">
           <div className="text-gray-700">
             Previous close
           </div>
@@ -28,7 +28,7 @@ export function StockDetails({prevClosePrice, openPrice,marketCap} : StockDetail
           </div>
         </div>
       </div>
-      <div className="p-3 tracking-wide border-b-1 border-gray-300">
+      <div className="p-3 tracking-wide border-b-1 border-gray-200">
         <div className=" pl-2">
           <div className="text-gray-700">
             Market cap.

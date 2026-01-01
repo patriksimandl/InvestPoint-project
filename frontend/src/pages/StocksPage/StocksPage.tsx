@@ -98,8 +98,8 @@ export function StocksPage({ isLogged, tableStocksData, setTableStocksData, setI
         <div className={isLogged ? `w-[68%]` : `w-full`}>
 
           <div className={`stocks-grid relative  ${tableStocksData ? '' : `h-[calc(100vh-170px)]`}`}>
-            {tableStocksData ? tableStocksData.map((Stock) => {
-              return <StockContainer key={Stock.symbol} stock={Stock}/>
+            {tableStocksData ? tableStocksData.map((stock) => {
+              return <StockContainer key={stock.symbol} stock={stock}/>
             }) :
               <div className="absolute top-[50%] left-[50%] translate-x-[-50%] translate-y-[-50%] flex flex-col justify-center items-center">
                 <img className="w-[80px]" src={LoadingIcon}></img>

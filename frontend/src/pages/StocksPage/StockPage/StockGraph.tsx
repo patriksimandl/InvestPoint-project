@@ -53,7 +53,7 @@ export function StockGraph({ stockData, lastIndex, setZoomButton }: StockGraphPr
       const stockGraphOptions = {
         chart: {
           events:{
-            zoomed: (chartContext,{xaxis,yaxis}) =>{
+            zoomed: (chartContext : any,{xaxis,yaxis} : {xaxis: {min:number,max: number},yaxis:{min: number,max:number}}) =>{
               if(!xaxis){return}
               const max = Math.round(xaxis.max);
               const min = Math.round(xaxis.min);

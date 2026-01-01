@@ -14,6 +14,7 @@ import utc from 'dayjs/plugin/utc'
 import timezone from "dayjs/plugin/timezone";
 import { StockDetails } from "./StockDetails";
 import { GraphZoom } from "./GraphZoom";
+import { BuyOverlay } from "./BuyOverlay";
 
 dayjs.extend(utc);
 dayjs.extend(timezone);
@@ -42,9 +43,7 @@ type StockPageProps = { isLogged: boolean; setIsLogged: Dispatch<SetStateAction<
 
 export function StockPage({ isLogged, setIsLogged, userEmail }: StockPageProps) {
   const [zoomButton, setZoomButton] = useState('6M');
-
-
-
+  const [isBuying, setIsBuying] = useState(true);
   const { symbol } = useParams();
 
   const queryClient = useQueryClient();
@@ -69,13 +68,13 @@ export function StockPage({ isLogged, setIsLogged, userEmail }: StockPageProps) 
 
   useEffect(() => {
     queryClient.setQueryData(['stockData', symbol], (oldData: stockDataProps) => {
-      if(!oldData){
+      if (!oldData) {
         return oldData;
       }
 
       const isMarketCap = oldData?.companyProfile?.marketCapitalization;
 
-      if(!isMarketCap){
+      if (!isMarketCap) {
         return oldData;
       }
 
@@ -98,7 +97,7 @@ export function StockPage({ isLogged, setIsLogged, userEmail }: StockPageProps) 
 
         })
       }
-      else{
+      else {
         return ({
           ...oldData,
           marketCapitalizationFormated: oldData?.companyProfile.marketCapitalization
@@ -119,6 +118,19 @@ export function StockPage({ isLogged, setIsLogged, userEmail }: StockPageProps) 
     },
     staleTime: 1000 * 60 * 5
   })
+
+  const { data: userPortfolio, isLoading: isLoadingPortfolio, error } = useQuery({
+    queryKey: ["userPortfolio"],
+    queryFn: async () => {
+      const response = await axios.get('http://localhost:3000/api/portfolio', { withCredentials: true })
+
+      return response.data;
+    },
+
+
+  });
+
+
 
   useEffect(() => {
     if (marketInfo) {
@@ -144,12 +156,13 @@ export function StockPage({ isLogged, setIsLogged, userEmail }: StockPageProps) 
 
       {isLoading ? <LoadingOverlay /> : ''}
       <title>{title}</title>
+      {isBuying ? <BuyOverlay setIsBuying={setIsBuying} todayClosePrice={stockData?.data.data[0].close} symbol={symbol} name={stockData?.name} userCashBalance={userPortfolio?.cashBalance} userTotalValue={userPortfolio?.totalBalance}/> : ''}
       <MainMenu isLogged={isLogged} setIsLogged={setIsLogged} userEmail={userEmail} />
       <div className="stock-page-container">
         <div className="w-full rounded-[8px] bg-white shadow-lg flex flex-col h-[75vh] p-[25px] ">
           <div className="flex flex-row h-[75vh]">
             <div className="w-[35%] flex flex-col">
-              <div className=" flex flex gap-4 border-b-1 pb-[45px] border-gray-300">
+              <div className=" flex flex gap-4 border-b-1 pb-[45px] border-gray-200">
                 <div className="p-4 w-[100px] h-[140px] flex items-center">
                   <img src={stockData?.logoURL} className='w-full fill' />
                 </div>
@@ -177,7 +190,7 @@ export function StockPage({ isLogged, setIsLogged, userEmail }: StockPageProps) 
 
                 </div>
               </div>
-              <div className="border-b-1 border-gray-300 p-2 flex justify-between text-gray-700 text-md">
+              <div className="border-b-1 border-gray-200 p-2 flex justify-between text-gray-700 text-md">
                 <div>
                   Next market opening:
                 </div>
@@ -197,7 +210,7 @@ export function StockPage({ isLogged, setIsLogged, userEmail }: StockPageProps) 
               </div>
             </div>
           </div>
-          <OperationTab />
+          <OperationTab setIsBuying={setIsBuying} />
         </div>
         <div className="bg-white rounded-[8px] mt-[20px] shadow-lg">
           dadw
