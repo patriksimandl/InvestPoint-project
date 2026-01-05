@@ -1,6 +1,13 @@
-import { useEffect, useRef, useState } from "react"
+import { useEffect, useRef, useState, type Dispatch, type SetStateAction } from "react"
 
-export function ChangeUnit({activeUnit, setActiveUnit}) {
+
+type ChangeUnitProps ={
+  activeUnit: string,
+  setActiveUnit: Dispatch<SetStateAction<'Value' | 'Quantity'>>,
+  setValue: Dispatch<SetStateAction<number>>;
+}
+
+export function ChangeUnit({activeUnit, setActiveUnit,setValue}: ChangeUnitProps) {
   
   const [menuActive,setMenuActive] = useState(false);
   const menu = useRef(null);
@@ -9,6 +16,7 @@ export function ChangeUnit({activeUnit, setActiveUnit}) {
 
 
   const setUnit = ()=>{
+    setValue(0)
     if(activeUnit === 'Value')
     {
       setActiveUnit('Quantity');
@@ -19,7 +27,6 @@ export function ChangeUnit({activeUnit, setActiveUnit}) {
   }
 
   useEffect(()=>{
-    console.log(activeUnit);
   })
 
 

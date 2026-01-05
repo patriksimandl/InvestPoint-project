@@ -71,7 +71,7 @@ export function PortfolioPage({ isLogged, setIsLogged, userEmail }: PortfolioPag
           <div className="pl-[50px] shadow-lg rounded-[8px] p-[30px] w-full bg-white flex flex-col">
             <div className="font-semibold headings-portfolio-page">Total portfolio value</div>
             <div className="text-[32px] font-semibold text-green-700 flex items-center h-full">
-              ${isLoading || !isLogged ? '0' : userPortfolio.totalBalance}
+              ${isLoading || !isLogged ? '0' : Number(userPortfolio.totalBalance).toFixed(2)}
             </div>
 
           </div>
@@ -84,7 +84,7 @@ export function PortfolioPage({ isLogged, setIsLogged, userEmail }: PortfolioPag
             </div>
             <div className="text-[32px] font-semibold text-blue-700 flex items-center h-full">
               
-              ${isLoading || !isLogged ? '1000' : userPortfolio.cashBalance}
+              ${isLoading || !isLogged ? '1000' : Number(userPortfolio.cashBalance).toFixed(2)}
               
             </div>
           </div>

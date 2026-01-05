@@ -153,6 +153,9 @@ export function StockPage({ isLogged, setIsLogged, userEmail }: StockPageProps) 
   const marketStatus = marketInfo?.data.markets[0].status.status;
   const nextOpeningTime = dayjs(marketInfo?.data.markets[0].status.nextChange).tz('Europe/Prague').format(`ddd DD/MM H:m`)
 
+  console.log(userPortfolio);
+  console.log(typeof userPortfolio?.cashBalance);
+
   const title = `Invest Point - ${symbol}`
   return (
 
@@ -161,7 +164,7 @@ export function StockPage({ isLogged, setIsLogged, userEmail }: StockPageProps) 
       {isLoading ? <LoadingOverlay /> : ''}
       <title>{title}</title>
       
-      {isBuying ? <BuyOverlay action={action} setIsBuying={setIsBuying} todayClosePrice={stockData?.data.data[0].close} symbol={symbol} name={stockData?.name} userCashBalance={userPortfolio?.cashBalance} userTotalValue={userPortfolio?.totalBalance}/> : ''}
+      {isBuying ? <BuyOverlay action={action} setIsBuying={setIsBuying} todayClosePrice={stockData?.data.data[0].close} symbol={symbol} name={stockData?.name} userCashBalance={Number((userPortfolio?.cashBalance))} userTotalValue={userPortfolio?.totalBalance}/> : ''}
       <LoginOverlay setShowLogin={setShowLogin} loginTransition={loginTransition} showLogin={showLogin} setLoginTransition={setLoginTransiton}/>
       <MainMenu isLogged={isLogged} setIsLogged={setIsLogged} userEmail={userEmail} />
       <div className="stock-page-container">

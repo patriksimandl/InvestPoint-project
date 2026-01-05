@@ -43,8 +43,19 @@ model userPortfolio{
   cashBalance                Decimal       @default(1000)@db.Decimal(18,8)
   totalBalanceHistory        Json 
   cashBalanceHistory         Json
-  stockHoldings              Json? 
+  stockHoldings              Json      @default("{}")
+  transactionHistory         transactionHistory[]
   user                       User      @relation(fields: [userId], references: [id])
+}
+
+model transactionHistory{
+  id                         Int             @id @default(autoincrement())
+  portfolioId                Int
+  price                      Decimal         @db.Decimal(18,2)
+  quantity                   Decimal         @db.Decimal(18,2)
+  timestamp                  DateTime  
+  type                       String   
+  portfolio                  userPortfolio    @relation(fields:[portfolioId], references: [id])
 }
 
 

@@ -2,9 +2,11 @@ import { useEffect, useState, type Dispatch, type SetStateAction } from "react";
 import './BuyOverlay.css'
 import { PortfolioOverlay } from "./PortfolioOverlay";
 import { ChangeUnit } from "./ChangeUnit";
+import { transaction } from "./transaction";
+
 
 type BuyOverlayProps = {
-  symbol: string | undefined,
+  symbol: string ,
   name: string,
   setIsBuying: Dispatch<SetStateAction<boolean>>
   userCashBalance: number,
@@ -14,12 +16,20 @@ type BuyOverlayProps = {
 }
 
 export function BuyOverlay({ symbol, name, setIsBuying, userCashBalance, userTotalValue, todayClosePrice, action }: BuyOverlayProps) {
-  const [activeButton, setActiveButton] = useState('Buy');
-  const [sliderValue, setSliderValue] = useState('0');
-  const [price, setPrice] = useState(0);
-  const [numberOfShares, setNumberOfShares] = useState(0);
-  const [activeUnit, setActiveUnit] = useState('Value');
+  const [activeButton, setActiveButton] = useState<'Buy' | 'Sell'>('Buy');
+  const [activeUnit, setActiveUnit] = useState<'Value' | 'Quantity'>('Value');
+  const [value, setValue] = useState(0);
+  
   const buttons = ['Buy', 'Sell'];
+
+
+  const maxShares = Number((userCashBalance / todayClosePrice).toFixed(2));
+
+
+  useEffect(() => {
+    console.log(maxShares);
+  }, [maxShares])
+
 
   useEffect(() => {
     if (action) {
@@ -30,44 +40,52 @@ export function BuyOverlay({ symbol, name, setIsBuying, userCashBalance, userTot
 
   }, [action])
 
+  function snapZero(num: number,eps = 0.1){
+    return Math.abs(num) < eps ? 0 : num;
+  }
 
 
-  useEffect(() => {
-    setPrice(userCashBalance * (Number(sliderValue) / 100));
-    setNumberOfShares(price / todayClosePrice);
-    console.log(sliderValue);
-  }, [sliderValue]);
+  //derivated state
+  //Use it when there is only one state of true and the other things can calculate from it
+  //variable is calculating based on how does state changes 
+  const price =snapZero(
+    activeUnit === 'Value'
+      ? Number(value.toFixed(2))
+      : Number((value * todayClosePrice).toFixed(2)),todayClosePrice / 100)
+
+  const numberOfShares = snapZero(
+    activeUnit === 'Quantity'
+      ? Number(value.toFixed(2))
+      : Number((value / todayClosePrice).toFixed(2))
+  )
 
 
-  useEffect(() => {
-    setNumberOfShares(price / todayClosePrice);
-    setSliderValue(String((price / userCashBalance) * 100));
-  }, [price])
+  const percent = snapZero(
+    activeUnit === 'Value'
+      ? (price / userCashBalance) * 100
+      : (numberOfShares / maxShares) * 100
+  ,0.1)
 
+  
+ 
 
+  function changeValue(value: string | number) {
+    value = Number(value);
+    
+      
 
+      if (value > (activeUnit === 'Value' ? userCashBalance : maxShares)) {
+        setValue(activeUnit === 'Value' ? userCashBalance : maxShares);
+      }
+      else if (value < 0) {
+        setValue(0)
+      }
 
-  function changePrice(value: number | string) {
-    if (!/^\d*\.?\d{0,2}$/.test(String(value))) {
-      value = String(value).slice(0, -1);
-    }
-
-
-    value = Number(value)
-
-
-    if (value < 0) {
-      setPrice(value);
-    }
-    else if (value > userCashBalance) {
-      setPrice(userCashBalance);
-
-    }
-    else {
-      setPrice(value)
-      //setSliderValue(String((userCashBalance / price)*100));
-    }
-
+      else {
+        setValue(value);
+      }
+    
+    
   }
 
   return (
@@ -82,38 +100,84 @@ export function BuyOverlay({ symbol, name, setIsBuying, userCashBalance, userTot
         <div className="text-black text-xl font-semibold mb-8">Buy {name} <span className="text-gray-500 font-normal">({symbol})</span></div>
         <div className="flex rounded-[8px] bg-white text-lg justify-around shadow-xl text-white  h-[5vh]">
           {buttons.map((button) => {
+            const actionButtonStyle =
+              button === 'Buy'
+                ? {
+                  borderTopLeftRadius: '8px',
+                  borderBottomLeftRadius: '8px',
+                }
+                : {
+                  borderTopRightRadius: '8px',
+                  borderBottomRightRadius: '8px',
+                };
+
             return (
-              <div onClick={() => { setActiveButton(button) }} className={`items-center flex justify-center w-[50%] ${activeButton === button ? 'bg-blue-800 text-white' : 'text-black'} rounded-${button === 'Buy' ? 'l' : 'r'}-[8px] cursor-pointer`}>
+              <div onClick={() => { setActiveButton(button) }} style={actionButtonStyle} className={`items-center flex justify-center w-[50%] ${activeButton === button ? 'bg-blue-800 text-white' : 'text-black'} cursor-pointer`} >
                 {button}
               </div>
             )
           })}
         </div>
-        
-        <ChangeUnit activeUnit={activeUnit} setActiveUnit={setActiveUnit}/>
+
+        <ChangeUnit activeUnit={activeUnit} setActiveUnit={setActiveUnit} setValue={setValue} />
 
         <div className="flex flex-col items-center font-normal text-3xl mt-[40px]">
           <div className="flex justify-center">
-            $<input value={price} type="number" className="w-[24%] text-nowrap max-w-[50%] outline-0" onChange={(event) => { changePrice(Number(event.currentTarget.value)) }} />
+
+            {activeUnit === 'Value'
+              ?
+              <>
+                $<input value={price} type="number" step={'100'} className=" text-nowrap  outline-0" style={{width: `${String(price).length + 1}ch`}} onChange={(event) => {
+                  changeValue(event.target.value);
+                }} />
+              </>
+              :
+
+              <>
+                <input value={numberOfShares} step={'0.1'} type="number" className=" text-nowrap1 outline-0" style={{width: `${String(numberOfShares).length + 1}ch`}} onChange={(event) => { changeValue(event.target.value) }} />
+                shares
+              </>
+            }
+
+
           </div>
 
           <div className="text-gray-500 text-xl mt-1">
-            {numberOfShares.toFixed(2)} shares
+            {activeUnit === 'Value' ? `≈ ${numberOfShares.toFixed(2)} shares` : `≈ $${price}`}
           </div>
         </div>
         <div className="flex flex-col gap-3 mt-[40px] relative">
-          <input onChange={(event) => { setSliderValue(event.currentTarget.value) }} value={sliderValue} className='value-selector' type="range" />
-          <div className="absolute slider-bar bg-blue-900 shadow-lg rounded-[8px] z-[-1] h-[10px]" style={{ width: `${Number(sliderValue) + 0.2}%` }}></div>
+          <input onChange={(event) => {/* setSliderValue(Number(event.currentTarget.value))*/
+            const pct = Number(event.target.value);
+
+            
+
+            
+
+
+            if (activeUnit === 'Value') {
+              
+              setValue((pct / 100) * userCashBalance)
+            }
+            else {
+              setValue((pct / 100) * maxShares)
+            }
+
+
+          }} value={percent} className='value-selector' type="range" />
+          <div className="absolute slider-bar bg-blue-900 shadow-lg rounded-[8px] z-[-1] h-[10px]" style={{ width: `${Number(percent) + 0.1}%` }}></div>
           <div className="absolute slider-bar bg-white shadow-lg rounded-[8px] z-[-2] h-[10px] w-full" ></div>
 
         </div>
 
+
         <div className="con flex justify-center mt-[25px]">
-          <button className="button-primary rounded-[8px] w-full">
-            Confirm Buy
+          <button onClick={() =>{transaction(activeButton,price,numberOfShares,symbol)}} className="button-primary rounded-[8px] w-full">
+            {activeButton === 'Buy' ? 'Confirm Buy' : 'Confirm Sell'}
           </button>
         </div>
       </div>
+
       <PortfolioOverlay userCashBalance={userCashBalance} price={price} userTotalValue={userTotalValue} />
 
     </>
