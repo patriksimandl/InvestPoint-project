@@ -1,8 +1,22 @@
 import ApexCharts from "apexcharts";
-import React, { useEffect, useRef } from "react";
+import { useEffect, useRef } from "react";
 
-export default function HistoryGraph({isLogged} : {isLogged : boolean}) {
+type HistoryGraphProps = {
+  isLogged: boolean,
+  totalBalanceHistory: Object;
+    
+  
+}
+
+
+export default function HistoryGraph({ isLogged, totalBalanceHistory }: HistoryGraphProps ) {
   const containerRef = useRef<HTMLDivElement | null>(null);
+
+
+
+  
+
+
 
   const historyGraphOptions = {
     chart: { type: 'area', width: '100%', height: '95%', toolbar: { show: false }, zoom: { enabled: false } },
@@ -31,7 +45,7 @@ export default function HistoryGraph({isLogged} : {isLogged : boolean}) {
   };
 
   useEffect(() => {
-    if(!isLogged) return
+    if (!isLogged) return
     if (!containerRef.current) return;
     const chart = new ApexCharts(containerRef.current as any, historyGraphOptions);
     chart.render();

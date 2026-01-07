@@ -54,8 +54,8 @@ router.post('/register', async (req, res) => {
     await db.userPortfolio.create({
       data: {
         userId: createdUser.id,
-        totalBalanceHistory: { [todaysDate]: 1000 },
-        cashBalanceHistory: {[todaysDate]: 1000}
+        totalBalanceHistory: [{ date: todaysDate, value: 1000 }],
+        cashBalanceHistory: [{date: todaysDate ,value: 1000}]
         
       }
     })

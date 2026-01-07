@@ -4,7 +4,7 @@ import { use, useEffect, useState, type Dispatch, type SetStateAction } from "re
 import './PortfolioPage.css'
 import InfoIcon from '/InfoIcon.svg'
 import HoldingsGraph from './HoldingsGraph';
-import HistoryGraph from './HistoryGraph';
+import HistoryGraph from './HistoryGraphNew';
 import { useQuery } from "@tanstack/react-query";
 import axios from "axios";
 import LoadingOverlay from './LoadingOverlay';
@@ -47,7 +47,9 @@ export function PortfolioPage({ isLogged, setIsLogged, userEmail }: PortfolioPag
 
 
 
+  const totalBalanceHistory = userPortfolio?.totalBalanceHistory;
 
+  console.log(totalBalanceHistory);
 
 
 
@@ -125,7 +127,7 @@ export function PortfolioPage({ isLogged, setIsLogged, userEmail }: PortfolioPag
               </div>
             </div>
 
-            <HistoryGraph isLogged={isLogged} />
+            <HistoryGraph isLogged={isLogged} totalBalanceHistory={totalBalanceHistory}/>
           </div>
           <div className="shadow-lg row-span-1 rounded-[8px] p-[20px] w-full bg-white flex flex-col">
             <div className="font-semibold headings-portfolio-page">Portfolio holdings</div>

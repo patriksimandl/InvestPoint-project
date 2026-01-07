@@ -8,7 +8,7 @@ import apiRoutes from './Routes/apiRoutes.js'
 import cookieParser from 'cookie-parser';
 import verifyRoutes from './Routes/verifyRoutes.js'
 import cron from 'node-cron'
-import updatePortfolio from "./updatePortfolio.ts";
+import updatePortfolio from "./updatePortfolio/updatePortfolio.ts";
 import dayjs from "dayjs";
 import marketRoutes from './Routes/marketRoutes.js'
 
@@ -29,7 +29,7 @@ app.use(cors({
 app.use(express.json());
 
 
-
+updatePortfolio();
 
 cron.schedule('10 0 * * *',()=>{
   updatePortfolio();
