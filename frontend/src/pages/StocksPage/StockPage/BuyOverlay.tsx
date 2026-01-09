@@ -3,10 +3,11 @@ import './BuyOverlay.css'
 import { PortfolioOverlay } from "./PortfolioOverlay";
 import { ChangeUnit } from "./ChangeUnit";
 import { transaction } from "./transaction";
+import { useQuery, useQueryClient } from "@tanstack/react-query";
 
 
 type BuyOverlayProps = {
-  symbol: string ,
+  symbol: string,
   name: string,
   setIsBuying: Dispatch<SetStateAction<boolean>>
   userCashBalance: number,
@@ -15,12 +16,14 @@ type BuyOverlayProps = {
   action: string
 }
 
-export function BuyOverlay({ symbol, name, setIsBuying, userCashBalance, userTotalValue, todayClosePrice, action }: BuyOverlayProps) {
+export function BuyOverlay({ symbol,setAnimateInMessage, name, setIsBuying, userCashBalance, userTotalValue, todayClosePrice, action, setTransactionMessage, transactionMessage, setBuyingQuantities }: BuyOverlayProps) {
   const [activeButton, setActiveButton] = useState<'Buy' | 'Sell'>('Buy');
   const [activeUnit, setActiveUnit] = useState<'Value' | 'Quantity'>('Value');
   const [value, setValue] = useState(0);
-  
+
   const buttons = ['Buy', 'Sell'];
+
+  const queryClient = useQueryClient();
 
 
   const maxShares = Number((userCashBalance / todayClosePrice).toFixed(2));
@@ -40,7 +43,7 @@ export function BuyOverlay({ symbol, name, setIsBuying, userCashBalance, userTot
 
   }, [action])
 
-  function snapZero(num: number,eps = 0.1){
+  function snapZero(num: number, eps = 0.1) {
     return Math.abs(num) < eps ? 0 : num;
   }
 
@@ -48,10 +51,10 @@ export function BuyOverlay({ symbol, name, setIsBuying, userCashBalance, userTot
   //derivated state
   //Use it when there is only one state of true and the other things can calculate from it
   //variable is calculating based on how does state changes 
-  const price =snapZero(
+  const price = snapZero(
     activeUnit === 'Value'
       ? Number(value.toFixed(2))
-      : Number((value * todayClosePrice).toFixed(2)),todayClosePrice / 100)
+      : Number((value * todayClosePrice).toFixed(2)), todayClosePrice / 100)
 
   const numberOfShares = snapZero(
     activeUnit === 'Quantity'
@@ -64,29 +67,54 @@ export function BuyOverlay({ symbol, name, setIsBuying, userCashBalance, userTot
     activeUnit === 'Value'
       ? (price / userCashBalance) * 100
       : (numberOfShares / maxShares) * 100
-  ,0.1)
+    , 0.1)
 
-  
- 
+
+  async function makeTransaction() {
+    const response = await transaction(activeButton, price, numberOfShares, symbol)
+
+    if (response.status === 201) {
+      queryClient.invalidateQueries({ queryKey: ['userPortfolio'] });
+
+
+      setBuyingQuantities({ price, numberOfShares }) 
+      setTransactionMessage(true)
+      setTimeout(() => {
+        //animate out
+        setAnimateInMessage(false)
+        //hide 
+        setTimeout(()=>{
+          setTransactionMessage(false)
+        },500)
+      }, 4000);
+
+      setIsBuying(false);
+    }
+  }
+
+
 
   function changeValue(value: string | number) {
     value = Number(value);
-    
-      
 
-      if (value > (activeUnit === 'Value' ? userCashBalance : maxShares)) {
-        setValue(activeUnit === 'Value' ? userCashBalance : maxShares);
-      }
-      else if (value < 0) {
-        setValue(0)
-      }
 
-      else {
-        setValue(value);
-      }
-    
-    
+
+    if (value > (activeUnit === 'Value' ? userCashBalance : maxShares)) {
+      setValue(activeUnit === 'Value' ? userCashBalance : maxShares);
+    }
+    else if (value < 0) {
+      setValue(0)
+    }
+
+    else {
+      setValue(value);
+    }
+
+
   }
+
+  
+
 
   return (
     <>
@@ -127,14 +155,14 @@ export function BuyOverlay({ symbol, name, setIsBuying, userCashBalance, userTot
             {activeUnit === 'Value'
               ?
               <>
-                $<input value={price} type="number" step={'100'} className=" text-nowrap  outline-0" style={{width: `${String(price).length + 1}ch`}} onChange={(event) => {
+                $<input value={price} type="number" step={'100'} className=" text-nowrap  outline-0" style={{ width: `${String(price).length + 1}ch` }} onChange={(event) => {
                   changeValue(event.target.value);
                 }} />
               </>
               :
 
               <>
-                <input value={numberOfShares} step={'0.1'} type="number" className=" text-nowrap1 outline-0" style={{width: `${String(numberOfShares).length + 1}ch`}} onChange={(event) => { changeValue(event.target.value) }} />
+                <input value={numberOfShares} step={'0.1'} type="number" className=" text-nowrap1 outline-0" style={{ width: `${String(numberOfShares).length + 1}ch` }} onChange={(event) => { changeValue(event.target.value) }} />
                 shares
               </>
             }
@@ -150,13 +178,13 @@ export function BuyOverlay({ symbol, name, setIsBuying, userCashBalance, userTot
           <input onChange={(event) => {/* setSliderValue(Number(event.currentTarget.value))*/
             const pct = Number(event.target.value);
 
-            
 
-            
+
+
 
 
             if (activeUnit === 'Value') {
-              
+
               setValue((pct / 100) * userCashBalance)
             }
             else {
@@ -172,7 +200,7 @@ export function BuyOverlay({ symbol, name, setIsBuying, userCashBalance, userTot
 
 
         <div className="con flex justify-center mt-[25px]">
-          <button onClick={() =>{transaction(activeButton,price,numberOfShares,symbol)}} className="button-primary rounded-[8px] w-full">
+          <button onClick={makeTransaction} className="button-primary rounded-[8px] w-full">
             {activeButton === 'Buy' ? 'Confirm Buy' : 'Confirm Sell'}
           </button>
         </div>

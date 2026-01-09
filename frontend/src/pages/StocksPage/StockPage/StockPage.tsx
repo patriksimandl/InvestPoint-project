@@ -16,6 +16,7 @@ import { StockDetails } from "./StockDetails";
 import { GraphZoom } from "./GraphZoom";
 import { BuyOverlay } from "./BuyOverlay";
 import { LoginOverlay } from "./LoginOverlay";
+import { TransactionMessage } from "./TransactionMessage";
 
 dayjs.extend(utc);
 dayjs.extend(timezone);
@@ -44,13 +45,34 @@ type StockPageProps = { isLogged: boolean; setIsLogged: Dispatch<SetStateAction<
 
 export function StockPage({ isLogged, setIsLogged, userEmail }: StockPageProps) {
   const [zoomButton, setZoomButton] = useState('6M');
-  const [isBuying, setIsBuying] = useState(false);
-  const [showLogin, setShowLogin] = useState(false);
-  const [loginTransition,setLoginTransiton] = useState(false);
+  const [isBuying, setIsBuying] = useState<boolean>(false);
+  const [showLogin, setShowLogin] = useState<boolean>(false);
+  const [loginTransition,setLoginTransiton] = useState<boolean>(false);
   const [action,setAction] = useState('');
+  const [transactionMessage, setTransactionMessage] = useState<boolean>(false);
   const { symbol } = useParams();
 
   const queryClient = useQueryClient();
+
+  const [animateInMessage, setAnimateInMessage] = useState(false);
+  const [buyingQuantities,setBuyingQuantities] = useState({
+    price: undefined,
+    numberOfShares: undefined
+  })
+
+
+  useEffect(()=>{
+    if(transactionMessage){
+      setAnimateInMessage(true);
+    }
+    else{
+      
+      setAnimateInMessage(false)
+    }
+  },[transactionMessage])
+
+
+
 
   const { data: stockData, isLoading, isError } = useQuery({
     queryKey: ['stockData', symbol],
@@ -162,10 +184,18 @@ export function StockPage({ isLogged, setIsLogged, userEmail }: StockPageProps) 
     <>
 
       {isLoading ? <LoadingOverlay /> : ''}
+      {isBuying ? <BuyOverlay action={action} setIsBuying={setIsBuying} setBuyingQuantities={setBuyingQuantities} setAnimateInMessage={setAnimateInMessage} todayClosePrice={stockData?.data.data[0].close} symbol={symbol} name={stockData?.name} userCashBalance={Number((userPortfolio?.cashBalance))} transactionMessage={transactionMessage} userTotalValue={userPortfolio?.totalBalance} setTransactionMessage={setTransactionMessage} /> : ''}
+
+      {transactionMessage ? <TransactionMessage animateInMessage={animateInMessage} setAnimateInMessage={setAnimateInMessage} transactionMessage={transactionMessage} setTransactionMessage={setTransactionMessage} symbol={symbol} buyingQuantities={buyingQuantities}/> :'' }
+      
+      
+
+
       <title>{title}</title>
       
-      {isBuying ? <BuyOverlay action={action} setIsBuying={setIsBuying} todayClosePrice={stockData?.data.data[0].close} symbol={symbol} name={stockData?.name} userCashBalance={Number((userPortfolio?.cashBalance))} userTotalValue={userPortfolio?.totalBalance}/> : ''}
+      
       <LoginOverlay setShowLogin={setShowLogin} loginTransition={loginTransition} showLogin={showLogin} setLoginTransition={setLoginTransiton}/>
+
       <MainMenu isLogged={isLogged} setIsLogged={setIsLogged} userEmail={userEmail} />
       <div className="stock-page-container">
         <div className="w-full rounded-[8px] bg-white shadow-lg flex flex-col h-[75vh] p-[25px] ">

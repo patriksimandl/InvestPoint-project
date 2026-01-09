@@ -14,9 +14,7 @@ export async function transaction(activeButton: 'Buy' | 'Sell', price: number, n
     { withCredentials: true }
   )
 
-  if(response.status === 201){
-    return 'Transaction was succesful';
-  }
+  return response
 
 
 

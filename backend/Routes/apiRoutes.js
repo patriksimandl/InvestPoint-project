@@ -107,11 +107,6 @@ router.post('/orders', async (req, res) => {
 
   }
 
-  console.log(prevTotalBalance);
-  console.log(price)
-  console.log(quantity);
-  console.log(updatedTotalBalance);
-
 
   try {
     await db.userPortfolio.update({
@@ -146,7 +141,7 @@ router.post('/orders', async (req, res) => {
 
 
 
-
+  res.sendStatus(201)
 
 
 
