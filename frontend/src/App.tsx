@@ -14,7 +14,7 @@ import { verification } from './verification'
 function App() {
   const [menuItems, setMenuItems] = useState([]);
   const [isLogged, setIsLogged] = useState<boolean>(false);
-  const [tableStocksData, setTableStocksData] = useState(JSON.parse(localStorage.getItem('tableStocksData')!) || null);
+  //const [tableStocksData, setTableStocksData] = useState(JSON.parse(localStorage.getItem('tableStocksData')!) || null);
   const [userEmail, setUserEmail] = useState<string | undefined>(undefined);
 
   useEffect(()=>{
@@ -52,11 +52,11 @@ useEffect(()=>{
 
 
 
-useQuery({
+const {data: tableStocksData} = useQuery({
   queryKey: ["stocksData"],
   queryFn: async () => {
     const response = await axios.get('http://localhost:3000/stocks')
-    setTableStocksData(response.data);
+    return response.data
     //localStorage.setItem('tableStocksData', JSON.stringify(response.data));
   },
   //To refetch every 20 min
@@ -74,7 +74,7 @@ return (
   <Routes>
     <Route path='/' element={<HomePage isLogged={isLogged} setIsLogged={setIsLogged} userEmail={userEmail} />} />
     <Route path='/login' element={<LoginPage isLogged={isLogged} setIsLogged={setIsLogged} setUserEmail={setUserEmail} />} />
-    <Route path='/stocks' element={<StocksPage isLogged={isLogged} tableStocksData={tableStocksData} setTableStocksData={setTableStocksData} setIsLogged={setIsLogged} userEmail={userEmail} />} />
+    <Route path='/stocks' element={<StocksPage isLogged={isLogged} tableStocksData={tableStocksData}  setIsLogged={setIsLogged} userEmail={userEmail} />} />
     <Route path='/portfolio' element={<PortfolioPage isLogged={isLogged} setIsLogged={setIsLogged} userEmail={userEmail} />} />
     <Route path='/stocks/:symbol' element={<StockPage isLogged={isLogged} setIsLogged={setIsLogged} userEmail={userEmail} />} />
   </Routes>

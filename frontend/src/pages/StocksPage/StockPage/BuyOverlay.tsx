@@ -16,7 +16,7 @@ type BuyOverlayProps = {
   action: string
 }
 
-export function BuyOverlay({ symbol,setAnimateInMessage, name, setIsBuying, userCashBalance, userTotalValue, todayClosePrice, action, setTransactionMessage, transactionMessage, setBuyingQuantities }: BuyOverlayProps) {
+export function BuyOverlay({ symbol,setAnimateInMessage, name, setIsBuying, userCashBalance, userTotalValue, todayClosePrice, action, setTransactionMessage, setBuyingQuantities }: BuyOverlayProps) {
   const [activeButton, setActiveButton] = useState<'Buy' | 'Sell'>('Buy');
   const [activeUnit, setActiveUnit] = useState<'Value' | 'Quantity'>('Value');
   const [value, setValue] = useState(0);

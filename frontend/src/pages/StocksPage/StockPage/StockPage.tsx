@@ -198,7 +198,7 @@ export function StockPage({ isLogged, setIsLogged, userEmail }: StockPageProps) 
 
       <MainMenu isLogged={isLogged} setIsLogged={setIsLogged} userEmail={userEmail} />
       <div className="stock-page-container">
-        <div className="w-full rounded-[8px] bg-white shadow-lg flex flex-col h-[75vh] p-[25px] ">
+        <div className="w-full rounded-[8px] bg-white shadow-lg flex flex-col h-[75dvh] p-[25px] ">
           <div className="flex flex-row h-[75vh]">
             <div className="w-[35%] flex flex-col">
               <div className=" flex flex gap-4 border-b-1 pb-[45px] border-gray-200">

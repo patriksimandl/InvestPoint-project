@@ -1,56 +1,118 @@
 import ApexCharts from "apexcharts";
-import { useEffect, useRef } from "react";
+import { useEffect, useRef, type Dispatch, type SetStateAction } from "react";
 
 type HistoryGraphProps = {
   isLogged: boolean,
-  totalBalanceHistory: Object;
-    
-  
+  totalBalanceHistory: {
+    date: string,
+    value: Number
+  }[];
+  setActiveZoomButton: Dispatch<SetStateAction<string>>,
+  lastIndex: number,
+
+
 }
 
 
-export default function HistoryGraph({ isLogged, totalBalanceHistory }: HistoryGraphProps ) {
+export default function HistoryGraph({ setActiveZoomButton, isLogged, totalBalanceHistory, lastIndex }: HistoryGraphProps) {
   const containerRef = useRef<HTMLDivElement | null>(null);
 
+  useEffect(() => {
+    
+    
+
+    if (!containerRef.current) return
+    if (!isLogged) return
+    if(!totalBalanceHistory) return
+
+    
+    const dates: string[] = [];
 
 
-  
+    const format = totalBalanceHistory?.map((day, index) => {
+      dates.push(day.date);
+
+
+      return {
+        x: index,
+        y: Number(day.value).toFixed(2)
+      }
+    })
+
+    console.log(format);
 
 
 
-  const historyGraphOptions = {
-    chart: { type: 'area', width: '100%', height: '95%', toolbar: { show: false }, zoom: { enabled: false } },
-    dataLabels: { enabled: false },
-    grid: { show: true, xaxis: { lines: { show: false } } },
-    markers: { strokeColor: 'inherited' },
-    series: [{ name: 'sales', data: [30, 40, 35, 50, 49, 60, 70, 91, 125] }],
-    xaxis: { categories: [1991, 1992, 1993, 1994, 1995, 1996, 1997, 1998, 1999], tooltip: { enabled: false } },
-    yaxis: { title: { text: 'Portfolio value ($)', style: { fontWeight: '600', fontSize: '15px' } } },
-    stroke: { curve: 'straight' },
-    subtitle: { text: '', align: '', style: { fontSize: '15px' } },
-    tooltip: {
-      custom: function ({ series, seriesIndex, dataPointIndex, w }: any) {
-        return (`<div class="p-[7px] text-[14px] flex">
+    const historyGraphOptions = {
+
+      chart: {
+        events: {
+          zoomed: (chartContext: any, { xaxis, yaxis }: { xaxis: { min: number, max: number }, yaxis: { min: number, max: number } }) => {
+            if (!xaxis) { return }
+            const max = Math.round(xaxis.max);
+            const min = Math.round(xaxis.min);
+
+            console.log(max);
+            console.log(min);
+
+
+            if (min === lastIndex - 30 && max === lastIndex) {
+              setActiveZoomButton('1M');
+            }
+
+            else if (min === lastIndex - 365 && max === lastIndex) {
+              setActiveZoomButton('1Y');
+            }
+            
+            else if(min === 0 && max === lastIndex) {
+              setActiveZoomButton('All')
+            }
+            
+          },
+        },
+        id: 'PortfolioHistory',
+        type: 'area', width: '100%', height: '95%', toolbar: { show: false }, zoom: { enabled: false }
+      },
+      dataLabels: { enabled: false },
+      grid: { show: true, xaxis: { lines: { show: false } } },
+      markers: { strokeColor: 'inherited' },
+      series: [{
+        data: format
+      }],
+      xaxis: {
+        type: 'numeric',
+        labels: {
+          formatter: (value: Number) => {
+            const idx = Math.round(Number(value));
+            return dates[idx]
+          }
+        }
+      },
+      yaxis: { title: { text: 'Portfolio value ($)', style: { fontWeight: '600', fontSize: '15px' } } },
+      stroke: { curve: 'straight' },
+      subtitle: { text: '', align: '', style: { fontSize: '15px' } },
+      tooltip: {
+        custom: function ({ series, seriesIndex, dataPointIndex, w }: any) {
+          return (`<div class="p-[7px] text-[14px] flex">
                   <div class="font-semibold">
                     ${series[seriesIndex][dataPointIndex]} USD 
                   </div>
-                  <div class="text-gray-500 ml-[5px]">
+                  ${/*<div class="text-gray-500 ml-[5px]">
                     ${w.globals.categoryLabels[dataPointIndex]}
-                  </div>
+                  </div>*/''}
                 </div>`)
-      },
-      marker: false,
-      y: { show: true }
-    }
-  };
+        },
+        marker: false,
+        y: { show: true }
+      }
+    };
 
-  useEffect(() => {
-    if (!isLogged) return
-    if (!containerRef.current) return;
+
     const chart = new ApexCharts(containerRef.current as any, historyGraphOptions);
     chart.render();
     return () => { chart.destroy(); };
-  }, [isLogged]);
+
+  }, [isLogged, containerRef.current,totalBalanceHistory]);
 
   return <div id="chart" className="w-full h-full " ref={containerRef} />;
 }

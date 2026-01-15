@@ -54,7 +54,7 @@ router.post('/orders', async (req, res) => {
       }
     })
   } catch (err) {
-    res.sendStatus(503)
+    return res.Status(503).send('first')
   }
 
   let portfolioId = portfolio?.id;
@@ -135,7 +135,7 @@ router.post('/orders', async (req, res) => {
 
 
   } catch (error) {
-    res.sendStatus(503)
+    return res.sendStatus(503)
   }
 
 
