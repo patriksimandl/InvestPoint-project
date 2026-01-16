@@ -10,7 +10,6 @@ import axios from "axios";
 import LoadingOverlay from './LoadingOverlay';
 import { NotLoggedOverlay } from "./NotLoggedOverlay";
 import { verification } from "../../verification.ts";
-import { GraphZoom } from "../StocksPage/StockPage/GraphZoom.tsx";
 import { GraphZoomButtons } from "./GraphZoomButtons.tsx";
 import { NavLink } from "react-router";
 
@@ -47,10 +46,11 @@ export function PortfolioPage({ isLogged, setIsLogged, userEmail}: PortfolioPage
 
   });
 
-  const tableStocksData = useQuery({
+  const {data:tableStocksData} = useQuery({
     queryKey: ["stocksData"],
     queryFn: async () => {
       const response = await axios.get('http://localhost:3000/stocks')
+      
       return response.data
       //localStorage.setItem('tableStocksData', JSON.stringify(response.data));
     },
@@ -71,7 +71,6 @@ export function PortfolioPage({ isLogged, setIsLogged, userEmail}: PortfolioPage
 
   const stockHoldings = typeof userPortfolio?.stockHoldings === 'object' && !Array.isArray(userPortfolio?.stockHoldings)
     ? Object.entries(userPortfolio?.stockHoldings).length > 0 ? userPortfolio?.stockHoldings : null : null
-
 
 
   return (
@@ -145,7 +144,7 @@ export function PortfolioPage({ isLogged, setIsLogged, userEmail}: PortfolioPage
             <div className="font-semibold headings-portfolio-page">Portfolio holdings</div>
             {
               stockHoldings ?
-                <HoldingsGraph isLogged={isLogged} stockHoldings={stockHoldings} />
+                <HoldingsGraph tableStocksData={tableStocksData} isLogged={isLogged} stockHoldings={stockHoldings} />
                 :
                 <div className="left-[50%] translate-x-[-50%] flex flex-col top-[50%] translate-y-[-25%] items-center absolute">
 
