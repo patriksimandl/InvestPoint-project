@@ -3,18 +3,15 @@ import { useEffect, useRef, type Dispatch, type SetStateAction } from "react";
 
 type HistoryGraphProps = {
   isLogged: boolean,
-  totalBalanceHistory: {
-    date: string,
-    value: Number
-  }[];
-  setActiveZoomButton: Dispatch<SetStateAction<string>>,
-  lastIndex: number,
+  totalBalanceHistory: Record<string,number>[] | undefined;
+  setActiveZoomButton: Dispatch<SetStateAction<string>> ,
 
 
 }
 
 
-export default function HistoryGraph({ setActiveZoomButton, isLogged, totalBalanceHistory, lastIndex }: HistoryGraphProps) {
+export default function HistoryGraph({ setActiveZoomButton, isLogged, totalBalanceHistory}: HistoryGraphProps) {
+  const lastIndex =totalBalanceHistory?.length! - 1;
   const containerRef = useRef<HTMLDivElement | null>(null);
 
   useEffect(() => {
@@ -29,8 +26,8 @@ export default function HistoryGraph({ setActiveZoomButton, isLogged, totalBalan
     const dates: string[] = [];
 
 
-    const format = totalBalanceHistory?.map((day, index) => {
-      dates.push(day.date);
+    const format = totalBalanceHistory?.map((day : Record<string,  number | string>, index) => {
+      dates.push(day.date as string);
 
 
       return {

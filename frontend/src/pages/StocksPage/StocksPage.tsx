@@ -7,6 +7,7 @@ import axios from "axios";
 import { useEffect, useState, type Dispatch, type SetStateAction } from "react";
 import LoadingIcon from '/LoadingIcon.svg'
 import { NavLink } from "react-router";
+import { Portfolio } from "../PortfolioPage/Portfolio";
 
 
 type StocksPageProps =
@@ -52,12 +53,12 @@ export function StocksPage({ isLogged, setIsLogged, userEmail }: StocksPageProps
 
 
 
-  const {data: tableStocksData} = useQuery({
+  const { data: tableStocksData } = useQuery({
     queryKey: ["stocksData"],
     queryFn: async () => {
       const response = await axios.get('http://localhost:3000/stocks')
       return response.data
-      
+
     },
     //To refetch every hour
     staleTime: 1000 * 60 * 20,
@@ -68,7 +69,17 @@ export function StocksPage({ isLogged, setIsLogged, userEmail }: StocksPageProps
     queryFn: async () => {
       const response = await axios.get('http://localhost:3000/api/portfolio', { withCredentials: true })
 
-      return response.data;
+      const data = response.data;
+      return new Portfolio(
+        data.userId,
+        data.totalBalance,
+        data.cashBalance,
+        data.totalBalanceHistory,
+        data.cashBalanceHistory,
+        data.stockHoldings,
+        data.transactionHistory
+
+      )
     },
 
 

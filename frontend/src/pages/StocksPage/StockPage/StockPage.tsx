@@ -17,6 +17,7 @@ import { GraphZoom } from "./GraphZoom";
 import { BuyOverlay } from "./BuyOverlay";
 import { LoginOverlay } from "./LoginOverlay";
 import { TransactionMessage } from "./TransactionMessage";
+import { Portfolio } from "../../PortfolioPage/Portfolio";
 
 dayjs.extend(utc);
 dayjs.extend(timezone);
@@ -47,29 +48,29 @@ export function StockPage({ isLogged, setIsLogged, userEmail }: StockPageProps) 
   const [zoomButton, setZoomButton] = useState('6M');
   const [isBuying, setIsBuying] = useState<boolean>(false);
   const [showLogin, setShowLogin] = useState<boolean>(false);
-  const [loginTransition,setLoginTransiton] = useState<boolean>(false);
-  const [action,setAction] = useState('');
+  const [loginTransition, setLoginTransiton] = useState<boolean>(false);
+  const [action, setAction] = useState('');
   const [transactionMessage, setTransactionMessage] = useState<boolean>(false);
   const { symbol } = useParams();
 
   const queryClient = useQueryClient();
 
   const [animateInMessage, setAnimateInMessage] = useState(false);
-  const [buyingQuantities,setBuyingQuantities] = useState({
+  const [buyingQuantities, setBuyingQuantities] = useState({
     price: undefined,
     numberOfShares: undefined
   })
 
 
-  useEffect(()=>{
-    if(transactionMessage){
+  useEffect(() => {
+    if (transactionMessage) {
       setAnimateInMessage(true);
     }
-    else{
-      
+    else {
+
       setAnimateInMessage(false)
     }
-  },[transactionMessage])
+  }, [transactionMessage])
 
 
 
@@ -149,8 +150,17 @@ export function StockPage({ isLogged, setIsLogged, userEmail }: StockPageProps) 
     queryKey: ["userPortfolio"],
     queryFn: async () => {
       const response = await axios.get('http://localhost:3000/api/portfolio', { withCredentials: true })
+      const data = response.data;
+      return new Portfolio(
+        data.userId,
+        data.totalBalance,
+        data.cashBalance,
+        data.totalBalanceHistory,
+        data.cashBalanceHistory,
+        data.stockHoldings,
+        data.transactionHistory
 
-      return response.data;
+      )
     },
 
 
@@ -186,15 +196,15 @@ export function StockPage({ isLogged, setIsLogged, userEmail }: StockPageProps) 
       {isLoading ? <LoadingOverlay /> : ''}
       {isBuying ? <BuyOverlay action={action} setIsBuying={setIsBuying} setBuyingQuantities={setBuyingQuantities} setAnimateInMessage={setAnimateInMessage} todayClosePrice={stockData?.data.data[0].close} symbol={symbol} name={stockData?.name} userCashBalance={Number((userPortfolio?.cashBalance))} transactionMessage={transactionMessage} userTotalValue={userPortfolio?.totalBalance} setTransactionMessage={setTransactionMessage} /> : ''}
 
-      {transactionMessage ? <TransactionMessage animateInMessage={animateInMessage} setAnimateInMessage={setAnimateInMessage} transactionMessage={transactionMessage} setTransactionMessage={setTransactionMessage} symbol={symbol} buyingQuantities={buyingQuantities}/> :'' }
-      
-      
+      {transactionMessage ? <TransactionMessage animateInMessage={animateInMessage} setAnimateInMessage={setAnimateInMessage} transactionMessage={transactionMessage} setTransactionMessage={setTransactionMessage} symbol={symbol} buyingQuantities={buyingQuantities} /> : ''}
+
+
 
 
       <title>{title}</title>
-      
-      
-      <LoginOverlay setShowLogin={setShowLogin} loginTransition={loginTransition} showLogin={showLogin} setLoginTransition={setLoginTransiton}/>
+
+
+      <LoginOverlay setShowLogin={setShowLogin} loginTransition={loginTransition} showLogin={showLogin} setLoginTransition={setLoginTransiton} />
 
       <MainMenu isLogged={isLogged} setIsLogged={setIsLogged} userEmail={userEmail} />
       <div className="stock-page-container">
@@ -249,7 +259,7 @@ export function StockPage({ isLogged, setIsLogged, userEmail }: StockPageProps) 
               </div>
             </div>
           </div>
-          <OperationTab setIsBuying={setIsBuying} isLogged={isLogged} setShowLogin={setShowLogin} showLogin={showLogin} setLoginTransition={setLoginTransiton} setAction={setAction}/>
+          <OperationTab setIsBuying={setIsBuying} isLogged={isLogged} setShowLogin={setShowLogin} showLogin={showLogin} setLoginTransition={setLoginTransiton} setAction={setAction} />
         </div>
         <div className="bg-white rounded-[8px] mt-[20px] shadow-lg">
           dadw

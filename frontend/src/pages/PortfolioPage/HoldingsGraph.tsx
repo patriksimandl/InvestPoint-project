@@ -1,26 +1,29 @@
 import ApexCharts from "apexcharts";
 import { useEffect, useRef } from "react";
+import type { Portfolio } from "./Portfolio";
+import type { StockData } from "./types";
 
 type HoldingsGraphProps = {
   isLogged: boolean,
-  stockHoldings: Record<string, number> | undefined | null;
-  tableStocksData: {symbol: string, industry: string}[] 
+  userPortfolio: Portfolio
+  
+  tableStocksData: StockData[]
 }
 
-export default function HoldingsGraph({ isLogged, stockHoldings, tableStocksData }: HoldingsGraphProps) {
+export default function HoldingsGraph({ isLogged, userPortfolio, tableStocksData }: HoldingsGraphProps) {
   const containerRef = useRef<HTMLDivElement | null>(null);
 
+
+  const stockHoldings = userPortfolio?.stockHoldings;
+  
   useEffect(() => {
     console.log(stockHoldings);
   }, [stockHoldings])
 
 
-  function defineLabels(stockHoldingsEntries: [string, number][]) {
+  function defineLabels(stockHoldingsEntries: [string, any][]) {
 
     const labels: String[] = [];
-
-    console.log(stockHoldingsEntries);
-
 
     stockHoldingsEntries.forEach((entry) => {
       const symbol = entry[0];
@@ -41,14 +44,19 @@ export default function HoldingsGraph({ isLogged, stockHoldings, tableStocksData
   function defineSeries(stockHoldingsEntries : [string,any][], labels : String[] ) {
     const series:number[] = [];
 
-    let HoldingsQuantity: number = 0;
+    
+    
+    console.log(userPortfolio);
+    const HoldingsValue: number | 'Stock Holdings is not defined' | undefined =  userPortfolio?.calculateStockHoldingsValue(); 
 
-    stockHoldingsEntries.forEach((entry) => {
-      const quantity = entry[1].quantity
-      const pricePerShare = entry[1].avgBuyPricePerShare;
-      HoldingsQuantity += quantity * pricePerShare
 
-    })
+    
+    if(typeof HoldingsValue !== 'number') return
+
+    
+   
+
+    
 
     const numberOfLabels = labels.length;
 
@@ -78,7 +86,7 @@ export default function HoldingsGraph({ isLogged, stockHoldings, tableStocksData
             const quantity = entry[1].quantity
             const pricePerShare = entry[1].avgBuyPricePerShare;
 
-            const valueOfSymbol = (quantity*pricePerShare) / (HoldingsQuantity / 100) 
+            const valueOfSymbol = (quantity*pricePerShare) / (HoldingsValue / 100) 
             percentOflabel += valueOfSymbol;
 
             console.log(symbol);
@@ -110,11 +118,16 @@ export default function HoldingsGraph({ isLogged, stockHoldings, tableStocksData
 
 
   useEffect(() => {
+   
 
     if (!isLogged) return;
     if (!containerRef.current) return;
+    
     if (!stockHoldings) return;
+     
     if (!tableStocksData) return;
+
+    
 
     const entries = Object.entries(stockHoldings);
     if (entries.length === 0) return;

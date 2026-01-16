@@ -1,0 +1,48 @@
+import type { Portfolio } from "./Portfolio";
+import type { StockData } from "./types";
+
+export function calculateStockHoldingsValue(userPortfolio: Portfolio | undefined, tableStocksData: StockData[]): { profitInMoney: number; profitInPercent: number } |number | undefined {
+
+  const buyHoldingsValue = userPortfolio?.calculateStockHoldingsValue();
+
+  console.log(buyHoldingsValue);
+
+  let marketStocksValue = 0;
+
+  if (!userPortfolio?.stockHoldings) return undefined;
+
+
+  
+
+  const entries = Object.entries(userPortfolio.stockHoldings);
+  if (entries.length === 0) return 0;
+
+  // TODO: Implement market value calculation using tableStocksData
+  entries.forEach((entry)=>{
+    const symbol = entry[0];
+    const quantity = entry [1].quantity;
+    
+
+    tableStocksData.forEach((stock)=>{
+      if(stock.symbol === symbol){
+        
+        const price = stock.data.data[0].close * quantity;
+        marketStocksValue += price;
+      }
+    })
+
+
+  })
+
+
+
+
+  console.log(marketStocksValue);
+
+
+  const profitInMoney = marketStocksValue - Number(buyHoldingsValue);  
+
+  const profitInPercent = (marketStocksValue - Number(buyHoldingsValue))/ Number(buyHoldingsValue)/100; 
+
+  return ({profitInMoney, profitInPercent });
+}

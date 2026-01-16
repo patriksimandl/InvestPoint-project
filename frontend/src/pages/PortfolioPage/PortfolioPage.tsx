@@ -3,6 +3,7 @@ import { MainMenu } from "../../shared/MainMenu";
 import { use, useEffect, useState, type Dispatch, type SetStateAction } from "react";
 import './PortfolioPage.css'
 import InfoIcon from '/InfoIcon.svg'
+import { Portfolio } from "./Portfolio.ts";
 import HoldingsGraph from './HoldingsGraph';
 import HistoryGraph from './HistoryGraph';
 import { useQuery } from "@tanstack/react-query";
@@ -12,6 +13,7 @@ import { NotLoggedOverlay } from "./NotLoggedOverlay";
 import { verification } from "../../verification.ts";
 import { GraphZoomButtons } from "./GraphZoomButtons.tsx";
 import { NavLink } from "react-router";
+import { NetProfit } from "./NetProfit.tsx";
 
 
 type PortfolioPageProps = {
@@ -23,7 +25,6 @@ type PortfolioPageProps = {
 export function PortfolioPage({ isLogged, setIsLogged, userEmail}: PortfolioPageProps) {
   const [activeZoomButton, setActiveZoomButton] = useState<string>('All');
   const todaysDate = dayjs().format('DD. MM');
-
   const zoomButtons = ['1M', '1Y', 'All'];
 
 
@@ -39,8 +40,20 @@ export function PortfolioPage({ isLogged, setIsLogged, userEmail}: PortfolioPage
     queryKey: ["userPortfolio"],
     queryFn: async () => {
       const response = await axios.get('http://localhost:3000/api/portfolio', { withCredentials: true })
+        const data =response.data
 
-      return response.data;
+
+      return new Portfolio(
+        data.userId,
+        data.totalBalance,
+        data.cashBalance,
+        data.totalBalanceHistory,
+        data.cashBalanceHistory,
+        data.stockHoldings,
+        data.transactionHistory
+
+      )
+      
     },
 
 
@@ -64,13 +77,10 @@ export function PortfolioPage({ isLogged, setIsLogged, userEmail}: PortfolioPage
 
 
 
-  const totalBalanceHistory = userPortfolio?.totalBalanceHistory;
-  console.log(totalBalanceHistory);
+  
 
-  const lastIndex = totalBalanceHistory?.length - 1;
+  const lastIndex = userPortfolio?.totalBalanceHistory?.length! - 1;
 
-  const stockHoldings = typeof userPortfolio?.stockHoldings === 'object' && !Array.isArray(userPortfolio?.stockHoldings)
-    ? Object.entries(userPortfolio?.stockHoldings).length > 0 ? userPortfolio?.stockHoldings : null : null
 
 
   return (
@@ -91,7 +101,7 @@ export function PortfolioPage({ isLogged, setIsLogged, userEmail}: PortfolioPage
           <div className="pl-[50px] shadow-lg rounded-[8px] p-[30px] w-full bg-white flex flex-col">
             <div className="font-semibold headings-portfolio-page">Total portfolio value</div>
             <div className="text-[32px] font-semibold text-green-700 flex items-center h-full">
-              ${isLoading || !isLogged ? '0' : Number(userPortfolio.totalBalance).toFixed(2)}
+              ${isLoading || !isLogged ? '0' : Number(userPortfolio?.totalBalance).toFixed(2)}
             </div>
 
           </div>
@@ -104,32 +114,11 @@ export function PortfolioPage({ isLogged, setIsLogged, userEmail}: PortfolioPage
             </div>
             <div className="text-[32px] font-semibold text-blue-700 flex items-center h-full">
 
-              ${isLoading || !isLogged ? '1000' : Number(userPortfolio.cashBalance).toFixed(2)}
+              ${isLoading || !isLogged ? '1000' : Number(userPortfolio?.cashBalance).toFixed(2)}
 
             </div>
           </div>
-          <div className="pl-[50px] shadow-lg rounded-[8px] p-[30px] w-full bg-white flex flex-col">
-            <div className="font-semibold headings-portfolio-page flex">
-              <div>
-                Net Profit
-              </div>
-              <div className="ml-[6px] flex flex-center relative">
-                <img src={InfoIcon} alt="InfoIcon" className="info-icon w-[20px]" />
-                <div className="info-label text-gray-800 font-normal absolute text-[14px] w-[14vw] bg-white rounded-[8px] border-[1px] border-gray-200 p-[14px] top-5 left-5 z-10 shadow-md transtion-all" >
-                  <span className="font-bold text-black">Gain from an investment</span> after subtracting the amount invested and all related costs from the total return.
-                </div>
-              </div>
-
-            </div>
-            <div className="font-semibold text-green-700">
-              <div className="text-[27px]  ">
-                {userPortfolio?.stockHoldings ? '+$273.36' : '$0'}
-              </div>
-              <div className="text-[20px] font-normal">
-                {userPortfolio?.stockHoldings ? '(+761.87 %)' : '(0%)'}
-              </div>
-            </div>
-          </div>
+          <NetProfit userPortfolio={userPortfolio} tableStocksData={tableStocksData} isLogged={isLogged}/>
 
           <div className="col-span-2 relative w-full h-[500px] p-[20px] shadow-lg bg-white rounded-[8px] flex flex-col">
             <div className="headings-portfolio-page pl-[30px] grid grid-cols-2">
@@ -138,13 +127,13 @@ export function PortfolioPage({ isLogged, setIsLogged, userEmail}: PortfolioPage
               <GraphZoomButtons zoomButtons={zoomButtons} lastIndex={lastIndex} setActiveZoomButton={setActiveZoomButton} activeZoomButton={activeZoomButton} />
             </div>
 
-            <HistoryGraph setActiveZoomButton={setActiveZoomButton} lastIndex={lastIndex} isLogged={isLogged} totalBalanceHistory={totalBalanceHistory} />
+            <HistoryGraph setActiveZoomButton={setActiveZoomButton} isLogged={isLogged} totalBalanceHistory={userPortfolio?.totalBalanceHistory} />
           </div>
           <div className="shadow-lg row-span-1 rounded-[8px] p-[20px] w-full bg-white flex flex-col relative">
             <div className="font-semibold headings-portfolio-page">Portfolio holdings</div>
             {
-              stockHoldings ?
-                <HoldingsGraph tableStocksData={tableStocksData} isLogged={isLogged} stockHoldings={stockHoldings} />
+              userPortfolio?.stockHoldings ?
+                <HoldingsGraph tableStocksData={tableStocksData} isLogged={isLogged} userPortfolio={userPortfolio} />
                 :
                 <div className="left-[50%] translate-x-[-50%] flex flex-col top-[50%] translate-y-[-25%] items-center absolute">
 
