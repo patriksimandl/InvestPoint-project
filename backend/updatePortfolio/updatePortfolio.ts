@@ -40,6 +40,7 @@ export default async function updatePortfolio() {
 
 
   let portfolios;
+  let tableStocksData;
   try {
     portfolios = await db.userPortfolio.findMany({
       select: {
@@ -52,6 +53,13 @@ export default async function updatePortfolio() {
       }
     })
 
+    tableStocksData = await db.stocks.findMany({
+      select: {
+        symbol: true,
+        data: true
+      }
+    })
+
 
   } catch (error) {
     console.log(error);
@@ -59,10 +67,10 @@ export default async function updatePortfolio() {
 
   //console.log(portfolios!);
 
-  if (!!!portfolios!) {
-    return 'No portfolios yet'
-  }
+  if (!!!portfolios!) return 'No portfolios yet'
+  
 
+  if(!!!tableStocksData) return 'No market StockData' 
 
 
   portfolios.forEach(async (portfolio) => {
@@ -73,39 +81,66 @@ export default async function updatePortfolio() {
 
 
     if (stockHoldings === null) return
-    
+
     if (totalBalanceHistory === null || !Array.isArray(totalBalanceHistory)) return
-    
+
     if (cashBalanceHistory === null || !Array.isArray(cashBalanceHistory)) return
-    
-    if (Object.entries(stockHoldings).length === 0) {
-      console.log('s');
-
-      const yesterdaysTotalBalanceIndex: number | null = isThereDate(totalBalanceHistory,yesterdayDate);
-
-      console.log(yesterdaysTotalBalanceIndex);
-
-      if (yesterdaysTotalBalanceIndex !== null) {
-        const entry = totalBalanceHistory[yesterdaysTotalBalanceIndex];
 
 
+    const stockHoldingsLength = Object.entries(stockHoldings).length
 
-        if (!isTotalBalanceEntry(entry)) return
-        console.log(portfolio.totalBalance.toNumber());
+    const yesterdaysTotalBalanceIndex: number | null = isThereDate(totalBalanceHistory, yesterdayDate);
+
+    console.log(yesterdaysTotalBalanceIndex);
+
+    if (yesterdaysTotalBalanceIndex !== null) {
+      const entry = totalBalanceHistory[yesterdaysTotalBalanceIndex];
+
+      if (!isTotalBalanceEntry(entry)) return
+
+      //no stockHoldings
+      if (stockHoldingsLength === 0) {
         entry.value = portfolio.totalBalance.toNumber();
+        console.log(portfolio.totalBalance.toNumber());
+
+
+      }
+      else {
+
+
+
       }
 
-      //if backend restarts and there is alredy todays date
-      //if there is already today date
 
-      let alreadyToday : number | null  = isThereDate(totalBalanceHistory,todaysDate);
+    }
 
-      if (alreadyToday === null) {
+    //if backend restarts and there is already todays date
+    //if there is already today date
+
+    let alreadyToday: number | null = isThereDate(totalBalanceHistory, todaysDate);
+
+    if (alreadyToday === null) {
+
+
+      //no stockHoldings
+      if (stockHoldingsLength === 0) {
 
         totalBalanceHistory.push({ date: todaysDate, value: portfolio.totalBalance.toNumber() })
         cashBalanceHistory.push({ date: todaysDate, value: portfolio.totalBalance.toNumber() })
       }
+
+      else{
+
+      }
+
+
     }
+
+
+
+
+
+
 
     await db.userPortfolio.update({
       where: {

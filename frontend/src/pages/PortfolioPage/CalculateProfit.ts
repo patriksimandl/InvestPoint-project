@@ -1,5 +1,6 @@
 import type { Portfolio } from "./Portfolio";
 import type { StockData } from "./types";
+import {ValueOfPortfolioHoldings} from '../../../../shared/src/index.ts'
 
 export function calculateStockHoldingsValue(userPortfolio: Portfolio | undefined, tableStocksData: StockData[]): { profitInMoney: number; profitInPercent: number } |number | undefined {
 
@@ -7,7 +8,7 @@ export function calculateStockHoldingsValue(userPortfolio: Portfolio | undefined
 
   console.log(buyHoldingsValue);
 
-  let marketStocksValue = 0;
+  
 
   if (!userPortfolio?.stockHoldings) return undefined;
 
@@ -17,8 +18,11 @@ export function calculateStockHoldingsValue(userPortfolio: Portfolio | undefined
   const entries = Object.entries(userPortfolio.stockHoldings);
   if (entries.length === 0) return 0;
 
+  const marketStocksValue = ValueOfPortfolioHoldings(entries,tableStocksData);;
+  
+
   // TODO: Implement market value calculation using tableStocksData
-  entries.forEach((entry)=>{
+  /*entries.forEach((entry)=>{
     const symbol = entry[0];
     const quantity = entry [1].quantity;
     
@@ -34,7 +38,7 @@ export function calculateStockHoldingsValue(userPortfolio: Portfolio | undefined
 
   })
 
-
+*/
 
 
   console.log(marketStocksValue);
