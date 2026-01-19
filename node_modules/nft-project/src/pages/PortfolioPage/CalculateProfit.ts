@@ -1,6 +1,6 @@
 import type { Portfolio } from "./Portfolio";
 import type { StockData } from "./types";
-import {ValueOfPortfolioHoldings} from '../../../../shared/src/index.ts'
+import {ValueOfPortfolioHoldings} from '@investpoint/shared'
 
 export function calculateStockHoldingsValue(userPortfolio: Portfolio | undefined, tableStocksData: StockData[]): { profitInMoney: number; profitInPercent: number } |number | undefined {
 

@@ -81,7 +81,7 @@ router.post('/orders', async (req, res) => {
 
       }
 
-      updatedTotalBalance = prevTotalBalance + (((prevAvgPrice * prevQuantity)+(price * quantity))/(prevQuantity+quantity) * quantity)
+      updatedTotalBalance = prevTotalBalance - price + (((prevAvgPrice * prevQuantity)+(price * quantity))/(prevQuantity+quantity) * quantity)
     }
 
   }
@@ -99,7 +99,7 @@ router.post('/orders', async (req, res) => {
         }
 
       }
-      updatedTotalBalance = prevTotalBalance + ((price/quantity) * quantity)
+      updatedTotalBalance = prevTotalBalance -price + ((price/quantity) * quantity)
     }
     else {
 

@@ -3,7 +3,7 @@ import db from "../prismaClient.ts";
 import { Decimal, objectEnumValues } from "@prisma/client/runtime/library";
 import { validate } from "node-cron";
 import isThereDate from "./isThereDate.ts";
-
+import{ ValueOfPortfolioHoldings} from '@investpoint/shared'
 type TotalBalanceEntry = {
   date: string,
   value: number
@@ -106,7 +106,7 @@ export default async function updatePortfolio() {
 
       }
       else {
-
+        
 
 
       }
@@ -119,6 +119,9 @@ export default async function updatePortfolio() {
 
     let alreadyToday: number | null = isThereDate(totalBalanceHistory, todaysDate);
 
+    let totalBalance;
+
+
     if (alreadyToday === null) {
 
 
@@ -126,15 +129,28 @@ export default async function updatePortfolio() {
       if (stockHoldingsLength === 0) {
 
         totalBalanceHistory.push({ date: todaysDate, value: portfolio.totalBalance.toNumber() })
-        cashBalanceHistory.push({ date: todaysDate, value: portfolio.totalBalance.toNumber() })
+        
       }
 
       else{
+        const marketHoldingsValue = ValueOfPortfolioHoldings(Object.entries(stockHoldings),tableStocksData);
+
+        totalBalance = marketHoldingsValue + portfolio.cashBalance.toNumber();
+
+        
+
+        totalBalanceHistory.push({ date: todaysDate, value: portfolio.cashBalance.toNumber() + marketHoldingsValue });
 
       }
 
+      cashBalanceHistory.push({ date: todaysDate, value: portfolio.cashBalance.toNumber() })
 
+
+    }else{
+      totalBalance = portfolio.totalBalance;
     }
+
+
 
 
 
@@ -147,7 +163,7 @@ export default async function updatePortfolio() {
         userId: portfolio.userId,
       },
       data: {
-        totalBalance: portfolio.totalBalance,
+        totalBalance,
         cashBalance: portfolio.cashBalance,
         totalBalanceHistory: totalBalanceHistory,
         cashBalanceHistory: cashBalanceHistory
