@@ -3,11 +3,11 @@ A full-stack virtual **investing platform**, designed to allow users manage virt
 
 
 ## 🚀 Features
-  ✅ User registration, login, and secure password management
-  ✅ Paper trading
-  ✅ Display of stock/investment data
-  ✅ REST API connecting frontend and backend
-  ✅ End-of-day market data
+  - ✅ User registration, login, and secure password management
+  - ✅ Paper trading
+  - ✅ Display of stock/investment data
+  - ✅ REST API connecting frontend and backend
+  - ✅ End-of-day market data
  
 ## ⚙️ Tech Stack
 
