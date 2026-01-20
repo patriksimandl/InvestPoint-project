@@ -80,8 +80,9 @@ export function StocksPage({ isLogged, setIsLogged, userEmail }: StocksPageProps
         data.transactionHistory
 
       )
-    },
 
+      
+    },
 
   });
 

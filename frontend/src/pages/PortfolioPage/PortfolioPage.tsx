@@ -56,7 +56,7 @@ export function PortfolioPage({ isLogged, setIsLogged, userEmail}: PortfolioPage
       
     },
 
-
+    
   });
 
   const {data:tableStocksData} = useQuery({

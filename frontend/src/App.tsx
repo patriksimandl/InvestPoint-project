@@ -7,7 +7,7 @@ import { StocksPage } from './pages/StocksPage/StocksPage'
 import axios from 'axios'
 import { QueryClient, QueryClientProvider, useQuery, useQueryClient } from '@tanstack/react-query'
 import { PortfolioPage } from './pages/PortfolioPage/PortfolioPage'
-import { StockPage } from './pages/StocksPage/StockPage/StockPage'
+import { StockPage } from './pages/StockPage/StockPage'
 import { verification } from './verification'
 
 

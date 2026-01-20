@@ -1,13 +1,13 @@
 import { useEffect, useState, type Dispatch, type SetStateAction } from "react";
-import { MainMenu } from "../../../shared/MainMenu";
+import { MainMenu } from "../../shared/MainMenu";
 import { useParams } from "react-router";
 import axios from "axios";
 import { QueryClient, useQuery, useQueryClient } from "@tanstack/react-query";
 import { StockGraph } from "./StockGraph";
 import './StockPage.css'
-import LoadingOverlay from "../../PortfolioPage/LoadingOverlay";
+import LoadingOverlay from "../PortfolioPage/LoadingOverlay";
 import { OperationTab } from "./OperationTab";
-import { formatPrice } from "../formatPrice";
+import { formatPrice } from "../StocksPage/formatPrice";
 import { MarketOpening } from "./MarketOpening";
 import dayjs from "dayjs";
 import utc from 'dayjs/plugin/utc'
@@ -17,7 +17,7 @@ import { GraphZoom } from "./GraphZoom";
 import { BuyOverlay } from "./BuyOverlay";
 import { LoginOverlay } from "./LoginOverlay";
 import { TransactionMessage } from "./TransactionMessage";
-import { Portfolio } from "../../PortfolioPage/Portfolio";
+import { Portfolio } from "../PortfolioPage/Portfolio";
 
 dayjs.extend(utc);
 dayjs.extend(timezone);
@@ -162,7 +162,6 @@ export function StockPage({ isLogged, setIsLogged, userEmail }: StockPageProps) 
 
       )
     },
-
 
   });
 
