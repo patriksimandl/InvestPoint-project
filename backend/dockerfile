@@ -1,0 +1,30 @@
+FROM node:24-alpine
+
+WORKDIR /backend
+
+ENV NODE_ENV=development
+
+COPY backend/package*.json ./
+
+COPY /shared/package*.json /shared/package.json
+
+
+COPY /shared /shared/
+
+
+RUN cd /shared && npm install && npm run build
+
+COPY /backend/.env ./
+
+RUN npm install
+
+COPY /backend . 
+
+
+
+RUN npx prisma generate
+
+EXPOSE 3000
+
+CMD ["npm", "run","start:docker"]
+

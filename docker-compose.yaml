@@ -1,0 +1,51 @@
+version: '3.8'
+services:
+  frontend:
+    build: 
+      context: .
+      dockerfile: ./frontend/dockerfile
+    container_name: investPoint-frontend
+    
+    depends_on:
+      - db
+      - backend
+    
+    ports:
+      - "5000:5000"
+    
+      
+
+  backend:
+    container_name: investPoint-backned
+    environment:
+      - DATABASE_URL=postgresql://postgres:123123@db:5432/db
+      - PASSWORD_BCRYPT_HASH_KEY='4'
+      - ALPHA_VANTAGE_API_KEY="LK8POHMZBZ2HQK9I"
+      - STOCKDATA_API_KEY="I5KV2ewxBpuuilfrOQhkRp1sroiKSg4ebs7V1IKc"
+      - FINNHUB_API_KEY="d595lc9r01qvj8ik996gd595lc9r01qvj8ik9970"
+      - JWT_SECRET_KEY="UltraSecretKey"
+    build: 
+      context: .
+      dockerfile: ./backend/dockerfile
+    depends_on:
+      - db
+    ports:
+      - "3000:3000"
+    env_file:
+      - ./backend/.env
+
+  db:
+    image: postgres:15-alpine
+    container_name: investPoint-db
+    restart: always
+    environment:
+      POSTGRES_USER: "postgres"
+      POSTGRES_PASSWORD: "123123"
+      POSTGRES_DB: db
+    ports:
+      - "5432:5432"
+    volumes:
+      - postgres_data:/var/lib/postgresql/data
+
+volumes:
+  postgres_data:

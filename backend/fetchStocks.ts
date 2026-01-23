@@ -15,6 +15,10 @@ export default async function fetchStocks() {
       },
     })
 
+
+    
+    console.log(lastFetchDate);
+
     
     //if it was today
     if (lastFetchDate && todaysDate.isSame(lastFetchDate.lastFetch)) {
@@ -23,7 +27,7 @@ export default async function fetchStocks() {
     }
 
     //get all the symbols
-    const symbols = await db.Stocks.findMany({
+    const symbols = await db.stocks.findMany({
       select: {
         symbol: true,
       },
@@ -52,6 +56,8 @@ export default async function fetchStocks() {
     }
 
   } catch (error : any) {
+    console.log('error');
+    console.log('has to fix error of fetching stocks in the container');
     console.log(error.message);
   }
 

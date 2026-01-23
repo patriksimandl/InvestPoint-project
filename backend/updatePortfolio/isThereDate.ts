@@ -1,4 +1,4 @@
-import { Prisma } from "@prisma/client";
+import { Prisma } from "../prisma/generated/prisma/client.ts";
 
 export default function isThereDate(array: Array<Prisma.JsonValue>, date: string) {
   let returningValue = null;

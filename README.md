@@ -30,7 +30,29 @@ A full-stack virtual **investing platform**, designed to allow users manage virt
 
 ### 🛠️ DevOps
 - [Docker](https://www.docker.com/) – containerization  
-- [Docker Compose](https://docs.docker.com/compose/) – local multi-container setup  
+- [Docker Compose](https://docs.docker.com/compose/) – local multi-container setup
+
+### Media 
+- [Cloudinary](https://cloudinary.com/) - Media and svg
+
+
+
+### Instalation
+
+### **1️⃣ Clone the repository**  
+```
+  git clone https://github.com/patriksimandl/InvestPoint-project.git
+```
+
+### **2️⃣ Set up environment variables**
+```
+  Rename .env.example in /backend to .env
+```
+
+### **3️⃣ Start the application and all required services (database, backend, etc.) with Docker, in the project root:**
+```
+  docker compose up --build
+```
 
 ## Purpose
   This platform is built as a **learning project** and portfolio demonstration

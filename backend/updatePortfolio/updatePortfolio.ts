@@ -1,6 +1,6 @@
 import dayjs from "dayjs";
 import db from "../prismaClient.ts";
-import { Decimal, objectEnumValues } from "@prisma/client/runtime/library";
+
 import { validate } from "node-cron";
 import isThereDate from "./isThereDate.ts";
 import{ ValueOfPortfolioHoldings} from '@investpoint/shared'

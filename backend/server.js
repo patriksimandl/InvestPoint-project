@@ -11,9 +11,10 @@ import cron from 'node-cron'
 import updatePortfolio from "./updatePortfolio/updatePortfolio.ts";
 import dayjs from "dayjs";
 import marketRoutes from './Routes/marketRoutes.js'
+import 'dotenv/config'
 
 const app = express();
-const PORT = 3000;
+const PORT = process.env.PORT
 
 //to allow to check cookies
 app.use(cookieParser());
@@ -27,6 +28,10 @@ app.use(cors({
 
 
 app.use(express.json());
+
+
+
+
 
 
 updatePortfolio();

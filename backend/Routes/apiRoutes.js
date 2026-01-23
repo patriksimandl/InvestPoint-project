@@ -2,7 +2,6 @@ import express from 'express'
 import db from "../prismaClient.ts";
 import dayjs from 'dayjs';
 import { compare } from 'bcryptjs';
-import { Decimal } from '@prisma/client/runtime/library';
 
 
 const router = express.Router();

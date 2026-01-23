@@ -47,7 +47,13 @@ const stocks = [
 
 
 async function insertStocks() {
-  await db.Stocks.createMany({ data: stocks });
+  if(await db.stocks.findMany.length !== 0){
+    return;
+  }
+
+
+
+  await db.stocks.createMany({ data: stocks });
 }
 
 insertStocks();
