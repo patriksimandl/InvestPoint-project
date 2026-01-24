@@ -54,6 +54,11 @@ A full-stack virtual **investing platform**, designed to allow users manage virt
   docker compose up --build
 ```
 
+### **4️⃣ Open your browser**
+```
+  http://localhost:5000
+```
+
 ## Purpose
   This platform is built as a **learning project** and portfolio demonstration
   focused on **full-stack architecture, clean code, and best practices**
