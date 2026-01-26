@@ -1,1 +1,17 @@
-@import '../../index.css' 
+@import '../../index.css';
+
+
+@layer components {
+
+  
+  .stock-scroll{
+    display: flex;
+    width: fit-content;
+    animation: scroll 30s linear infinite;
+  }
+
+  @keyframes scroll {
+    from {transform: translateX(0);}
+    to{transform: translateX(-50%);}
+  }
+}

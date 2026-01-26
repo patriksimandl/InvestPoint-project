@@ -108,13 +108,7 @@ export function StocksPage({ isLogged, setIsLogged, userEmail }: StocksPageProps
         </div>
 
       </div> : ''}
-      <div className="w-full bg-white bg-linear-to-br from-sky-300 to-blue-800 fixed top-[0px] h-[160px] content-end px-[8%] z-[1] text-white ">
-        <div className={`grid grid-cols-3  mb-[10px] font-semibold ${isLogged ? 'w-[69%]' : `w-full`}`}>
-          <div className="ml-[90px]">Share</div>
-          <div className="ml-[98px]">Price</div>
-          <div></div>
-        </div>
-      </div>
+      
       <div className="stocks-page-container  flex ">
         <div className={isLogged ? `w-[68%]` : `w-full`}>
 

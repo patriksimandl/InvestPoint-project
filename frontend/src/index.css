@@ -27,11 +27,11 @@
 
 
   .button-primary{
-    @apply rounded-[40px] p-3 text-white font-semibold flex justify-center  w-[10vw] text-[17px] bg-blue-900 cursor-pointer shadow-lg ;
+    @apply rounded-[40px] p-3 text-white font-semibold flex justify-center  w-[10vw] text-[17px] bg-blue-900 cursor-pointer shadow-lg;
   }
 
   .button-primary-inactive{
-    @apply rounded-[40px] p-3 text-white font-semibold flex justify-center  w-[10vw] text-[17px]  cursor-pointer bg-gray-400;
+    @apply rounded-[40px] p-3 text-white font-semibold flex justify-center  w-[10vw] text-[17px]  cursor-pointer bg-gray-400 ;
   }
 
   .button-secondary{
