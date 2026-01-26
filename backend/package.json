@@ -3,6 +3,12 @@
   "version": "1.0.0",
   "description": "",
   "main": "index.js",
+  "typescript": {
+    "compilerOptions": {
+      "resolveJsonModule": true,
+      "esModuleInterop": true
+    }
+  },
   "scripts": {
     "dev": "node --watch server.js",
     "test": "echo \"Error: no test specified\" && exit 1",

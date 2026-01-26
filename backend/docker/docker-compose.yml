@@ -1,8 +1,8 @@
-version: '3.8'
+
 services:
   db:
     image: postgres:15-alpine
-    container_name: NFT-database
+    container_name: investPoint-dev-db
     restart: always
     environment:
       POSTGRES_USER: "postgres"

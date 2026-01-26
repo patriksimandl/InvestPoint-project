@@ -47,7 +47,14 @@ const stocks = [
 
 
 async function insertStocks() {
-  if(await db.stocks.findMany.length !== 0){
+  const length =await (await db.stocks.findMany()).length;
+  
+  console.log(length);
+
+  if( length !== 0){
+    
+
+
     return;
   }
 

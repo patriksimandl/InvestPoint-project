@@ -5,11 +5,9 @@ services:
       context: .
       dockerfile: ./frontend/dockerfile
     container_name: investPoint-frontend
-    
     depends_on:
       - db
       - backend
-    
     ports:
       - "5000:5000"
     
@@ -19,11 +17,6 @@ services:
     container_name: investPoint-backned
     environment:
       - DATABASE_URL=postgresql://postgres:123123@db:5432/db
-      - PASSWORD_BCRYPT_HASH_KEY='4'
-      - ALPHA_VANTAGE_API_KEY=LK8POHMZBZ2HQK9I
-      - STOCKDATA_API_KEY=I5KV2ewxBpuuilfrOQhkRp1sroiKSg4ebs7V1IKc
-      - FINNHUB_API_KEY=d595lc9r01qvj8ik996gd595lc9r01qvj8ik9970
-      - JWT_SECRET_KEY=UltraSecretKey
     build: 
       context: .
       dockerfile: ./backend/dockerfile

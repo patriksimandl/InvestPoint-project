@@ -2,41 +2,50 @@ import axios from 'axios';
 import db from './prismaClient.ts';
 import dayjs from 'dayjs';
 import "dotenv/config";
+import mockedData from './mockedData/mockedData.js';
 
 export default async function fetchStocks() {
+
   const todaysDate = dayjs().startOf('day')
-
-
-  try {
-    //get last time fetched
-    const lastFetchDate = await db.lastFetch.findUnique({
-      where: {
-        id: 1,
-      },
-    })
+  //get last time fetched
+  const lastFetchDate = await db.lastFetch.findUnique({
+    where: {
+      id: 1,
+    },
+  })
 
 
 
-    
+
+
+
+
+
+
+  if (process.env.STOCKDATA_API_KEY === "your_api_key" || process.env.FINNHUB_API_KEY === "your_api_key") {
+    const mockedDate = dayjs('2000-01-01').startOf('day');
 
     //if it was today
-    if (lastFetchDate && todaysDate.isSame(lastFetchDate.lastFetch)) {
+    if (lastFetchDate && (mockedDate.isSame(lastFetchDate.lastFetch) || todaysDate.isSame(lastFetchDate.lastFetch)) ) {
       console.log('exit');
       return;
     }
 
-    //get all the symbols
-    const symbols = await db.stocks.findMany({
-      select: {
-        symbol: true,
-      },
-    });
 
 
-    //actual fetch from server
-    await fetchFromStocksServer(symbols);
+    mockedData.forEach(async (stock) => {
+      await db.stocks.update({
+        where: {
+          symbol: stock.symbol
+        },
+        data: {
+          data: stock.data,
+          companyProfile: stock.companyProfile
+        }
+      })
 
-    
+
+    })
 
 
     //update the last time fetch or create if it is first time
@@ -46,22 +55,86 @@ export default async function fetchStocks() {
           id: 1
         },
         data: {
-          lastFetch: todaysDate
+          //use fake date for user to be able to provide api key anyway
+          lastFetch: mockedDate
         }
       })
     }
     else {
       await db.lastFetch.create({
         data: {
-          lastFetch: todaysDate
+          lastFetch:mockedDate
         }
       })
     }
 
-  } catch (error: any) {
-    console.log('error');
-    console.log('has to fix error of fetching stocks in the container');
-    console.log(error.message);
+
+
+
+
+
+
+
+
+
+
+
+
+
+    console.log('Used mocked data because no api key was provided');
+  }
+  else {
+
+
+    //if it was today
+    if (lastFetchDate && todaysDate.isSame(lastFetchDate.lastFetch)) {
+      console.log('exit');
+      return;
+    }
+
+
+
+    try {
+
+
+      //get all the symbols
+      const symbols = await db.stocks.findMany({
+        select: {
+          symbol: true,
+        },
+      });
+
+
+      //actual fetch from server
+      await fetchFromStocksServer(symbols);
+
+
+
+
+      //update the last time fetch or create if it is first time
+      if (lastFetchDate) {
+        await db.lastFetch.update({
+          where: {
+            id: 1
+          },
+          data: {
+            lastFetch: todaysDate
+          }
+        })
+      }
+      else {
+        await db.lastFetch.create({
+          data: {
+            lastFetch: todaysDate
+          }
+        })
+      }
+
+    } catch (error: any) {
+      console.log('error');
+      console.log('has to fix error of fetching stocks in the container');
+      console.log(error.message);
+    }
   }
 
 }
@@ -85,7 +158,7 @@ async function fetchFromStocksServer(symbols: { symbol: string }[]) {
     const response = await axios.get(`https://api.stockdata.org/v1/data/eod?symbols=${symbol}&api_token=${process.env.STOCKDATA_API_KEY}`);
     fetches++;
     console.log(response);
-    await db.Stocks.update({
+    await db.stocks.update({
       where: {
         symbol
       },
