@@ -3,7 +3,7 @@
 
 @layer components{
   html{
-    @apply pt-[160px] 
+    @apply pt-[130px] bg-slate-100
   }
 
   .stocks-page-container,

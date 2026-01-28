@@ -5,6 +5,7 @@ export interface StockData {
     data:{
       date: string,
       close: number
+      open:number
     }[]
   }
 }

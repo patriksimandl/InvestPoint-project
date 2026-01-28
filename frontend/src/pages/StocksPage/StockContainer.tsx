@@ -30,7 +30,7 @@ export function StockContainer({ stock }: StockContainer) {
   const dailyChange: number = pricesToday.close - pricesToday.open
 
   return (
-    <div className="stock-container align-center p-[20px] shadow-lg h-[110px]">
+    <div className="stock-container align-center py-[20px] px-[25px] shadow-lg h-[110px]">
       <div className="flex justify-end  flex-row-reverse">
         <div className="company-name flex justify-center flex-col ml-[20px]">
           <div className="font-bold text-[20px] p-[0] ">

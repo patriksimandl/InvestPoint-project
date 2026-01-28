@@ -2,7 +2,7 @@
 export default function LoadingOverlay() {
   return (
     <>
-      <div className="fixed left-0 right-0 bottom-0 top-[160px] backdrop-blur-[10px] w-full h-full z-11 bg-black/20"></div>
+      <div className="fixed left-0 right-0 bottom-0 top-0 backdrop-blur-[10px] w-full h-full z-11 bg-black/20"></div>
       <div className="fixed top-[50%] w-[7vw] left-[50%] translate-x-[-50%] translate-y-[-50%] flex flex-col justify-center items-center z-20 bg-white rounded-[8px] p-[20px]">
         <svg fill="#000000FF" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
           <circle cx="4" cy="12" r="3">

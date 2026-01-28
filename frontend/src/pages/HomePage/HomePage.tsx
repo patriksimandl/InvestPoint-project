@@ -3,6 +3,10 @@ import { MainMenu } from '../../shared/MainMenu'
 import './HomePage.css'
 import type { Dispatch, SetStateAction } from 'react'
 import { Features } from './Features';
+import axios from 'axios';
+import { useQuery } from '@tanstack/react-query';
+import { ScrollStockPanel } from './ScrollStocksPanel.tsx';
+import { BottomMenu } from '../../shared/BottomMenu';
 
 type HomePageProps = {
   isLogged: boolean,
@@ -13,6 +17,24 @@ type HomePageProps = {
 
 
 export function HomePage({ isLogged, setIsLogged, userEmail }: HomePageProps) {
+  
+
+
+
+  const {data:tableStocksData} = useQuery({
+    queryKey: ["stocksData"],
+    queryFn: async () => {
+      const response = await axios.get('http://localhost:3000/stocks')
+      
+      return response.data
+    },
+    //To refetch every 20 min
+    staleTime: 1000 * 60 * 20,
+    
+  });
+
+
+
   return (
     <>
       <title>Home</title>
@@ -41,42 +63,7 @@ export function HomePage({ isLogged, setIsLogged, userEmail }: HomePageProps) {
           </div>
 
         </div>
-        <div className='h-[3rem] overflow-hidden text-md' >
-          <div className='stock-scroll h-full'>
-            <div className='pl-20 pr-20 border-l-[1px] h-full flex items-center'>
-              AMZN
-            </div>
-            <div className='pl-20 pr-20 border-l-[1px] h-full flex items-center'>
-              AMZN
-            </div>
-            <div className='pl-20 pr-20 border-l-[1px] h-full flex items-center'>
-              AMZN
-            </div>
-            <div className='pl-20 pr-20 border-l-[1px] h-full flex items-center'>
-              AMZN
-            </div>
-            <div className='pl-20 pr-20 border-l-[1px] h-full flex items-center'>
-              AMZN
-            </div>
-
-            <div className='pl-20 pr-20 border-l-[1px] h-full flex items-center'>
-              AMZN
-            </div>
-            <div className='pl-20 pr-20 border-l-[1px] h-full flex items-center'>
-              AMZN
-            </div>
-            <div className='pl-20 pr-20 border-l-[1px] h-full flex items-center'>
-              AMZN
-            </div>
-            <div className='pl-20 pr-20 border-l-[1px] h-full flex items-center'>
-              AMZN
-            </div>
-            <div className='pl-20 pr-20 border-l-[1px] h-full flex items-center'>
-              AMZN
-            </div>
-
-          </div>
-        </div>
+        <ScrollStockPanel tableStocksData={tableStocksData}/>
         <Features />
         <div className="h-[34rem] rounded-[60px] outline-[3px] outline-slate-200 mx-[5%] p-15 shadow-2xl shadow-black/60 mb-10 flex relative">
           <div className='flex flex-col justify-center w-[40%]'>
@@ -105,6 +92,7 @@ export function HomePage({ isLogged, setIsLogged, userEmail }: HomePageProps) {
 
         </div>
       </div>
+      <BottomMenu isLogged={isLogged}/>
     </>
 
   )

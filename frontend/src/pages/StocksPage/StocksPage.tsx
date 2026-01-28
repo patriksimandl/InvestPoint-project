@@ -7,7 +7,8 @@ import axios from "axios";
 import { useEffect, useState, type Dispatch, type SetStateAction } from "react";
 import LoadingIcon from '/LoadingIcon.svg'
 import { NavLink } from "react-router";
-import { Portfolio } from "../PortfolioPage/Portfolio";
+import { Portfolio } from "../PortfolioPage/Portfolio.ts";
+import { BottomMenu } from "../../shared/BottomMenu.tsx";
 
 
 type StocksPageProps =
@@ -25,6 +26,7 @@ type StocksPageProps =
         data: {
           date: string,
           close: number
+          open: number
 
 
         }[],
@@ -90,7 +92,7 @@ export function StocksPage({ isLogged, setIsLogged, userEmail }: StocksPageProps
     <>
       <title>Browse Stocks</title>
       <MainMenu isLogged={isLogged} setIsLogged={setIsLogged} userEmail={userEmail} />
-      {isLogged ? <div className="w-[25%] bg-white h-[82vh] rounded-[8px] fixed right-[8%] z-99 top-[130px] p-[20px] flex flex-col shadow-lg">
+      {isLogged ? <div className="w-[25%] bg-white h-[80vh] rounded-[8px] fixed right-[8%] z-99 top-[140px] p-[20px] flex flex-col shadow-lg">
         <div className="font-semibold text-[22px]">Your Portfolio</div>
         <div className="">
           <div className="text-[15px] text-gray-600 mt-[15px]">Total Balance</div>
@@ -109,7 +111,7 @@ export function StocksPage({ isLogged, setIsLogged, userEmail }: StocksPageProps
 
       </div> : ''}
       
-      <div className="stocks-page-container  flex ">
+      <div className="stocks-page-container pb-10  flex ">
         <div className={isLogged ? `w-[68%]` : `w-full`}>
 
           <div className={`stocks-grid relative  ${tableStocksData ? '' : `h-[calc(100vh-170px)]`}`}>
@@ -127,6 +129,7 @@ export function StocksPage({ isLogged, setIsLogged, userEmail }: StocksPageProps
 
 
       </div>
+      <BottomMenu isLogged={isLogged}/>
     </>
 
   )

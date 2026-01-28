@@ -12,7 +12,7 @@
 
 
   .stock-container{
-    @apply bg-white grid grid-cols-3 p-7 rounded-[8px]
+    @apply bg-white grid grid-cols-3 p-7 rounded-[16px]
   }
 
   .labels{

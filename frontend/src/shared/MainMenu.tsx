@@ -2,7 +2,7 @@ import './MainMenu.css'
 import { NavLink } from 'react-router'
 import SearchIcon from '../assets/search-icon.svg'
 import { AccountMenu } from './AccountMenu';
-import type { Dispatch, SetStateAction } from 'react';
+import { useEffect, useRef, useState, type Dispatch, type SetStateAction } from 'react';
 
 export type MainMenuProps = {
   setIsLogged: Dispatch<SetStateAction<boolean>>;
@@ -11,7 +11,47 @@ export type MainMenuProps = {
 }
 
 export function MainMenu({ isLogged, setIsLogged, userEmail }: MainMenuProps) {
+  const mainMenu = useRef(null);
   const menuLinks = ['Portfolio', 'Stocks'];
+
+  const [isAtTop, setIsAtTop] = useState(true);
+
+  useEffect(()=>{
+    console.log('isAtTop');
+    console.log(isAtTop);
+  },[isAtTop])
+
+
+
+  useEffect(() => {
+
+    async function menuTransition () {
+      if (!mainMenu.current) return
+
+      console.log('scroll');
+      console.log(window.scrollY);
+      if (window.scrollY <= 30) {
+        
+        await setIsAtTop(true);
+        mainMenu.current.classList.add('transition-all');
+      }
+      else {
+        mainMenu.current.classList.add('transition-all');
+      }
+
+
+      
+
+      const onScroll = () => { setIsAtTop(window.scrollY <= 30);console.log(window.scrollY);  }
+
+      window.addEventListener('scroll', () => { onScroll() });
+      return () => window.removeEventListener('scroll', () => { onScroll() })
+    }
+
+    menuTransition();
+
+  }, [mainMenu])
+
 
 
 
@@ -20,7 +60,7 @@ export function MainMenu({ isLogged, setIsLogged, userEmail }: MainMenuProps) {
 
   return (
     <>
-      <div className="flex flex-row  justify-between bg-white   rounded-[60px] h-[88px] items-center px-[25px] shadow-2xl fixed top-7 inset-x-[8%]  z-100" >
+      <div ref={mainMenu} className="flex flex-row  justify-between bg-white   rounded-[60px] h-[88px] items-center px-[25px] shadow-2xl fixed top-7 inset-x-[8%]  z-100" style={winUrl === '/' ? {} : { top: isAtTop ? '' : '0px', left: isAtTop ? '' : '0px', borderRadius: isAtTop ? '' : '0px', right: isAtTop ? '' : '0px', height: isAtTop ? '' : '100px' }} >
         <div className="main-menu-left-container flex items-center gap-[40px]">
           <NavLink to='/'>
             <img className='w-[10vw] c-sky-200' src="/InvestPoint-logo-with-blacktext-removebg-preview.png" alt="Invest-point-logo" />
@@ -51,7 +91,7 @@ export function MainMenu({ isLogged, setIsLogged, userEmail }: MainMenuProps) {
 
       </div>
       {winUrl === '/' ? '' :
-        <div className="w-full  bg-blue-200 bg-linear-to-br from-sky-300 to-blue-800 fixed top-[0px] h-[160px] content-end px-[8%] z-98 text-white pb-[10px]">
+        /*<div className="w-full  bg-slate-100 fixed top-[0px] h-[100px] content-end px-[8%] z-98 text-white pb-[10px]">
           {winUrl === '/stocks' ?
             <div className={`grid grid-cols-3   font-semibold ${isLogged ? 'w-[69%]' : `w-full`}`}>
               <div className="ml-[90px]">Share</div>
@@ -64,7 +104,8 @@ export function MainMenu({ isLogged, setIsLogged, userEmail }: MainMenuProps) {
           }
 
         </div>
-
+        */
+        ''
       }
     </>
 
