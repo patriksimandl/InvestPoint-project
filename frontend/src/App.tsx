@@ -1,4 +1,4 @@
-import { Routes, Route } from 'react-router'
+import { Routes, Route, useLocation } from 'react-router'
 import { HomePage } from './pages/HomePage/HomePage'
 import { LoginPage } from './pages/LoginPage/LoginPage'
 import './App.css'
@@ -16,6 +16,7 @@ function App() {
   const [isLogged, setIsLogged] = useState<boolean>(false);
   //const [tableStocksData, setTableStocksData] = useState(JSON.parse(localStorage.getItem('tableStocksData')!) || null);
   const [userEmail, setUserEmail] = useState<string | undefined>(undefined);
+  const { pathname} = useLocation();
 
   useEffect(()=>{
     console.log('isLogged');
@@ -64,8 +65,10 @@ const {data: tableStocksData} = useQuery({
 });
 
 
+useEffect(()=>{
+  window.scrollTo(0,0);
 
-
+},[pathname])
 
 
 
