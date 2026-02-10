@@ -95,7 +95,7 @@ export function PortfolioPage({ isLogged, setIsLogged, userEmail}: PortfolioPage
 
 
 
-      <div className="portfolio-page-container ">
+      <div style={{height: `${isLogged? '' : 'calc(100vh - 140px)'}`,overflow: `${isLogged? '' : 'hidden'}`}}className="portfolio-page-container ">
 
         <div className="grid grid-cols-3 gap-[20px] pb-[20px]">
           <div className="pl-[50px] shadow-lg rounded-[8px] p-[30px] w-full bg-white flex flex-col">
