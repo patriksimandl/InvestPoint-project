@@ -7,17 +7,8 @@ import axios from 'axios';
 import { useQuery } from '@tanstack/react-query';
 import { ScrollStockPanel } from './ScrollStocksPanel.tsx';
 import { BottomMenu } from '../../shared/BottomMenu';
-import { IsLoggedContext } from '../../App.tsx';
 
-type HomePageProps = {
-  userEmail: string | undefined;
-}
-
-export function HomePage({ userEmail }: HomePageProps) {
-
-
-
-
+export function HomePage() {
   const { data: tableStocksData } = useQuery({
     queryKey: ["stocksData"],
     queryFn: async () => {
@@ -32,12 +23,11 @@ export function HomePage({ userEmail }: HomePageProps) {
   });
 
 
-  const {isLogged,setIsLogged} = useContext(IsLoggedContext);
 
   return (
     <>
       <title>Home</title>
-      <MainMenu userEmail={userEmail} />
+      <MainMenu  />
       <div className=''>
         
         <div className='bg-blue-100 mt-[-120px] pt-[160px] pb-15 px-[20px] sm:px-[20px]'>

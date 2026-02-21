@@ -9,13 +9,11 @@ import LoadingIcon from '/LoadingIcon.svg'
 import { NavLink } from "react-router";
 import { Portfolio } from "../PortfolioPage/Portfolio.ts";
 import { BottomMenu } from "../../shared/BottomMenu.tsx";
-import { IsLoggedContext } from "../../App";
+import { IsLoggedContext, UserEmailContext } from "../../App";
 
 
-type StocksPageProps =
+/*type StocksPageProps =
   {
-    userEmail: string | undefined;
-
     tableStocksData: null | {
 
       logoURL: string
@@ -36,22 +34,14 @@ type StocksPageProps =
       }
 
     }[];
-    /*tableStocksData: {
-
-      name: string,
-      symbol: string,
-      logoURL: string;
-      data: {
-        "Time Series (Daily)": any
-      }
-
-    }[],*/
+    
   }
+*/
 
-
-export function StocksPage({ userEmail}: StocksPageProps) {
+export function StocksPage() {
 
   const { isLogged, setIsLogged } = useContext(IsLoggedContext)!;
+  const { userEmail } = useContext(UserEmailContext)!;
   
 
 
@@ -94,11 +84,11 @@ export function StocksPage({ userEmail}: StocksPageProps) {
   return (
     <>
       <title>Browse Stocks</title>
-      <MainMenu userEmail={userEmail} />
+      <MainMenu />
       
       <div className="stocks-page-container pb-8 ">
-        <div className="max-w-7xl mx-auto px-[20px] sm:px-[20px] flex flex-col md:flex-row gap-5">
-          <div className={isLogged ? `w-full md:w-[70%]` : `w-full`}>
+        <div className="max-w-7xl mx-auto px-[20px] sm:px-[20px] flex flex-col lg:flex-row gap-5">
+          <div className={isLogged ? `w-full lg:w-[70%]` : `w-full`}>
             <div className={`stocks-grid relative  ${tableStocksData ? '' : `h-[calc(100vh-170px)]`}`}>
               {tableStocksData ? tableStocksData.map((stock) => {
                 return <StockContainer key={stock.symbol} stock={stock} />
@@ -112,7 +102,7 @@ export function StocksPage({ userEmail}: StocksPageProps) {
           </div>
 
           {isLogged && (
-            <div className="w-full md:w-[24%] bg-white h-auto md:h-[750px] rounded-[8px] md:sticky md:top-[132px] p-[18px] flex flex-col shadow-lg">
+            <div className="w-full bg-white h-auto rounded-[8px] p-[18px] flex flex-col shadow-lg">
               <div className="font-semibold text-[22px]">Your Portfolio</div>
               <div className="">
                 <div className="text-[15px] text-gray-600 mt-[15px]">Total Balance</div>

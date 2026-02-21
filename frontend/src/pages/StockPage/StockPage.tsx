@@ -19,7 +19,7 @@ import { LoginOverlay } from "./LoginOverlay";
 import { TransactionMessage } from "./TransactionMessage";
 import { Portfolio } from "../PortfolioPage/Portfolio";
 import { BottomMenu } from "../../shared/BottomMenu";
-import { IsLoggedContext } from "../../App";
+import { IsLoggedContext, UserEmailContext } from "../../App";
 
 dayjs.extend(utc);
 dayjs.extend(timezone);
@@ -44,10 +44,9 @@ type stockDataProps = {
 
 }
 
-type StockPageProps = { userEmail?: string | undefined; }
-
-export function StockPage({ userEmail }: StockPageProps) {
+export function StockPage() {
   const { isLogged, setIsLogged } = useContext(IsLoggedContext)!;
+  const { userEmail } = useContext(UserEmailContext)!;
   const [zoomButton, setZoomButton] = useState('6M');
   const [isBuying, setIsBuying] = useState<boolean>(false);
   const [showLogin, setShowLogin] = useState<boolean>(false);
@@ -207,7 +206,7 @@ export function StockPage({ userEmail }: StockPageProps) {
 
       <LoginOverlay setShowLogin={setShowLogin} loginTransition={loginTransition} showLogin={showLogin} setLoginTransition={setLoginTransiton} />
 
-      <MainMenu userEmail={userEmail} />
+      <MainMenu />
       <div className="stock-page-container mb-10">
         <div className="max-w-7xl mx-auto px-[20px] sm:px-[20px]">
           <div className="w-full rounded-[8px] bg-white shadow-lg flex flex-col h-auto lg:h-[650px] p-4 sm:p-5 md:p-[22px]">

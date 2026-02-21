@@ -4,14 +4,11 @@ import SearchIcon from '../assets/search-icon.svg'
 import { AccountMenu } from './AccountMenu';
 import { useContext, useEffect, useRef, useState, type Dispatch, type SetStateAction } from 'react';
 import axios from 'axios';
-import { IsLoggedContext } from '../App';
+import { IsLoggedContext, UserEmailContext } from '../App';
 
-export type MainMenuProps = {
-  userEmail?: string | undefined
-}
-
-export function MainMenu({ userEmail }: MainMenuProps) {
+export function MainMenu() {
   const { isLogged, setIsLogged } = useContext(IsLoggedContext)!;
+  const { userEmail } = useContext(UserEmailContext)!;
   const mainMenu = useRef(null);
   const menuLinks = ['Portfolio', 'Stocks'];
 
@@ -94,7 +91,7 @@ export function MainMenu({ userEmail }: MainMenuProps) {
                 <img src={SearchIcon} className='w-7 absolute search-icon cursor-pointer'></img>
               </div>
               {isLogged ?
-                <AccountMenu userEmail={userEmail} />
+                <AccountMenu />
                 :
                 <NavLink className='button-primary' to={'/login'}>
                   Log in

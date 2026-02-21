@@ -11,17 +11,23 @@ import { StockPage } from './pages/StockPage/StockPage'
 import { verification } from './verification'
 
 
-export const IsLoggedContext = createContext<{isLogged: boolean, setIsLogged: Dispatch<SetStateAction<boolean>>}>({
+export const IsLoggedContext = createContext<{ isLogged: boolean, setIsLogged: Dispatch<SetStateAction<boolean>> }>({
   isLogged: false,
-  setIsLogged: () => {},
+  setIsLogged: () => { },
 });
+
+export const UserEmailContext = createContext<{ userEmail: string | undefined, setUserEmail: Dispatch<SetStateAction<string | undefined>> }>({
+  userEmail: undefined,
+  setUserEmail: () => { },
+});
+
 
 function App() {
   const [menuItems, setMenuItems] = useState([]);
   const [isLogged, setIsLogged] = useState(false);
-  //const [tableStocksData, setTableStocksData] = useState(JSON.parse(localStorage.getItem('tableStocksData')!) || null);
+
   const [userEmail, setUserEmail] = useState<string | undefined>(undefined);
-  const { pathname} = useLocation();
+  const { pathname } = useLocation();
 
   /*useEffect(()=>{
     console.log('isLogged');
@@ -29,7 +35,7 @@ function App() {
   },[isLogged])
   */
 
-  const { data: verificationEmail , isError, isSuccess,error} = useQuery({
+  const { data: verificationEmail, isError, isSuccess, error } = useQuery({
     queryKey: ["verification"],
     queryFn: verification,
     retry: false,
@@ -37,55 +43,57 @@ function App() {
   })
 
 
-useEffect(()=>{
-  if(verificationEmail){
-    setIsLogged(true);
-    setUserEmail(verificationEmail);
-  }
-},[verificationEmail,isSuccess]);
+  useEffect(() => {
+    if (verificationEmail) {
+      setIsLogged(true);
+      setUserEmail(verificationEmail);
+    }
+  }, [verificationEmail, isSuccess]);
 
 
-useEffect(()=>{
-  if(isError){
-    console.log(error);
-    setIsLogged(false);
-  }
-},[isError,error]);
+  useEffect(() => {
+    if (isError) {
+      console.log(error);
+      setIsLogged(false);
+    }
+  }, [isError, error]);
 
 
-const {data: tableStocksData} = useQuery({
-  queryKey: ["stocksData"],
-  queryFn: async () => {
-    //const response = await axios.get('http://localhost:3000/stocks')
-    const response = await axios.get(`${import.meta.env.VITE_BACKEND_URL}/stocks`);
-    return response.data
-    //localStorage.setItem('tableStocksData', JSON.stringify(response.data));
-  },
-  //To refetch every 20 min
-  staleTime: 1000 * 60 * 20,
-});
+  const { data: tableStocksData } = useQuery({
+    queryKey: ["stocksData"],
+    queryFn: async () => {
+      //const response = await axios.get('http://localhost:3000/stocks')
+      const response = await axios.get(`${import.meta.env.VITE_BACKEND_URL}/stocks`);
+      return response.data
+      //localStorage.setItem('tableStocksData', JSON.stringify(response.data));
+    },
+    //To refetch every 20 min
+    staleTime: 1000 * 60 * 20,
+  });
 
 
-useEffect(()=>{
-  window.scrollTo(0,0);
+  useEffect(() => {
+    window.scrollTo(0, 0);
 
-},[pathname])
-
-
+  }, [pathname])
 
 
 
-return (
-  <IsLoggedContext.Provider value={{isLogged,setIsLogged}}>
-  <Routes>
-    <Route path='/' element={<HomePage userEmail={userEmail} />} />
-    <Route path='/login' element={<LoginPage setUserEmail={setUserEmail} />} />
-    <Route path='/stocks' element={<StocksPage tableStocksData={tableStocksData} userEmail={userEmail} />} />
-    <Route path='/portfolio' element={<PortfolioPage userEmail={userEmail} />} />
-    <Route path='/stocks/:symbol' element={<StockPage userEmail={userEmail} />} />
-  </Routes>
-  </IsLoggedContext.Provider>
-)
+
+
+  return (
+    <IsLoggedContext.Provider value={{ isLogged, setIsLogged }}>
+      <UserEmailContext.Provider value={{ userEmail, setUserEmail }}>
+        <Routes>
+          <Route path='/' element={<HomePage />} />
+          <Route path='/login' element={<LoginPage />} />
+          <Route path='/stocks' element={<StocksPage  />} />
+          <Route path='/portfolio' element={<PortfolioPage />} />
+          <Route path='/stocks/:symbol' element={<StockPage />} />
+        </Routes>
+      </UserEmailContext.Provider>
+    </IsLoggedContext.Provider>
+  )
 
 }
 

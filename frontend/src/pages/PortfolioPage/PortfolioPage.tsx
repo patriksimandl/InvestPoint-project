@@ -2,7 +2,6 @@ import dayjs from "dayjs";
 import { MainMenu } from "../../shared/MainMenu";
 import { use, useContext, useEffect, useState, type Dispatch, type SetStateAction } from "react";
 import './PortfolioPage.css'
-import InfoIcon from '/InfoIcon.svg'
 import { Portfolio } from "./Portfolio.ts";
 import HoldingsGraph from './HoldingsGraph';
 import HistoryGraph from './HistoryGraph';
@@ -15,15 +14,12 @@ import { GraphZoomButtons } from "./GraphZoomButtons.tsx";
 import { NavLink } from "react-router";
 import { NetProfit } from "./NetProfit.tsx";
 import { BottomMenu } from "../../shared/BottomMenu.tsx";
-import { IsLoggedContext } from "../../App";
+import { IsLoggedContext, UserEmailContext } from "../../App";
 
 
-type PortfolioPageProps = {
-  userEmail?: string | undefined;
-}
-
-export function PortfolioPage({ userEmail}: PortfolioPageProps) {
+export function PortfolioPage() {
   const { isLogged, setIsLogged } = useContext(IsLoggedContext)!;
+  const { userEmail } = useContext(UserEmailContext)!;
   const [activeZoomButton, setActiveZoomButton] = useState<string>('All');
   const todaysDate = dayjs().format('DD. MM');
   const zoomButtons = ['1M', '1Y', 'All'];
@@ -89,7 +85,7 @@ export function PortfolioPage({ userEmail}: PortfolioPageProps) {
   return (
     <>
       <title>Your Portfolio</title>
-      <MainMenu userEmail={userEmail} />
+      <MainMenu />
 
 
 

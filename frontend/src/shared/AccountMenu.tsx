@@ -2,14 +2,15 @@ import { useState, useRef, useEffect, useContext } from 'react'
 import { } from 'react';
 import axios from 'axios';
 import { useQueryClient } from '@tanstack/react-query';
-import { IsLoggedContext } from '../App';
+import { IsLoggedContext, UserEmailContext } from '../App';
 
 
 
 
 
-export function AccountMenu({ userEmail }: { userEmail?: string | undefined }) {
+export function AccountMenu() {
   const { setIsLogged } = useContext(IsLoggedContext)!;
+  const { userEmail } = useContext(UserEmailContext)!;
   const [menuActive, setMenuActive] = useState(false);
 
   const toggleButton = useRef(null);

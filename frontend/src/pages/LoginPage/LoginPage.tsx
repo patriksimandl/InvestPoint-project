@@ -10,7 +10,7 @@ import { EmailInput } from "./EmailInput";
 import { NameInputs } from "./NamesInput";
 import { useNavigate } from "react-router";
 import { useQueryClient } from "@tanstack/react-query";
-import { IsLoggedContext } from "../../App";
+import { IsLoggedContext, UserEmailContext } from "../../App";
 
 export type eventProps = {
   target: {
@@ -18,14 +18,11 @@ export type eventProps = {
   },
 }
 
-type LoginPageProps = {
-  setUserEmail: Dispatch<SetStateAction<string | undefined>>
-}
-
 let passwordArray: string[];
 
-export function LoginPage({ setUserEmail }: LoginPageProps) {
+export function LoginPage() {
   const { isLogged, setIsLogged } = useContext(IsLoggedContext)!;
+  const { setUserEmail } = useContext(UserEmailContext)!;
   const navigate = useNavigate();
   const [isRegistrating, setIsRegistrating] = useState(false);
   const [passwordShown, setPasswordShown] = useState(false);
