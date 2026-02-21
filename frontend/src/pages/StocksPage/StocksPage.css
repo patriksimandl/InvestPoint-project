@@ -6,13 +6,13 @@
 
 @layer components{
   .stocks-grid{
-    @apply grid grid-rows-10 gap-6;
+    @apply grid grid-cols-1 gap-3 sm:gap-4 md:gap-5;
 
   }
 
 
   .stock-container{
-    @apply bg-white grid grid-cols-3 p-7 rounded-[16px]
+    @apply bg-white flex flex-col md:grid md:grid-cols-3 p-4 md:p-6 rounded-[14px] md:rounded-[16px] gap-3 md:gap-0 transition-shadow hover:shadow-xl border border-transparent hover:border-slate-200
   }
 
   .labels{

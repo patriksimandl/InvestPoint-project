@@ -29,10 +29,10 @@ export function BuyOverlay({ symbol,setAnimateInMessage, name, setIsBuying, user
   const maxShares = Number((userCashBalance / todayClosePrice).toFixed(2));
 
 
-  useEffect(() => {
+  /*useEffect(() => {
     console.log(maxShares);
   }, [maxShares])
-
+  */
 
   useEffect(() => {
     if (action) {
@@ -119,7 +119,7 @@ export function BuyOverlay({ symbol,setAnimateInMessage, name, setIsBuying, user
   return (
     <>
       <div className="fixed left-0 right-0 bottom-0 top-0 backdrop-blur-[0px] bg-black/20 w-full h-full z-101"></div>
-      <div className="fixed z-102 left-[50%] shadow-lg top-[50%] bg-slate-100 translate-x-[-50%] translate-y-[-50%] w-[35vw] h-[auto] rounded-[8px] p-10">
+      <div className="fixed z-102 left-[50%] shadow-lg top-[50%] bg-slate-100 translate-x-[-50%] translate-y-[-50%] w-[94vw] sm:w-[80vw] md:w-[55vw] lg:w-[35vw] h-[auto] max-h-[90vh] overflow-auto rounded-[8px] p-6 sm:p-8">
         <button onClick={() => { setIsBuying(false) }} aria-label="Close" className="absolute top-3 right-3 p-2 rounded-full hover:bg-gray-100 cursor-pointer">
           <svg xmlns="http://www.w3.org/2000/svg" className="w-6 h-6 text-gray-600" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2}>
             <path strokeLinecap="round" strokeLinejoin="round" d="M6 18L18 6M6 6l12 12" />

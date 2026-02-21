@@ -1,4 +1,4 @@
-import { useEffect, useState, type Dispatch, type SetStateAction } from "react";
+import { useContext, useEffect, useState, type Dispatch, type SetStateAction } from "react";
 import './LoginPage.css';
 
 import { defLength, defNumber, defSpecialChar, defUpperCase } from "./authPassword";
@@ -10,6 +10,7 @@ import { EmailInput } from "./EmailInput";
 import { NameInputs } from "./NamesInput";
 import { useNavigate } from "react-router";
 import { useQueryClient } from "@tanstack/react-query";
+import { IsLoggedContext } from "../../App";
 
 export type eventProps = {
   target: {
@@ -18,14 +19,13 @@ export type eventProps = {
 }
 
 type LoginPageProps = {
-  isLogged: boolean,
-  setIsLogged: Dispatch<SetStateAction<boolean>>
   setUserEmail: Dispatch<SetStateAction<string | undefined>>
 }
 
 let passwordArray: string[];
 
-export function LoginPage({ isLogged, setIsLogged, setUserEmail }: LoginPageProps) {
+export function LoginPage({ setUserEmail }: LoginPageProps) {
+  const { isLogged, setIsLogged } = useContext(IsLoggedContext)!;
   const navigate = useNavigate();
   const [isRegistrating, setIsRegistrating] = useState(false);
   const [passwordShown, setPasswordShown] = useState(false);
@@ -135,7 +135,7 @@ export function LoginPage({ isLogged, setIsLogged, setUserEmail }: LoginPageProp
   return (
     <>
       <title>{isRegistrating ? 'Create account' : 'Login'}</title>
-      <div className="login-page-container relative flex flex-row rounded-[30px] w-[70%] shadow-xl h-154" >
+      <div className="login-page-container relative flex flex-col lg:flex-row rounded-[26px] w-[92%] sm:w-[86%] lg:w-[80%] xl:w-[85%] max-w-[1200px] shadow-xl max-h-[92vh] lg:max-h-[94vh] xl:max-h-[95vh] lg:min-h-[600px] overflow-auto" >
         <button onClick={() => navigate(-1)} aria-label="Close" className="absolute top-3 right-3 p-2 rounded-full hover:bg-gray-100 cursor-pointer">
           <svg xmlns="http://www.w3.org/2000/svg" className="w-6 h-6 text-gray-600" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2}>
             <path strokeLinecap="round" strokeLinejoin="round" d="M6 18L18 6M6 6l12 12" />
@@ -144,7 +144,7 @@ export function LoginPage({ isLogged, setIsLogged, setUserEmail }: LoginPageProp
         <div className="image-container w-[55%] hidden lg:inline ">
           <img className="h-[100%] object-cover rounded-l-[30px]" src="/Login-page-img.png" />
         </div>
-        <div className=" flex flex-col justify-center items-center bg-white  px-[80px] lg:px-[90px] py-[20px]  lg:w-[45%] md:w-full rounded-[30px]  lg:rounded-r-[30px] lg:rounded-l-[0px] ">
+        <div className="flex flex-col justify-center items-center bg-white px-[24px] sm:px-[40px] lg:px-[70px] py-[24px] lg:w-[45%] md:w-full rounded-[26px] lg:rounded-r-[30px] lg:rounded-l-[0px]">
           <div className="flex content-start  w-full">
             <img className="w-[150px]" src="/InvestPoint-logo-removebg-preview.png" alt="invest-point-logo" />
           </div>
@@ -169,7 +169,7 @@ export function LoginPage({ isLogged, setIsLogged, setUserEmail }: LoginPageProp
             ''
           }
 
-          <div className="flex gap-[10px] w-full">
+          <div className="flex flex-col sm:flex-row gap-[10px] w-full">
             {isRegistrating ?
               <>
 

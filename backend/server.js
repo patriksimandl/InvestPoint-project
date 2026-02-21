@@ -20,7 +20,8 @@ const PORT = process.env.PORT
 app.use(cookieParser());
 
 app.use(cors({
-  origin: 'http://localhost:5000',
+  //origin: 'http://investpoint-project-backend-production.up.railway.app',
+  origin: true,
   credentials: true
 }))
 
@@ -61,7 +62,7 @@ setInterval(()=>{
 app.get('/stocks', async(req,res) =>{
   const tableStocksData = await db.stocks.findMany();
 
-  res.send(tableStocksData).status(200);
+  res.json(tableStocksData).status(200);
 })
 
 //one symbol
@@ -85,7 +86,7 @@ app.get('/stocks/:symbol',async(req,res) =>{
   
   console.log(symbolData);
 
-  res.send(symbolData).status(200);
+  res.status(200).send(symbolData);
 
 
 })

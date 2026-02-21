@@ -6,7 +6,7 @@ type PortfolioOverlayProps ={
 
 export function PortfolioOverlay({price, userTotalValue, userCashBalance}: PortfolioOverlayProps){
   return (
-    <div className="fixed z-102 right-[-20vw] shadow-lg top-[50%] bg-slate-100  translate-y-[-50%] w-[20vw] h-[auto] rounded-l-[8px] p-10 translate-x-[-100%] transition-all">
+    <div className="fixed hidden md:block z-102 right-[-90vw] sm:right-[-60vw] md:right-[-30vw] lg:right-[-20vw] shadow-lg top-[50%] bg-slate-100 translate-y-[-50%] w-[90vw] sm:w-[60vw] md:w-[30vw] lg:w-[20vw] h-[auto] rounded-l-[8px] p-6 sm:p-8 translate-x-[-100%] transition-all">
         <div className="flex font-semibold text-2xl">
           Your portfolio
         </div>

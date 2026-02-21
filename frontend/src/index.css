@@ -1,46 +1,69 @@
 @import "tailwindcss";
 
 
-@layer components{
-  html{
-    @apply pt-[130px] bg-slate-100
+@layer components {
+  html {
+    @apply pt-[96px] md:pt-[120px] bg-slate-100
   }
 
   .stocks-page-container,
   .portfolio-page-container,
-  .stock-page-container
-  {
-    @apply px-[8%] bg-slate-100 pt-[10px]
+  .stock-page-container {
+    @apply bg-slate-100 pt-[8px]
   }
 
-    
-  
-  
+  @keyframes float {
 
+    0%,
+    100% {
+      transform: translateY(0) rotate(3deg);
+    }
 
-
-
-
-
-
-
-
-
-  .button-primary{
-    @apply rounded-[40px] p-3 text-white font-semibold flex justify-center  w-[10vw] text-[17px] bg-blue-900 cursor-pointer shadow-lg;
+    50% {
+      transform: translateY(-20px) rotate(2deg);
+    }
   }
 
-  .button-primary-inactive{
-    @apply rounded-[40px] p-3 text-white font-semibold flex justify-center  w-[10vw] text-[17px]  cursor-pointer bg-gray-400 ;
+  .animate-float {
+    animation: float 6s ease-in-out infinite;
   }
 
-  .button-secondary{
-    @apply rounded-[40px] p-3 text-white font-semibold flex justify-center  w-[10vw] text-[17px]  bg-linear-to-br from-sky-400 to-indigo-600 cursor-pointer shadow-lg
+
+
+
+
+
+
+
+
+
+
+
+
+  .button-primary {
+    @apply rounded-[40px] p-3 text-white font-semibold flex justify-center w-full sm:w-[220px] md:w-[10vw] text-[17px] bg-blue-900 cursor-pointer shadow-lg;
+  }
+
+  .button-primary-inactive {
+    @apply rounded-[40px] p-3 text-white font-semibold flex justify-center w-full sm:w-[220px] md:w-[10vw] text-[17px] cursor-pointer bg-gray-400;
+  }
+
+  .button-secondary {
+    @apply rounded-[40px] p-3 text-white font-semibold flex justify-center w-full sm:w-[220px] md:w-[10vw] text-[17px] bg-linear-to-br from-sky-400 to-indigo-600 cursor-pointer shadow-lg
   }
 
 }
 
+@layer utilities {
+  .text-sm {
+    font-size: 0.95rem;
+    line-height: 1.35rem;
+  }
 
+  
 
-
-
+  .text-xs {
+    font-size: 0.85rem;
+    line-height: 1.2rem;
+  }
+}

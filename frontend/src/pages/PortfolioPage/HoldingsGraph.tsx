@@ -17,7 +17,7 @@ export default function HoldingsGraph({ isLogged, userPortfolio, tableStocksData
   const stockHoldings = userPortfolio?.stockHoldings;
   
   useEffect(() => {
-    console.log(stockHoldings);
+    //console.log(stockHoldings);
   }, [stockHoldings])
 
 
@@ -46,7 +46,7 @@ export default function HoldingsGraph({ isLogged, userPortfolio, tableStocksData
 
     
     
-    console.log(userPortfolio);
+    /*console.log(userPortfolio);*/
     const HoldingsValue: number | 'Stock Holdings is not defined' | undefined =  userPortfolio?.calculateStockHoldingsValue(); 
 
 
@@ -89,8 +89,7 @@ export default function HoldingsGraph({ isLogged, userPortfolio, tableStocksData
             const valueOfSymbol = (quantity*pricePerShare) / (HoldingsValue / 100) 
             percentOflabel += valueOfSymbol;
 
-            console.log(symbol);
-            console.log(valueOfSymbol);
+          
 
             
           }
@@ -103,7 +102,6 @@ export default function HoldingsGraph({ isLogged, userPortfolio, tableStocksData
 
     })
 
-    console.log(series);
     
     let sumOfSeries = 0
 
@@ -111,7 +109,6 @@ export default function HoldingsGraph({ isLogged, userPortfolio, tableStocksData
       sumOfSeries += num;
     })
 
-    console.log(sumOfSeries);
     return series
   }
 
@@ -147,7 +144,6 @@ export default function HoldingsGraph({ isLogged, userPortfolio, tableStocksData
         events: {
           legendClick: function (chartContext: any, seriesIndex: any, config: any) {
             const seriesName = config.global.seriesNames[seriesIndex];
-            console.log(seriesName);
           }
         }
       },
@@ -162,7 +158,23 @@ export default function HoldingsGraph({ isLogged, userPortfolio, tableStocksData
       },
       legend: { position: 'bottom', fontSize: '12px' },
       states: { active: { filter: {} } },
-      colors: ['#008FFB', '#00E396', '#FEB019', '#FF4560', '#775DD0', '#3F51B5', '#546E7A']
+      colors: ['#008FFB', '#00E396', '#FEB019', '#FF4560', '#775DD0', '#3F51B5', '#546E7A'],
+      responsive: [
+        {
+          breakpoint: 768,
+          options: {
+            plotOptions: { pie: { donut: { size: '58%' } } },
+            legend: { position: 'bottom', fontSize: '11px' }
+          }
+        },
+        {
+          breakpoint: 480,
+          options: {
+            plotOptions: { pie: { donut: { size: '62%' } } },
+            legend: { position: 'bottom', fontSize: '10px' }
+          }
+        }
+      ]
     };
 
     const chart = new ApexCharts(containerRef.current as any, holdingsGraphOptions);
@@ -170,5 +182,5 @@ export default function HoldingsGraph({ isLogged, userPortfolio, tableStocksData
     return () => { chart.destroy(); };
   }, [isLogged, stockHoldings, containerRef.current, tableStocksData]);
 
-  return <div className="mt-[5%] " ref={containerRef} />;
+  return <div className="mt-4 w-full min-h-[220px] sm:min-h-[260px] md:min-h-[300px]" ref={containerRef} />;
 }

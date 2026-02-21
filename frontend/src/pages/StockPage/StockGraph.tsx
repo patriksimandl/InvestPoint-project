@@ -86,18 +86,56 @@ export function StockGraph({ stockData, lastIndex, setZoomButton }: StockGraphPr
           }, type: 'candlestick', width: '100%', height: '100%', toolbar: { show: false }, zoom: { enabled: true }
         },
         dataLabels: { enabled: false },
-        grid: { show: true, xaxis: { lines: { show: false } } },
+        grid: { show: true, xaxis: { lines: { show: false } }, padding: { left: 5, right: 5 } },
         //markers: { strokeColor: 'inherited' },
         series: [{
           data: format
         }],
+        responsive: [
+          {
+            breakpoint: 768,
+            options: {
+              xaxis: {
+                labels: {
+                  style: { fontSize: '10px' },
+                  rotate: -90,
+                  rotateAlways: false
+                }
+              },
+              yaxis: {
+                labels: { style: { fontSize: '11px' } }
+              },
+              grid: { padding: { left: 10, right: 0 } }
+            }
+          },
+          {
+            breakpoint: 520,
+            options: {
+              xaxis: {
+                labels: {
+                  style: { fontSize: '7px' },
+                  rotate: 0,
+                  rotateAlways: true,
+                  maxHeight: 60
+                },
+                tickAmount: 4
+              },
+              yaxis: {
+                labels: { style: { fontSize: '8px' } },
+                tickAmount: 5
+              },
+              grid: { padding: { left: 10, right: 0 } }
+            }
+          }
+        ],
         xaxis: {
           type: 'numeric',
           labels: {
             formatter: (value: number) => {
               const indx = Math.round(Number(value));
               return dayjs(dates[indx]).format('YYYY-MM-DD')
-            }
+            },
+            style: { fontSize: '12px' }
           },
 
           tooltip: {
@@ -113,6 +151,9 @@ export function StockGraph({ stockData, lastIndex, setZoomButton }: StockGraphPr
           }
         },
         yaxis: {
+          labels: {
+            style: { fontSize: '12px' }
+          },
           crosshairs: {
             show: true, 
             stroke: {

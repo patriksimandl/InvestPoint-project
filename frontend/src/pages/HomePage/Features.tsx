@@ -24,28 +24,35 @@ export function Features() {
 
   return (
     <>
-      <div className="text-center mb-16 mt-20">
-        <h2 className="text-3xl md:text-4xl font-bold text-slate-900 dark:text-white mb-4">Everything you need to grow your wealth</h2>
-        <p className="text-slate-500 dark:text-slate-400 max-w-2xl mx-auto">Access professional tools and real-time insights to make smarter investment decisions every single day.</p>
+      <div className="bg-white">
+        <div className="max-w-7xl mx-auto px-[20px] sm:px-[20px]">
+          <div className="text-center pb-12 pt-12">
+            <h2 className="text-3xl md:text-4xl font-bold text-slate-900 dark:text-white mb-4">Everything you need to grow your wealth</h2>
+            <p className="text-slate-500 text-lg dark:text-slate-400 max-w-2xl mx-auto">Access professional tools and real-time insights to make smarter investment decisions every single day.</p>
+          </div>
+        </div>
       </div>
-      <div className="grid grid-cols-3 px-[5%] h-[15rem] gap-8 mb-40">
+      <div className="bg-white pb-24">
+        <div className="max-w-7xl mx-auto px-[20px] sm:px-[20px]">
+          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 h-auto gap-5 md:gap-6">
         {featuresContent.map((feature) => {
           return (
-            <div className="flex bg-slate-100  flex-col w-full h-full bg-blue-100 rounded-[12px] p-7 ">
+            <div className="flex shadow-md flex-col  transition-all hover:scale-[1.04] hover:shadow-xl w-full h-full bg-slate-100 rounded-[12px] p-5 md:p-6">
               <div className="flex items-center justify-center h-[4rem] w-[4rem] bg-blue-100 rounded-[12px]">
                 {feature.icon}
               </div>
               <div className="font-bold text-blue-900 text-xl mt-4">
                 {feature.header}
               </div>
-              <div className="mt-3 text-slate-600 text-md">
+              <div className="mt-3 text-lg text-slate-600 text-sm">
                 {feature.content}
               </div>
             </div>
           )
         })}
 
-       
+          </div>
+        </div>
       </div>
     </>
   )

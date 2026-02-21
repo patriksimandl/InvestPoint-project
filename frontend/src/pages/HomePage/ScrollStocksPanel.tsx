@@ -8,7 +8,7 @@ type ScrollStockPanelProps = {
 
 export function ScrollStockPanel({ tableStocksData }: ScrollStockPanelProps) {
   return (
-    <div className='h-[3rem] overflow-hidden text-md' >
+    <div className='h-[4rem] overflow-hidden text-md pb-4 bg-slate-100 md:bg-white pt-5' >
       <div className='stock-scroll h-full'>
         {tableStocksData?.map((stock, i) => {
           if (i > 15) {
@@ -22,9 +22,8 @@ export function ScrollStockPanel({ tableStocksData }: ScrollStockPanelProps) {
 
           const percentChange = (closePrice - yesterdayPrice) / (yesterdayPrice / 100)
 
-          console.log(percentChange);
           return (
-            <NavLink to={`/stocks/${symbol}`} className='px-12  h-full flex items-center gap-3'>
+            <NavLink to={`/stocks/${symbol}`} className='px-6 sm:px-10 h-full flex items-center gap-3'>
               <div className="font-semibold">
                 {symbol}
               </div>
@@ -36,7 +35,7 @@ export function ScrollStockPanel({ tableStocksData }: ScrollStockPanelProps) {
                   <svg xmlns="http://www.w3.org/2000/svg" height="24px" viewBox="0 -960 960 960" width="24px" fill="#e7000b"><path d="M480-360 280-560h400L480-360Z" /></svg>
                 </div>
                 <div>
-                  {percentChange.toFixed(2)}
+                  {percentChange.toFixed(2)}%
 
                 </div>
 

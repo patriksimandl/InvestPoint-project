@@ -23,9 +23,10 @@ export function EmailInput({ email, setEmail, emailCredentials,resetKey }: Email
   }
 
 
-  useEffect(() => {
+  /*useEffect(() => {
     console.log(emailCredentials);
   }, [emailCredentials])
+  */
 
   return (
     <>

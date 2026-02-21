@@ -31,7 +31,6 @@ export function GraphZoomButtons({ zoomButtons, setActiveZoomButton, activeZoomB
 
     }
     else if (option === 'All') {
-      console.log('reset');
       ApexCharts.exec('PortfolioHistory', 'zoomX', 'resetSeries');
     }
   }
@@ -42,10 +41,10 @@ export function GraphZoomButtons({ zoomButtons, setActiveZoomButton, activeZoomB
 
 
   return (
-    <div className="zoom-grid flex gap-5 w-full text-[17px] justify-end pr-[30px]">
+    <div className="zoom-grid flex gap-2 sm:gap-4 w-full text-[14px] sm:text-[16px] justify-start sm:justify-end flex-wrap">
       {zoomButtons.map((option: string) => {
         return (
-          <div key={option} className={`w-[40px] cursor-pointer justify-center flex transition-[border] duration-40 ${activeZoomButton === option ? 'font-semibold border-b-[3px]' : ''}`} onClick={() => { setActiveZoomButton(option); ZoomGraph(option) }}>{option}</div>
+          <div key={option} className={`cursor-pointer justify-center flex px-3 py-1 rounded-full border ${activeZoomButton === option ? 'font-semibold border-slate-900 text-slate-900' : 'border-slate-200 text-slate-600'} transition-colors`} onClick={() => { setActiveZoomButton(option); ZoomGraph(option) }}>{option}</div>
         )
       })}
     </div>

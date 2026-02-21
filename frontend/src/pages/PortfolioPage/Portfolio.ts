@@ -53,6 +53,8 @@ export class Portfolio {
 
     })
 
+    console.log(HoldingsQuantity);
     return HoldingsQuantity;
+    
   }
 }

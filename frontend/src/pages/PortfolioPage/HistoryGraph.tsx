@@ -36,7 +36,6 @@ export default function HistoryGraph({ setActiveZoomButton, isLogged, totalBalan
       }
     })
 
-    console.log(format);
 
 
 
@@ -49,9 +48,9 @@ export default function HistoryGraph({ setActiveZoomButton, isLogged, totalBalan
             const max = Math.round(xaxis.max);
             const min = Math.round(xaxis.min);
 
-            console.log(max);
+            /*console.log(max);
             console.log(min);
-
+            */
 
             if (min === lastIndex - 30 && max === lastIndex) {
               setActiveZoomButton('1M');
@@ -68,7 +67,11 @@ export default function HistoryGraph({ setActiveZoomButton, isLogged, totalBalan
           },
         },
         id: 'PortfolioHistory',
-        type: 'area', width: '100%', height: '95%', toolbar: { show: false }, zoom: { enabled: false }
+        type: 'area',
+        width: '100%',
+        height: '95%',
+        toolbar: { show: false },
+        zoom: { enabled: false }
       },
       dataLabels: { enabled: false },
       grid: { show: true, xaxis: { lines: { show: false } } },
@@ -82,10 +85,15 @@ export default function HistoryGraph({ setActiveZoomButton, isLogged, totalBalan
           formatter: (value: Number) => {
             const idx = Math.round(Number(value));
             return dates[idx]
-          }
+          },
+          rotate: -35,
+          style: { fontSize: '11px' }
         }
       },
-      yaxis: { title: { text: 'Portfolio value ($)', style: { fontWeight: '600', fontSize: '15px' } } },
+      yaxis: {
+        title: { text: 'Portfolio value ($)', style: { fontWeight: '600', fontSize: '14px' } },
+        labels: { style: { fontSize: '11px' } }
+      },
       stroke: { curve: 'straight' },
       subtitle: { text: '', align: '', style: { fontSize: '15px' } },
       tooltip: {
@@ -101,7 +109,26 @@ export default function HistoryGraph({ setActiveZoomButton, isLogged, totalBalan
         },
         marker: false,
         y: { show: true }
-      }
+      },
+      responsive: [
+        {
+          breakpoint: 768,
+          options: {
+            chart: { height: 280 },
+            xaxis: { labels: { rotate: -45, style: { fontSize: '10px' } } },
+            yaxis: { title: { style: { fontSize: '12px' } }, labels: { style: { fontSize: '10px' } } }
+          }
+        },
+        {
+          breakpoint: 480,
+          options: {
+            chart: { height: 240 },
+            grid: { padding: { left: 6, right: 6 } },
+            xaxis: { labels: { show: false } },
+            yaxis: { title: { style: { fontSize: '11px' } }, labels: { style: { fontSize: '9px' } } }
+          }
+        }
+      ]
     };
 
 
@@ -111,5 +138,5 @@ export default function HistoryGraph({ setActiveZoomButton, isLogged, totalBalan
 
   }, [isLogged, containerRef.current,totalBalanceHistory]);
 
-  return <div id="chart" className="w-full h-full " ref={containerRef} />;
+  return <div id="chart" className="w-full h-full min-h-[240px]" ref={containerRef} />;
 }

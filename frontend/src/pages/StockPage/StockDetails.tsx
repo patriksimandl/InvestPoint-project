@@ -9,21 +9,21 @@ export function StockDetails({prevClosePrice, openPrice,marketCap} : StockDetail
 
   return (
     <>
-      <div className="flex border-b-1 border-gray-200 p-3  tracking-wide ">
+      <div className="flex flex-row justify-between border-b-1 border-gray-200 p-3 tracking-wide">
 
-        <div className="pl-2 pr-22 border-r-1 border-gray-200 text-lg  ">
-          <div className="text-gray-700">
+        <div className="pl-2 pr-4 sm:pr-6 border-r-1 border-gray-200 flex-1 text-base sm:text-lg">
+          <div className="text-gray-700 text-nowrap">
             Previous close
           </div>
-          <div className="text-2xl p-1">
+          <div className="text-xl sm:text-2xl p-1">
             ${prevClosePrice}
           </div>
         </div>
-        <div className="pl-6">
-          <div className="text-gray-700 text-lg">
+        <div className="pl-4 sm:pl-6 flex-1">
+          <div className="text-gray-700 text-base sm:text-lg">
             Open
           </div>
-          <div className="text-2xl p-1">
+          <div className="text-xl sm:text-2xl p-1">
             ${openPrice}
           </div>
         </div>

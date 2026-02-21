@@ -72,8 +72,8 @@ router.post('/register', async (req, res) => {
 
   res.cookie("accessToken",token, {
     httpOnly: true,
-    secure: false,
-    sameSite: 'Strict',
+    secure: true,
+    sameSite: 'none',
     path: '/',
     maxAge: 1000 * 60* 20
   })
@@ -116,12 +116,12 @@ router.post('/login', async (req, res) => {
     //if it is sent even on HTTP or just on HTTPS
     //in production set it on
     //using false just for localhost development
-    secure: false,
+    secure: true,
 
     //How the cookie will be realive
     //if the sites are requested each from backend strict wont work
     //if it navige from client site from frontend => like react router 'strict' setting will work and it is most secured
-    sameSite: 'Strict',
+    sameSite: 'none',
     path: '/',
     //how long the cookie will be in the browser
     maxAge: 1000 * 60* 20
@@ -135,9 +135,9 @@ router.post('/logout', (req,res)=>{
   res.clearCookie("accessToken",{
     
     httpOnly: true,
-    //In production has to be on
-    secure: false,
-    sameSite: 'strict',
+    //In production has to be true because development is htttp and it is not secure
+    secure: true,
+    sameSite: 'none',
     path: "/",
   })
 

@@ -13,9 +13,10 @@ export function NameInput({name,setNameValidation}: NameInputProps) {
 
   const nameInput = useRef(null);
   
-  useEffect(() =>{
+  /*useEffect(() =>{
     console.log(nameValue);
   },[nameValue])
+  */
 
   return (
     <div className='flex flex-col'>

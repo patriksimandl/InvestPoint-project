@@ -11,7 +11,8 @@ export async function sendInfo(email: string, password: string, isRegistrating: 
   let response;
   try {
     if (isRegistrating) {
-      response = await axios.post('http://localhost:3000/auth/register', {
+      // response = await axios.post('http://localhost:3000/auth/register', {
+      response = await axios.post(`${import.meta.env.VITE_BACKEND_URL}/auth/register`, {
         email,
         password
       },
@@ -19,7 +20,8 @@ export async function sendInfo(email: string, password: string, isRegistrating: 
         { withCredentials: true });
     }
     else {
-      response = await axios.post('http://localhost:3000/auth/login', {
+      // response = await axios.post('http://localhost:3000/auth/login', {
+      response = await axios.post(`${import.meta.env.VITE_BACKEND_URL}/auth/login`, {
         email,
         password
       },
@@ -44,7 +46,6 @@ export async function sendInfo(email: string, password: string, isRegistrating: 
   }
 
   if (response.status != 201 && response.status != 200) {
-    console.log(response.status);
     return response.data;
   }
 
