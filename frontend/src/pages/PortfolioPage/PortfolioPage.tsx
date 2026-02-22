@@ -94,7 +94,7 @@ export function PortfolioPage() {
 
 
 
-      <div style={{height: `${isLogged? '' : ''}`,overflow: `${isLogged? '' : 'hidden'}`}}className="portfolio-page-container">
+      <div style={{height: `${isLogged? '' : ''}`,overflow: `${isLogged? '' : 'hidden'}`}}className={`portfolio-page-container `}>
         <div className="max-w-7xl mx-auto px-[20px] sm:px-[20px]">
           <div className="grid grid-cols-1 min-[520px]:grid-cols-2 lg:grid-cols-3 gap-3 sm:gap-4 md:gap-5 pb-4">
           <div className="shadow-lg rounded-[12px] p-[18px] sm:p-[22px] md:p-[26px] md:pl-[36px] w-full bg-white flex flex-col min-h-[120px] transition-transform duration-200 ease-out hover:scale-[1.02]">

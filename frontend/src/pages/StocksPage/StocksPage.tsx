@@ -86,7 +86,7 @@ export function StocksPage() {
       <title>Browse Stocks</title>
       <MainMenu />
       
-      <div className="stocks-page-container pb-8 ">
+      <div className="stocks-page-container pb-8">
         <div className="max-w-7xl mx-auto px-[20px] sm:px-[20px] flex flex-col lg:flex-row gap-5">
           <div className={isLogged ? `w-full lg:w-[70%]` : `w-full`}>
             <div className={`stocks-grid relative  ${tableStocksData ? '' : `h-[calc(100vh-170px)]`}`}>
@@ -106,7 +106,7 @@ export function StocksPage() {
               <div className="font-semibold text-[22px]">Your Portfolio</div>
               <div className="">
                 <div className="text-[15px] text-gray-600 mt-[15px]">Total Balance</div>
-                <div className="text-[20px] font-semibold">${Number(userPortfolio?.totalBalance).toFixed(2)}</div>
+                <div className="text-[20px] font-semibold mb-4">${Number(userPortfolio?.totalBalance).toFixed(2)}</div>
               </div>
               <div className="flex h-full justify-center">
                 <NavLink to="/portfolio" className="button-primary self-end w-full sm:w-[220px] md:w-[12vw]">
