@@ -28,7 +28,8 @@ export function PortfolioPage() {
   const { isLoading: isVerficationLoading } = useQuery({
     queryKey: ['verification'],
     queryFn: verification,
-    retry: false
+    retry: false,
+    staleTime: 1000 *60
   })
 
 

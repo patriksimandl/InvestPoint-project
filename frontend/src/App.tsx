@@ -2,13 +2,14 @@ import { Routes, Route, useLocation } from 'react-router'
 import { HomePage } from './pages/HomePage/HomePage'
 import { LoginPage } from './pages/LoginPage/LoginPage'
 import './App.css'
-import { createContext, useContext, useEffect, useState, type Dispatch, type SetStateAction } from 'react'
+import { createContext, useContext, useEffect, useMemo, useState, type Dispatch, type SetStateAction } from 'react'
 import { StocksPage } from './pages/StocksPage/StocksPage'
 import axios from 'axios'
 import { QueryClient, QueryClientProvider, useQuery, useQueryClient } from '@tanstack/react-query'
 import { PortfolioPage } from './pages/PortfolioPage/PortfolioPage'
 import { StockPage } from './pages/StockPage/StockPage'
 import { verification } from './verification'
+import type { StockData } from './pages/PortfolioPage/types'
 
 
 export const IsLoggedContext = createContext<{ isLogged: boolean, setIsLogged: Dispatch<SetStateAction<boolean>> }>({
@@ -20,6 +21,8 @@ export const UserEmailContext = createContext<{ userEmail: string | undefined, s
   userEmail: undefined,
   setUserEmail: () => { },
 });
+
+export const TableStocksDataContext = createContext<null | StockData[]>(null);
 
 
 function App() {
@@ -77,22 +80,24 @@ function App() {
 
   }, [pathname])
 
-
+  
 
 
 
   return (
-    <IsLoggedContext.Provider value={{ isLogged, setIsLogged }}>
-      <UserEmailContext.Provider value={{ userEmail, setUserEmail }}>
-        <Routes>
-          <Route path='/' element={<HomePage />} />
-          <Route path='/login' element={<LoginPage />} />
-          <Route path='/stocks' element={<StocksPage  />} />
-          <Route path='/portfolio' element={<PortfolioPage />} />
-          <Route path='/stocks/:symbol' element={<StockPage />} />
-        </Routes>
-      </UserEmailContext.Provider>
-    </IsLoggedContext.Provider>
+    <TableStocksDataContext.Provider value={tableStocksData} >
+      <IsLoggedContext.Provider value={{ isLogged, setIsLogged }}>
+        <UserEmailContext.Provider value={{ userEmail, setUserEmail }}>
+          <Routes>
+            <Route path='/' element={<HomePage />} />
+            <Route path='/login' element={<LoginPage />} />
+            <Route path='/stocks' element={<StocksPage />} />
+            <Route path='/portfolio' element={<PortfolioPage />} />
+            <Route path='/stocks/:symbol' element={<StockPage />} />
+          </Routes>
+        </UserEmailContext.Provider>
+      </IsLoggedContext.Provider>
+    </TableStocksDataContext.Provider>
   )
 
 }

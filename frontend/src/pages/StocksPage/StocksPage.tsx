@@ -1,4 +1,4 @@
-import { MainMenu } from "../../shared/MainMenu";
+import {MainMenu}  from "../../shared/MainMenu";
 import './StocksPage.css'
 import { StockContainer } from "./StockContainer";
 import dayjs from "dayjs";
@@ -6,44 +6,23 @@ import { useQuery } from "@tanstack/react-query";
 import axios from "axios";
 import { useContext, useEffect, useState, type Dispatch, type SetStateAction } from "react";
 import LoadingIcon from '/LoadingIcon.svg'
-import { NavLink } from "react-router";
+import { NavLink, useNavigate, useSearchParams } from "react-router";
 import { Portfolio } from "../PortfolioPage/Portfolio.ts";
 import { BottomMenu } from "../../shared/BottomMenu.tsx";
 import { IsLoggedContext, UserEmailContext } from "../../App";
+import type { StockData } from "../PortfolioPage/types.ts";
 
 
-/*type StocksPageProps =
-  {
-    tableStocksData: null | {
 
-      logoURL: string
-      name: string
-      symbol: string
-      data: {
-        meta: {}
-        data: {
-          date: string,
-          close: number
-          open: number
-
-
-        }[],
-      },
-      companyProfile: {
-        marketCapitalization: number
-      }
-
-    }[];
-    
-  }
-*/
 
 export function StocksPage() {
 
   const { isLogged, setIsLogged } = useContext(IsLoggedContext)!;
-  const { userEmail } = useContext(UserEmailContext)!;
   
+  const [SearchParams] = useSearchParams();
 
+
+  const search = SearchParams.get('search');
 
 
   const { data: tableStocksData } = useQuery({
@@ -81,6 +60,19 @@ export function StocksPage() {
 
   });
 
+  let filteredTableStocksData;
+
+  if(search){
+     filteredTableStocksData = tableStocksData.filter((stock : StockData)=>{
+      return stock.name.toLowerCase().includes(search.toLowerCase()) || stock.symbol.toLowerCase().includes(search.toLowerCase());
+    })
+  }
+  else{
+    filteredTableStocksData = tableStocksData
+  }
+
+  
+
   return (
     <>
       <title>Browse Stocks</title>
@@ -90,7 +82,9 @@ export function StocksPage() {
         <div className="max-w-7xl mx-auto px-[20px] sm:px-[20px] flex flex-col lg:flex-row gap-5">
           <div className={isLogged ? `w-full lg:w-[70%]` : `w-full`}>
             <div className={`stocks-grid relative  ${tableStocksData ? '' : `h-[calc(100vh-170px)]`}`}>
-              {tableStocksData ? tableStocksData.map((stock) => {
+              {tableStocksData 
+              ? 
+               filteredTableStocksData.map((stock) => {
                 return <StockContainer key={stock.symbol} stock={stock} />
               }) :
                 <div className="absolute top-[50%] left-[50%] translate-x-[-50%] translate-y-[-50%] flex flex-col justify-center items-center">

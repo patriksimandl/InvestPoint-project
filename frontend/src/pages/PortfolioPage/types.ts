@@ -1,4 +1,5 @@
 export interface StockData {
+  name: string
   symbol: string;
   industry: string;
   data:{
