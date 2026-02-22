@@ -19,7 +19,7 @@ export function calculateStockHoldingsValue(userPortfolio: Portfolio | undefined
 
   const marketStocksValue = ValueOfPortfolioHoldings(entries,tableStocksData);;
 
-  console.log(marketStocksValue);
+  
   
 
   // TODO: Implement market value calculation using tableStocksData
@@ -40,13 +40,16 @@ export function calculateStockHoldingsValue(userPortfolio: Portfolio | undefined
   })
 
 */
+  
+  console.log('market',marketStocksValue);
+ console.log(marketStocksValue - Number(buyHoldingsValue));
 
-
+  console.log((marketStocksValue - Number(buyHoldingsValue))/ Number(buyHoldingsValue) *100);
 
 
   const profitInMoney = marketStocksValue - Number(buyHoldingsValue);  
 
-  const profitInPercent = (marketStocksValue - Number(buyHoldingsValue))/ Number(buyHoldingsValue)/100; 
+  const profitInPercent = (marketStocksValue - Number(buyHoldingsValue))/ Number(buyHoldingsValue)*100; 
 
   return ({profitInMoney, profitInPercent });
 }

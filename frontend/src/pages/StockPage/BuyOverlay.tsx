@@ -3,25 +3,28 @@ import './BuyOverlay.css'
 import { PortfolioOverlay } from "./PortfolioOverlay";
 import { ChangeUnit } from "./ChangeUnit";
 import { transaction } from "./transaction";
-import { useQuery, useQueryClient } from "@tanstack/react-query";
+import { useQueryClient } from "@tanstack/react-query";
 
 
 type BuyOverlayProps = {
   symbol: string,
   name: string,
   setIsBuying: Dispatch<SetStateAction<boolean>>
+  setAnimateInMessage: Dispatch<SetStateAction<boolean>>
+  setTransactionMessage: Dispatch<SetStateAction<boolean>>
+  setBuyingQuantities: Dispatch<SetStateAction<{ price: number; numberOfShares: number }>>
   userCashBalance: number,
   userTotalValue: number,
   todayClosePrice: number
   action: string
 }
 
-export function BuyOverlay({ symbol,setAnimateInMessage, name, setIsBuying, userCashBalance, userTotalValue, todayClosePrice, action, setTransactionMessage, setBuyingQuantities }: BuyOverlayProps) {
+export function BuyOverlay({ symbol, setAnimateInMessage, name, setIsBuying, userCashBalance, userTotalValue, todayClosePrice, action, setTransactionMessage, setBuyingQuantities }: BuyOverlayProps) {
   const [activeButton, setActiveButton] = useState<'Buy' | 'Sell'>('Buy');
   const [activeUnit, setActiveUnit] = useState<'Value' | 'Quantity'>('Value');
   const [value, setValue] = useState(0);
 
-  const buttons = ['Buy', 'Sell'];
+  const buttons: Array<'Buy' | 'Sell'> = ['Buy', 'Sell'];
 
   const queryClient = useQueryClient();
 
@@ -118,38 +121,33 @@ export function BuyOverlay({ symbol,setAnimateInMessage, name, setIsBuying, user
 
   return (
     <>
-      <div className="fixed left-0 right-0 bottom-0 top-0 backdrop-blur-[0px] bg-black/20 w-full h-full z-101"></div>
-      <div className="fixed z-102 left-[50%] shadow-lg top-[50%] bg-slate-100 translate-x-[-50%] translate-y-[-50%] w-[94vw] sm:w-[80vw] md:w-[55vw] lg:w-[35vw] h-[auto] max-h-[90vh] overflow-auto rounded-[8px] p-6 sm:p-8">
-        <button onClick={() => { setIsBuying(false) }} aria-label="Close" className="absolute top-3 right-3 p-2 rounded-full hover:bg-gray-100 cursor-pointer">
-          <svg xmlns="http://www.w3.org/2000/svg" className="w-6 h-6 text-gray-600" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2}>
+      <div className="fixed inset-0 bg-black/30 backdrop-blur-[1px] z-101"></div>
+      <div className="fixed z-102 left-[50%] top-[50%] translate-x-[-50%] translate-y-[-50%] w-[92vw] sm:w-[78vw] md:w-[52vw] lg:w-[34vw] max-h-[90vh] overflow-auto rounded-[22px] p-6 sm:p-8 bg-slate-50 border border-slate-200/70 shadow-xl">
+        <button onClick={() => { setIsBuying(false) }} aria-label="Close" className="absolute top-4 right-4 p-2 rounded-full hover:bg-slate-100 transition-colors">
+          <svg xmlns="http://www.w3.org/2000/svg" className="w-5 h-5 text-slate-600" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2}>
             <path strokeLinecap="round" strokeLinejoin="round" d="M6 18L18 6M6 6l12 12" />
           </svg>
         </button>
-        <div className="text-black text-xl font-semibold mb-8">Buy {name} <span className="text-gray-500 font-normal">({symbol})</span></div>
-        <div className="flex rounded-[8px] bg-white text-lg justify-around shadow-xl text-white  h-[5vh]">
+        <div className="text-slate-900 text-[20px] font-semibold mb-2">Trade {name} <span className="text-slate-500 font-normal">({symbol})</span></div>
+        <div className="text-slate-500 text-[13px] mb-6">Choose action and amount</div>
+        <div className="flex rounded-full bg-slate-100 p-1 text-[15px] font-semibold">
           {buttons.map((button) => {
-            const actionButtonStyle =
-              button === 'Buy'
-                ? {
-                  borderTopLeftRadius: '8px',
-                  borderBottomLeftRadius: '8px',
-                }
-                : {
-                  borderTopRightRadius: '8px',
-                  borderBottomRightRadius: '8px',
-                };
-
             return (
-              <div onClick={() => { setActiveButton(button) }} style={actionButtonStyle} className={`items-center flex justify-center w-[50%] ${activeButton === button ? 'bg-blue-800 text-white' : 'text-black'} cursor-pointer`} >
+              <button
+                key={button}
+                onClick={() => { setActiveButton(button) }}
+                className={`flex-1 py-2 rounded-full transition-all ${activeButton === button ? 'bg-blue-800 text-white shadow-sm' : 'text-slate-700 hover:bg-white'}`}
+                type="button"
+              >
                 {button}
-              </div>
+              </button>
             )
           })}
         </div>
 
         <ChangeUnit activeUnit={activeUnit} setActiveUnit={setActiveUnit} setValue={setValue} />
 
-        <div className="flex flex-col items-center font-normal text-3xl mt-[40px]">
+        <div className="flex flex-col items-center font-normal text-3xl mt-[34px]">
           <div className="flex justify-center">
 
             {activeUnit === 'Value'
@@ -170,11 +168,11 @@ export function BuyOverlay({ symbol,setAnimateInMessage, name, setIsBuying, user
 
           </div>
 
-          <div className="text-gray-500 text-xl mt-1">
+          <div className="text-slate-500 text-[17px] mt-1">
             {activeUnit === 'Value' ? `≈ ${numberOfShares.toFixed(2)} shares` : `≈ $${price}`}
           </div>
         </div>
-        <div className="flex flex-col gap-3 mt-[40px] relative">
+            <div className="flex flex-col gap-3 mt-[36px] relative">
           <input onChange={(event) => {/* setSliderValue(Number(event.currentTarget.value))*/
             const pct = Number(event.target.value);
 
@@ -193,14 +191,14 @@ export function BuyOverlay({ symbol,setAnimateInMessage, name, setIsBuying, user
 
 
           }} value={percent} className='value-selector' type="range" />
-          <div className="absolute slider-bar bg-blue-900 shadow-lg rounded-[8px] z-[-1] h-[10px]" style={{ width: `${Number(percent) + 0.1}%` }}></div>
-          <div className="absolute slider-bar bg-white shadow-lg rounded-[8px] z-[-2] h-[10px] w-full" ></div>
+          <div className="absolute slider-bar bg-blue-800 shadow-sm rounded-[8px] z-[-1] h-[10px]" style={{ width: `${Number(percent) + 0.1}%` }}></div>
+          <div className="absolute slider-bar bg-white border border-slate-200 rounded-[8px] z-[-2] h-[10px] w-full" ></div>
 
         </div>
 
 
-        <div className="con flex justify-center mt-[25px]">
-          <button onClick={makeTransaction} className="button-primary rounded-[8px] w-full">
+        <div className="con flex justify-center mt-[26px]">
+          <button onClick={makeTransaction} className="button-primary rounded-[12px] w-full">
             {activeButton === 'Buy' ? 'Confirm Buy' : 'Confirm Sell'}
           </button>
         </div>

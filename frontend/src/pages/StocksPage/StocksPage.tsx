@@ -1,23 +1,30 @@
 import {MainMenu}  from "../../shared/MainMenu";
 import './StocksPage.css'
 import { StockContainer } from "./StockContainer";
-import dayjs from "dayjs";
 import { useQuery } from "@tanstack/react-query";
 import axios from "axios";
-import { useContext, useEffect, useState, type Dispatch, type SetStateAction } from "react";
+import { useContext } from "react";
 import LoadingIcon from '/LoadingIcon.svg'
-import { NavLink, useNavigate, useSearchParams } from "react-router";
+import { NavLink, useSearchParams } from "react-router";
 import { Portfolio } from "../PortfolioPage/Portfolio.ts";
 import { BottomMenu } from "../../shared/BottomMenu.tsx";
-import { IsLoggedContext, UserEmailContext } from "../../App";
+import { IsLoggedContext } from "../../App";
 import type { StockData } from "../PortfolioPage/types.ts";
+
+type StockWithLogo = StockData & {
+  logoURL: string;
+  data: {
+    meta: {};
+    data: { date: string; close: number; open: number }[];
+  };
+};
 
 
 
 
 export function StocksPage() {
 
-  const { isLogged, setIsLogged } = useContext(IsLoggedContext)!;
+  const { isLogged } = useContext(IsLoggedContext)!;
   
   const [SearchParams] = useSearchParams();
 
@@ -25,7 +32,7 @@ export function StocksPage() {
   const search = SearchParams.get('search');
 
 
-  const { data: tableStocksData } = useQuery({
+  const { data: tableStocksData } = useQuery<StockWithLogo[]>({
     queryKey: ["stocksData"],
     queryFn: async () => {
       // const response = await axios.get('http://localhost:3000/stocks')
@@ -37,7 +44,7 @@ export function StocksPage() {
     staleTime: 1000 * 60 * 20,
   });
 
-  const { data: userPortfolio, isLoading, error } = useQuery({
+  const { data: userPortfolio } = useQuery({
     queryKey: ["userPortfolio"],
     queryFn: async () => {
       // const response = await axios.get('http://localhost:3000/api/portfolio', { withCredentials: true })
@@ -60,18 +67,40 @@ export function StocksPage() {
 
   });
 
-  let filteredTableStocksData;
+  const totalBalance = Number(userPortfolio?.totalBalance ?? 0);
+  const cashBalance = Number(userPortfolio?.cashBalance ?? 0);
+  const holdingsCount = userPortfolio?.stockHoldings
+    ? Object.keys(userPortfolio.stockHoldings).length
+    : 0;
+  const totalHistory = userPortfolio?.totalBalanceHistory ?? [];
+  const latestTotal = totalHistory.length
+    ? Object.values(totalHistory[totalHistory.length - 1])[1]
+    : undefined;
+  const previousTotal = totalHistory.length > 1
+    ? Object.values(totalHistory[totalHistory.length - 2])[1]
+    : undefined;
+  const dailyChange =
+    latestTotal !== undefined && previousTotal !== undefined
+      ? latestTotal - previousTotal
+      : undefined;
+  const dailyChangePct =
+    dailyChange !== undefined && previousTotal
+      ? (dailyChange / previousTotal) * 100
+      : undefined;
 
-  if(search){
-     filteredTableStocksData = tableStocksData.filter((stock : StockData)=>{
+  let filteredTableStocksData: StockWithLogo[] | undefined;
+
+  if (search && tableStocksData) {
+    filteredTableStocksData = tableStocksData.filter((stock: StockWithLogo) => {
       return stock.name.toLowerCase().includes(search.toLowerCase()) || stock.symbol.toLowerCase().includes(search.toLowerCase());
-    })
-  }
-  else{
-    filteredTableStocksData = tableStocksData
+    });
+  } else if (search) {
+    filteredTableStocksData = [];
+  } else {
+    filteredTableStocksData = tableStocksData ?? [];
   }
 
-  
+  console.log(latestTotal) 
 
   return (
     <>
@@ -84,10 +113,10 @@ export function StocksPage() {
             <div className={`stocks-grid relative  ${tableStocksData ? '' : `h-[calc(100vh-170px)]`}`}>
               {tableStocksData 
               ? 
-               filteredTableStocksData.map((stock) => {
+               (filteredTableStocksData ?? []).map((stock: StockWithLogo) => {
                 return <StockContainer key={stock.symbol} stock={stock} />
               }) :
-                <div className="absolute top-[50%] left-[50%] translate-x-[-50%] translate-y-[-50%] flex flex-col justify-center items-center">
+                <div className="absolute  top-[50%] left-[50%] translate-x-[-50%] translate-y-[-50%] flex flex-col justify-center items-center">
                   <img className="w-[80px]" src={LoadingIcon}></img>
                   <div className="text-[25px] font-semibold"></div>
                 </div>
@@ -96,13 +125,37 @@ export function StocksPage() {
           </div>
 
           {isLogged && (
-            <div className="w-full bg-white h-auto rounded-[8px] p-[18px] flex flex-col shadow-lg">
-              <div className="font-semibold text-[22px]">Your Portfolio</div>
-              <div className="">
-                <div className="text-[15px] text-gray-600 mt-[15px]">Total Balance</div>
-                <div className="text-[20px] font-semibold mb-4">${Number(userPortfolio?.totalBalance).toFixed(2)}</div>
+            <div className="w-full lg:w-[30%] lg:sticky lg:top-[120px] h-auto lg:h-[79vh] bg-slate-50/70 rounded-[20px] p-[22px] flex flex-col shadow-md border border-slate-200/60">
+              <div className="flex items-center justify-between">
+                <div className="font-semibold text-[18.5px] text-slate-900">Your Portfolio</div>
+                {dailyChange !== undefined && dailyChangePct !== undefined && (
+                  <div
+                    className={`text-[11.5px] font-semibold px-2.5 py-1 rounded-full border ${dailyChange >= 0 ? 'text-emerald-700 bg-emerald-50 border-emerald-200/70' : 'text-rose-700 bg-rose-50 border-rose-200/70'}`}
+                  >
+                    {dailyChange >= 0 ? '+' : ''}${dailyChange.toFixed(2)}
+                    <span className="ml-1">({dailyChangePct >= 0 ? '+' : ''}{dailyChangePct.toFixed(2)}%)</span>
+                  </div>
+                )}
               </div>
-              <div className="flex h-full justify-center">
+
+              <div className="mt-4 rounded-[16px] bg-white/80 border border-slate-200/70 p-4">
+                <div className="text-[11.5px] uppercase tracking-[0.24em] text-slate-500">Total Balance</div>
+                <div className="text-[26px] font-semibold mt-2 text-slate-900">${totalBalance.toFixed(2)}</div>
+                <div className="text-[12.5px] text-slate-500 mt-2">Updated daily</div>
+              </div>
+
+              <div className="grid grid-cols-2 gap-3 mt-4">
+                <div className="rounded-[16px] bg-white/80 border border-slate-200/70 p-4">
+                  <div className="text-[11.5px] uppercase tracking-[0.2em] text-slate-500">Cash</div>
+                  <div className="text-[18px] font-semibold mt-2 text-slate-900">${cashBalance.toFixed(2)}</div>
+                </div>
+                <div className="rounded-[16px] bg-white/80 border border-slate-200/70 p-4">
+                  <div className="text-[11.5px] uppercase tracking-[0.2em] text-slate-500">Holdings</div>
+                  <div className="text-[18px] font-semibold mt-2 text-slate-900">{holdingsCount}</div>
+                </div>
+              </div>
+
+              <div className="flex justify-center mt-auto pt-6">
                 <NavLink to="/portfolio" className="button-primary self-end w-full sm:w-[220px] md:w-[12vw]">
                   View More
                   <div className="flex items-center ml-[4px]">
