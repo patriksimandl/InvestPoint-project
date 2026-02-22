@@ -75,7 +75,7 @@ router.post('/orders', async (req, res) => {
 
     if (type === 'BUY') {
       stockHoldings[symbol] = {
-        avgBuyPricePerShare: ((prevAvgPrice * prevQuantity)+(price * quantity))/(prevQuantity+quantity),
+        avgBuyPricePerShare: ((prevAvgPrice * prevQuantity)+(price))/(prevQuantity+quantity),
         quantity: prevQuantity + quantity,
 
       }
