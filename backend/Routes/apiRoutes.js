@@ -2,9 +2,30 @@ import express from 'express'
 import db from "../prismaClient.ts";
 import dayjs from 'dayjs';
 import { compare } from 'bcryptjs';
+import updateExistingHolding from './orders/ordersSymbolInPortfolio.js';
+import { isReqestValid } from './orders/isReqestValid.ts';
 
 
 const router = express.Router();
+
+const fetchPortfolioAndSymbolData = async (userId, symbol) => {
+  const portfolio = await db.userPortfolio.findUnique({
+    where: {
+      userId
+    }
+  });
+
+  const symbolData = await db.stocks.findUnique({
+    where: {
+      symbol: symbol
+    },
+    select: {
+      data: true
+    }
+  });
+
+  return { portfolio, symbolData };
+};
 
 
 router.get('/portfolio', async (req, res) => {
@@ -33,58 +54,52 @@ router.post('/orders', async (req, res) => {
   console.log('hit');
   const userId = req.userId;
 
-  
+
   const type = req.body.type;
-  const price = req.body.price;
+  //const price = req.body.price;
   const quantity = req.body.numberOfShares;
   const symbol = req.body.symbol
   const date = dayjs();
 
-  
-
-
-
   let portfolio;
+  let symbolData;
 
   try {
-    portfolio = await db.userPortfolio.findUnique({
-      where: {
-        userId
-      }
-    })
+    const result = await fetchPortfolioAndSymbolData(userId, symbol);
+    portfolio = result.portfolio;
+    symbolData = result.symbolData;
   } catch (err) {
     return res.Status(503).send('first')
   }
 
   let portfolioId = portfolio?.id;
   let stockHoldings = portfolio?.stockHoldings;
-  
+
   const prevCashBalance = Number(portfolio.cashBalance);
   const prevTotalBalance = Number(portfolio.totalBalance);
-  
-  let updatedTotalBalance
+  const priceOfShare = Number(symbolData.data.data[0].close);
+
+
+  let updatedTotalBalance;
+
+  if(!isReqestValid(portfolio,quantity,priceOfShare,type,symbol)) return res.status(400).send('Invalid Request');
+
   
 
   if (symbol in stockHoldings) {
-    
-    const prevAvgPrice = stockHoldings[symbol].avgBuyPricePerShare;
-    const prevQuantity = stockHoldings[symbol].quantity;
-    
+    const result = updateExistingHolding({
+      stockHoldings,
+      symbol,
+      type,
+      priceOfShare,
+      
+      quantity,
+      prevTotalBalance
+    });
 
-
-
-    if (type === 'BUY') {
-      stockHoldings[symbol] = {
-        avgBuyPricePerShare: ((prevAvgPrice * prevQuantity)+(price))/(prevQuantity+quantity),
-        quantity: prevQuantity + quantity,
-
-      }
-
-      updatedTotalBalance = prevTotalBalance - price + (((prevAvgPrice * prevQuantity)+(price * quantity))/(prevQuantity+quantity) * quantity)
-    }
-
-  }
-  else {
+    stockHoldings = result.stockHoldings;
+    updatedTotalBalance = result.updatedTotalBalance;
+  } else {
 
 
     if (type === 'BUY') {
@@ -92,16 +107,16 @@ router.post('/orders', async (req, res) => {
       stockHoldings = {
         ...stockHoldings,
         [symbol]: {
-          avgBuyPricePerShare: ((price / quantity).toFixed(15)),
+          avgBuyPricePerShare: ((priceOfShare * quantity / quantity).toFixed(15)),
           quantity
 
         }
 
       }
-      updatedTotalBalance = prevTotalBalance -price + ((price/quantity) * quantity)
+      updatedTotalBalance = prevTotalBalance - (priceOfShare*quantity) + ((priceOfShare*quantity / quantity) * quantity)
     }
     else {
-
+      return res.status(400).send('Error');
     }
 
   }
@@ -115,16 +130,16 @@ router.post('/orders', async (req, res) => {
       data: {
         stockHoldings,
         cashBalance: type === 'BUY'
-          ? prevCashBalance - price 
-          : prevCashBalance + price,
+          ? prevCashBalance - priceOfShare * quantity
+          : prevCashBalance + priceOfShare * quantity,
         totalBalance: updatedTotalBalance
       }
     })
 
     await db.transactionHistory.create({
-      data:{
+      data: {
         portfolioId,
-        price: price,
+        price: priceOfShare*quantity,
         quantity: quantity,
         timestamp: date,
         type
@@ -134,16 +149,11 @@ router.post('/orders', async (req, res) => {
 
 
   } catch (error) {
-    return res.sendStatus(503)
+    return res.status(503).send('Fatal Error');
   }
 
 
-
-
   res.sendStatus(201)
-
-
-
 })
 
 

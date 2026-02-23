@@ -1,0 +1,23 @@
+### login /login
+POST http://localhost:3000/auth/login
+Content-Type: application/json
+
+{
+  "email": "your@gmail.com",
+  "password":"yourPassword1_"
+}
+
+####
+
+POST http://localhost:3000/api/orders
+Authorization: eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6MSwiaWF0IjoxNzcxODU1NjEzLCJleHAiOjE3NzE4NTkyMTN9.dj1JCL4_TGFJBJiMaxZf-XddyIeYx_ZJKKjmhgNziM4
+Content-Type: application/json
+
+{
+  "type":"BUY",
+  "symbol":"AAPL",
+  
+  "numberOfShares":1
+}
+
+###
