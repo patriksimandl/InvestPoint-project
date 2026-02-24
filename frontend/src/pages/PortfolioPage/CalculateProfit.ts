@@ -39,13 +39,13 @@ export function calculateStockHoldingsValue(userPortfolio: Portfolio | undefined
 
   })
 
-*/
+
   
   console.log('market',marketStocksValue);
  console.log(marketStocksValue - Number(buyHoldingsValue));
 
   console.log((marketStocksValue - Number(buyHoldingsValue))/ Number(buyHoldingsValue) *100);
-
+*/
 
   const profitInMoney = marketStocksValue - Number(buyHoldingsValue);  
 

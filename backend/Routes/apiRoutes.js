@@ -43,10 +43,45 @@ router.get('/portfolio', async (req, res) => {
 
 
   } catch (err) {
-    res.sendStatus(503);
+    res.sendStatus(404).send('Portfolio not found');
   }
 
 })
+
+
+router.get('/transactionHistory', async (req, res) => {
+  const userId = req.userId;
+
+  try {
+    const portfolio = await db.userPortfolio.findUnique({
+      where: {
+        userId
+      },
+      select: {
+        id: true
+      }
+    });
+
+    if (!portfolio) {
+      return res.status(404).send('Portfolio not found');
+    }
+
+    const transactionHistory = await db.transactionHistory.findMany({
+      where: {
+        portfolioId: portfolio.id
+      },
+      orderBy: {
+        timestamp: 'desc'
+      }
+    });
+
+    return res.status(200).send(transactionHistory);
+
+  } catch (err) {
+    res.sendStatus(503);
+  }
+});
+
 
 
 
@@ -139,6 +174,7 @@ router.post('/orders', async (req, res) => {
     await db.transactionHistory.create({
       data: {
         portfolioId,
+        symbol,
         price: priceOfShare*quantity,
         quantity: quantity,
         timestamp: date,

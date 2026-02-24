@@ -7,10 +7,11 @@ type OperationTabProps ={
   showLogin: boolean,
   setLoginTransition: Dispatch<SetStateAction<boolean>>
   setAction: Dispatch<SetStateAction<string>>
+  canSell: boolean
 }
 
 
-export function OperationTab({setIsBuying,isLogged,setShowLogin,showLogin,setLoginTransition,setAction} : OperationTabProps) {
+export function OperationTab({setIsBuying,isLogged,setShowLogin,showLogin,setLoginTransition,setAction,canSell} : OperationTabProps) {
   const [buttonState,setButtonState] = useState('Overview');
 
   function changeBuying(action :string) {
@@ -37,8 +38,13 @@ export function OperationTab({setIsBuying,isLogged,setShowLogin,showLogin,setLog
           Buy
         </button>
         <button 
-          onClick={() => {changeBuying('Sell')}} 
-          className="bg-white text-slate-700 border-2 border-slate-300 rounded-lg font-semibold hover:bg-slate-50 hover:border-slate-400 transition-all min-w-[90px] sm:min-w-[100px] px-4 sm:px-5 py-2.5 sm:py-3 text-sm sm:text-[15px] shadow-sm hover:shadow"
+          onClick={() => { if (canSell) changeBuying('Sell') }}
+          disabled={!canSell}
+          className={`border-2 rounded-lg font-semibold transition-all min-w-[90px] sm:min-w-[100px] px-4 sm:px-5 py-2.5 sm:py-3 text-sm sm:text-[15px] shadow-sm ${
+            canSell
+              ? 'bg-white text-slate-700 border-slate-300 hover:bg-slate-50 hover:border-slate-400 hover:shadow'
+              : 'bg-slate-50 text-slate-400 border-slate-200 cursor-not-allowed'
+          }`}
         >
           Sell
         </button>

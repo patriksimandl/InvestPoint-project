@@ -863,6 +863,7 @@ export type UserPortfolioScalarFieldEnum = (typeof UserPortfolioScalarFieldEnum)
 export const TransactionHistoryScalarFieldEnum = {
   id: 'id',
   portfolioId: 'portfolioId',
+  symbol: 'symbol',
   price: 'price',
   quantity: 'quantity',
   timestamp: 'timestamp',

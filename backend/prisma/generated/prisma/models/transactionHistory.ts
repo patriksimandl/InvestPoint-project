@@ -43,6 +43,7 @@ export type TransactionHistorySumAggregateOutputType = {
 export type TransactionHistoryMinAggregateOutputType = {
   id: number | null
   portfolioId: number | null
+  symbol: string | null
   price: runtime.Decimal | null
   quantity: runtime.Decimal | null
   timestamp: Date | null
@@ -52,6 +53,7 @@ export type TransactionHistoryMinAggregateOutputType = {
 export type TransactionHistoryMaxAggregateOutputType = {
   id: number | null
   portfolioId: number | null
+  symbol: string | null
   price: runtime.Decimal | null
   quantity: runtime.Decimal | null
   timestamp: Date | null
@@ -61,6 +63,7 @@ export type TransactionHistoryMaxAggregateOutputType = {
 export type TransactionHistoryCountAggregateOutputType = {
   id: number
   portfolioId: number
+  symbol: number
   price: number
   quantity: number
   timestamp: number
@@ -86,6 +89,7 @@ export type TransactionHistorySumAggregateInputType = {
 export type TransactionHistoryMinAggregateInputType = {
   id?: true
   portfolioId?: true
+  symbol?: true
   price?: true
   quantity?: true
   timestamp?: true
@@ -95,6 +99,7 @@ export type TransactionHistoryMinAggregateInputType = {
 export type TransactionHistoryMaxAggregateInputType = {
   id?: true
   portfolioId?: true
+  symbol?: true
   price?: true
   quantity?: true
   timestamp?: true
@@ -104,6 +109,7 @@ export type TransactionHistoryMaxAggregateInputType = {
 export type TransactionHistoryCountAggregateInputType = {
   id?: true
   portfolioId?: true
+  symbol?: true
   price?: true
   quantity?: true
   timestamp?: true
@@ -200,6 +206,7 @@ export type transactionHistoryGroupByArgs<ExtArgs extends runtime.Types.Extensio
 export type TransactionHistoryGroupByOutputType = {
   id: number
   portfolioId: number
+  symbol: string
   price: runtime.Decimal
   quantity: runtime.Decimal
   timestamp: Date
@@ -232,6 +239,7 @@ export type transactionHistoryWhereInput = {
   NOT?: Prisma.transactionHistoryWhereInput | Prisma.transactionHistoryWhereInput[]
   id?: Prisma.IntFilter<"transactionHistory"> | number
   portfolioId?: Prisma.IntFilter<"transactionHistory"> | number
+  symbol?: Prisma.StringFilter<"transactionHistory"> | string
   price?: Prisma.DecimalFilter<"transactionHistory"> | runtime.Decimal | runtime.DecimalJsLike | number | string
   quantity?: Prisma.DecimalFilter<"transactionHistory"> | runtime.Decimal | runtime.DecimalJsLike | number | string
   timestamp?: Prisma.DateTimeFilter<"transactionHistory"> | Date | string
@@ -242,6 +250,7 @@ export type transactionHistoryWhereInput = {
 export type transactionHistoryOrderByWithRelationInput = {
   id?: Prisma.SortOrder
   portfolioId?: Prisma.SortOrder
+  symbol?: Prisma.SortOrder
   price?: Prisma.SortOrder
   quantity?: Prisma.SortOrder
   timestamp?: Prisma.SortOrder
@@ -255,6 +264,7 @@ export type transactionHistoryWhereUniqueInput = Prisma.AtLeast<{
   OR?: Prisma.transactionHistoryWhereInput[]
   NOT?: Prisma.transactionHistoryWhereInput | Prisma.transactionHistoryWhereInput[]
   portfolioId?: Prisma.IntFilter<"transactionHistory"> | number
+  symbol?: Prisma.StringFilter<"transactionHistory"> | string
   price?: Prisma.DecimalFilter<"transactionHistory"> | runtime.Decimal | runtime.DecimalJsLike | number | string
   quantity?: Prisma.DecimalFilter<"transactionHistory"> | runtime.Decimal | runtime.DecimalJsLike | number | string
   timestamp?: Prisma.DateTimeFilter<"transactionHistory"> | Date | string
@@ -265,6 +275,7 @@ export type transactionHistoryWhereUniqueInput = Prisma.AtLeast<{
 export type transactionHistoryOrderByWithAggregationInput = {
   id?: Prisma.SortOrder
   portfolioId?: Prisma.SortOrder
+  symbol?: Prisma.SortOrder
   price?: Prisma.SortOrder
   quantity?: Prisma.SortOrder
   timestamp?: Prisma.SortOrder
@@ -282,6 +293,7 @@ export type transactionHistoryScalarWhereWithAggregatesInput = {
   NOT?: Prisma.transactionHistoryScalarWhereWithAggregatesInput | Prisma.transactionHistoryScalarWhereWithAggregatesInput[]
   id?: Prisma.IntWithAggregatesFilter<"transactionHistory"> | number
   portfolioId?: Prisma.IntWithAggregatesFilter<"transactionHistory"> | number
+  symbol?: Prisma.StringWithAggregatesFilter<"transactionHistory"> | string
   price?: Prisma.DecimalWithAggregatesFilter<"transactionHistory"> | runtime.Decimal | runtime.DecimalJsLike | number | string
   quantity?: Prisma.DecimalWithAggregatesFilter<"transactionHistory"> | runtime.Decimal | runtime.DecimalJsLike | number | string
   timestamp?: Prisma.DateTimeWithAggregatesFilter<"transactionHistory"> | Date | string
@@ -289,6 +301,7 @@ export type transactionHistoryScalarWhereWithAggregatesInput = {
 }
 
 export type transactionHistoryCreateInput = {
+  symbol: string
   price: runtime.Decimal | runtime.DecimalJsLike | number | string
   quantity: runtime.Decimal | runtime.DecimalJsLike | number | string
   timestamp: Date | string
@@ -299,6 +312,7 @@ export type transactionHistoryCreateInput = {
 export type transactionHistoryUncheckedCreateInput = {
   id?: number
   portfolioId: number
+  symbol: string
   price: runtime.Decimal | runtime.DecimalJsLike | number | string
   quantity: runtime.Decimal | runtime.DecimalJsLike | number | string
   timestamp: Date | string
@@ -306,6 +320,7 @@ export type transactionHistoryUncheckedCreateInput = {
 }
 
 export type transactionHistoryUpdateInput = {
+  symbol?: Prisma.StringFieldUpdateOperationsInput | string
   price?: Prisma.DecimalFieldUpdateOperationsInput | runtime.Decimal | runtime.DecimalJsLike | number | string
   quantity?: Prisma.DecimalFieldUpdateOperationsInput | runtime.Decimal | runtime.DecimalJsLike | number | string
   timestamp?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
@@ -316,6 +331,7 @@ export type transactionHistoryUpdateInput = {
 export type transactionHistoryUncheckedUpdateInput = {
   id?: Prisma.IntFieldUpdateOperationsInput | number
   portfolioId?: Prisma.IntFieldUpdateOperationsInput | number
+  symbol?: Prisma.StringFieldUpdateOperationsInput | string
   price?: Prisma.DecimalFieldUpdateOperationsInput | runtime.Decimal | runtime.DecimalJsLike | number | string
   quantity?: Prisma.DecimalFieldUpdateOperationsInput | runtime.Decimal | runtime.DecimalJsLike | number | string
   timestamp?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
@@ -325,6 +341,7 @@ export type transactionHistoryUncheckedUpdateInput = {
 export type transactionHistoryCreateManyInput = {
   id?: number
   portfolioId: number
+  symbol: string
   price: runtime.Decimal | runtime.DecimalJsLike | number | string
   quantity: runtime.Decimal | runtime.DecimalJsLike | number | string
   timestamp: Date | string
@@ -332,6 +349,7 @@ export type transactionHistoryCreateManyInput = {
 }
 
 export type transactionHistoryUpdateManyMutationInput = {
+  symbol?: Prisma.StringFieldUpdateOperationsInput | string
   price?: Prisma.DecimalFieldUpdateOperationsInput | runtime.Decimal | runtime.DecimalJsLike | number | string
   quantity?: Prisma.DecimalFieldUpdateOperationsInput | runtime.Decimal | runtime.DecimalJsLike | number | string
   timestamp?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
@@ -341,6 +359,7 @@ export type transactionHistoryUpdateManyMutationInput = {
 export type transactionHistoryUncheckedUpdateManyInput = {
   id?: Prisma.IntFieldUpdateOperationsInput | number
   portfolioId?: Prisma.IntFieldUpdateOperationsInput | number
+  symbol?: Prisma.StringFieldUpdateOperationsInput | string
   price?: Prisma.DecimalFieldUpdateOperationsInput | runtime.Decimal | runtime.DecimalJsLike | number | string
   quantity?: Prisma.DecimalFieldUpdateOperationsInput | runtime.Decimal | runtime.DecimalJsLike | number | string
   timestamp?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
@@ -360,6 +379,7 @@ export type transactionHistoryOrderByRelationAggregateInput = {
 export type transactionHistoryCountOrderByAggregateInput = {
   id?: Prisma.SortOrder
   portfolioId?: Prisma.SortOrder
+  symbol?: Prisma.SortOrder
   price?: Prisma.SortOrder
   quantity?: Prisma.SortOrder
   timestamp?: Prisma.SortOrder
@@ -376,6 +396,7 @@ export type transactionHistoryAvgOrderByAggregateInput = {
 export type transactionHistoryMaxOrderByAggregateInput = {
   id?: Prisma.SortOrder
   portfolioId?: Prisma.SortOrder
+  symbol?: Prisma.SortOrder
   price?: Prisma.SortOrder
   quantity?: Prisma.SortOrder
   timestamp?: Prisma.SortOrder
@@ -385,6 +406,7 @@ export type transactionHistoryMaxOrderByAggregateInput = {
 export type transactionHistoryMinOrderByAggregateInput = {
   id?: Prisma.SortOrder
   portfolioId?: Prisma.SortOrder
+  symbol?: Prisma.SortOrder
   price?: Prisma.SortOrder
   quantity?: Prisma.SortOrder
   timestamp?: Prisma.SortOrder
@@ -441,6 +463,7 @@ export type transactionHistoryUncheckedUpdateManyWithoutPortfolioNestedInput = {
 }
 
 export type transactionHistoryCreateWithoutPortfolioInput = {
+  symbol: string
   price: runtime.Decimal | runtime.DecimalJsLike | number | string
   quantity: runtime.Decimal | runtime.DecimalJsLike | number | string
   timestamp: Date | string
@@ -449,6 +472,7 @@ export type transactionHistoryCreateWithoutPortfolioInput = {
 
 export type transactionHistoryUncheckedCreateWithoutPortfolioInput = {
   id?: number
+  symbol: string
   price: runtime.Decimal | runtime.DecimalJsLike | number | string
   quantity: runtime.Decimal | runtime.DecimalJsLike | number | string
   timestamp: Date | string
@@ -487,6 +511,7 @@ export type transactionHistoryScalarWhereInput = {
   NOT?: Prisma.transactionHistoryScalarWhereInput | Prisma.transactionHistoryScalarWhereInput[]
   id?: Prisma.IntFilter<"transactionHistory"> | number
   portfolioId?: Prisma.IntFilter<"transactionHistory"> | number
+  symbol?: Prisma.StringFilter<"transactionHistory"> | string
   price?: Prisma.DecimalFilter<"transactionHistory"> | runtime.Decimal | runtime.DecimalJsLike | number | string
   quantity?: Prisma.DecimalFilter<"transactionHistory"> | runtime.Decimal | runtime.DecimalJsLike | number | string
   timestamp?: Prisma.DateTimeFilter<"transactionHistory"> | Date | string
@@ -495,6 +520,7 @@ export type transactionHistoryScalarWhereInput = {
 
 export type transactionHistoryCreateManyPortfolioInput = {
   id?: number
+  symbol: string
   price: runtime.Decimal | runtime.DecimalJsLike | number | string
   quantity: runtime.Decimal | runtime.DecimalJsLike | number | string
   timestamp: Date | string
@@ -502,6 +528,7 @@ export type transactionHistoryCreateManyPortfolioInput = {
 }
 
 export type transactionHistoryUpdateWithoutPortfolioInput = {
+  symbol?: Prisma.StringFieldUpdateOperationsInput | string
   price?: Prisma.DecimalFieldUpdateOperationsInput | runtime.Decimal | runtime.DecimalJsLike | number | string
   quantity?: Prisma.DecimalFieldUpdateOperationsInput | runtime.Decimal | runtime.DecimalJsLike | number | string
   timestamp?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
@@ -510,6 +537,7 @@ export type transactionHistoryUpdateWithoutPortfolioInput = {
 
 export type transactionHistoryUncheckedUpdateWithoutPortfolioInput = {
   id?: Prisma.IntFieldUpdateOperationsInput | number
+  symbol?: Prisma.StringFieldUpdateOperationsInput | string
   price?: Prisma.DecimalFieldUpdateOperationsInput | runtime.Decimal | runtime.DecimalJsLike | number | string
   quantity?: Prisma.DecimalFieldUpdateOperationsInput | runtime.Decimal | runtime.DecimalJsLike | number | string
   timestamp?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
@@ -518,6 +546,7 @@ export type transactionHistoryUncheckedUpdateWithoutPortfolioInput = {
 
 export type transactionHistoryUncheckedUpdateManyWithoutPortfolioInput = {
   id?: Prisma.IntFieldUpdateOperationsInput | number
+  symbol?: Prisma.StringFieldUpdateOperationsInput | string
   price?: Prisma.DecimalFieldUpdateOperationsInput | runtime.Decimal | runtime.DecimalJsLike | number | string
   quantity?: Prisma.DecimalFieldUpdateOperationsInput | runtime.Decimal | runtime.DecimalJsLike | number | string
   timestamp?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
@@ -529,6 +558,7 @@ export type transactionHistoryUncheckedUpdateManyWithoutPortfolioInput = {
 export type transactionHistorySelect<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = runtime.Types.Extensions.GetSelect<{
   id?: boolean
   portfolioId?: boolean
+  symbol?: boolean
   price?: boolean
   quantity?: boolean
   timestamp?: boolean
@@ -539,6 +569,7 @@ export type transactionHistorySelect<ExtArgs extends runtime.Types.Extensions.In
 export type transactionHistorySelectCreateManyAndReturn<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = runtime.Types.Extensions.GetSelect<{
   id?: boolean
   portfolioId?: boolean
+  symbol?: boolean
   price?: boolean
   quantity?: boolean
   timestamp?: boolean
@@ -549,6 +580,7 @@ export type transactionHistorySelectCreateManyAndReturn<ExtArgs extends runtime.
 export type transactionHistorySelectUpdateManyAndReturn<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = runtime.Types.Extensions.GetSelect<{
   id?: boolean
   portfolioId?: boolean
+  symbol?: boolean
   price?: boolean
   quantity?: boolean
   timestamp?: boolean
@@ -559,13 +591,14 @@ export type transactionHistorySelectUpdateManyAndReturn<ExtArgs extends runtime.
 export type transactionHistorySelectScalar = {
   id?: boolean
   portfolioId?: boolean
+  symbol?: boolean
   price?: boolean
   quantity?: boolean
   timestamp?: boolean
   type?: boolean
 }
 
-export type transactionHistoryOmit<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = runtime.Types.Extensions.GetOmit<"id" | "portfolioId" | "price" | "quantity" | "timestamp" | "type", ExtArgs["result"]["transactionHistory"]>
+export type transactionHistoryOmit<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = runtime.Types.Extensions.GetOmit<"id" | "portfolioId" | "symbol" | "price" | "quantity" | "timestamp" | "type", ExtArgs["result"]["transactionHistory"]>
 export type transactionHistoryInclude<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
   portfolio?: boolean | Prisma.userPortfolioDefaultArgs<ExtArgs>
 }
@@ -584,6 +617,7 @@ export type $transactionHistoryPayload<ExtArgs extends runtime.Types.Extensions.
   scalars: runtime.Types.Extensions.GetPayloadResult<{
     id: number
     portfolioId: number
+    symbol: string
     price: runtime.Decimal
     quantity: runtime.Decimal
     timestamp: Date
@@ -1014,6 +1048,7 @@ export interface Prisma__transactionHistoryClient<T, Null = never, ExtArgs exten
 export interface transactionHistoryFieldRefs {
   readonly id: Prisma.FieldRef<"transactionHistory", 'Int'>
   readonly portfolioId: Prisma.FieldRef<"transactionHistory", 'Int'>
+  readonly symbol: Prisma.FieldRef<"transactionHistory", 'String'>
   readonly price: Prisma.FieldRef<"transactionHistory", 'Decimal'>
   readonly quantity: Prisma.FieldRef<"transactionHistory", 'Decimal'>
   readonly timestamp: Prisma.FieldRef<"transactionHistory", 'DateTime'>

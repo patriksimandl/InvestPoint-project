@@ -1,13 +1,17 @@
-import { useEffect, useState, type Dispatch, type SetStateAction } from "react"
+import type { Dispatch, SetStateAction } from "react"
 
-type transactionMessageProps ={
-  transactionMessage: boolean,
+type TransactionMessageProps ={
+  animateInMessage: boolean
   setTransactionMessage: Dispatch<SetStateAction<boolean>>
   symbol: string
+  buyingQuantities: {
+    price: number
+    numberOfShares: number
+  }
 }
 
 
-export function TransactionMessage({ animateInMessage,setAnimateInMessage, transactionMessage, setTransactionMessage,symbol , buyingQuantities}: transactionMessageProps) {
+export function TransactionMessage({ animateInMessage, setTransactionMessage, symbol, buyingQuantities }: TransactionMessageProps) {
   
 
 

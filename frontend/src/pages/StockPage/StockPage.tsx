@@ -1,8 +1,8 @@
-import { useContext, useEffect, useState, type Dispatch, type SetStateAction } from "react";
+import { useContext, useEffect, useState } from "react";
 import { MainMenu } from "../../shared/MainMenu";
 import { useParams } from "react-router";
 import axios from "axios";
-import { QueryClient, useQuery, useQueryClient } from "@tanstack/react-query";
+import { useQuery, useQueryClient } from "@tanstack/react-query";
 import { StockGraph } from "./StockGraph";
 import './StockPage.css'
 import LoadingOverlay from "../PortfolioPage/LoadingOverlay";
@@ -19,7 +19,7 @@ import { LoginOverlay } from "./LoginOverlay";
 import { TransactionMessage } from "./TransactionMessage";
 import { Portfolio } from "../PortfolioPage/Portfolio";
 import { BottomMenu } from "../../shared/BottomMenu";
-import { IsLoggedContext, UserEmailContext } from "../../App";
+import { IsLoggedContext } from "../../App";
 
 dayjs.extend(utc);
 dayjs.extend(timezone);
@@ -45,8 +45,7 @@ type stockDataProps = {
 }
 
 export function StockPage() {
-  const { isLogged, setIsLogged } = useContext(IsLoggedContext)!;
-  const { userEmail } = useContext(UserEmailContext)!;
+  const { isLogged } = useContext(IsLoggedContext)!;
   const [zoomButton, setZoomButton] = useState('6M');
   const [isBuying, setIsBuying] = useState<boolean>(false);
   const [showLogin, setShowLogin] = useState<boolean>(false);
@@ -57,12 +56,15 @@ export function StockPage() {
 
   const queryClient = useQueryClient();
 
+
   const [animateInMessage, setAnimateInMessage] = useState(false);
   const [buyingQuantities, setBuyingQuantities] = useState({
-    price: undefined,
-    numberOfShares: undefined
+    price: 0,
+    numberOfShares: 0
   })
 
+
+  if(!symbol) return
 
   useEffect(() => {
     if (transactionMessage) {
@@ -77,7 +79,7 @@ export function StockPage() {
 
 
 
-  const { data: stockData, isLoading, isError } = useQuery({
+  const { data: stockData, isLoading } = useQuery({
     queryKey: ['stockData', symbol],
     queryFn: async () => {
       // const response = await axios.get(`http://localhost:3000/stocks/${symbol}`)
@@ -138,7 +140,7 @@ export function StockPage() {
 
 
 
-  const { data: marketInfo, isLoading: isLoadingMarketInfo } = useQuery({
+  const { data: marketInfo } = useQuery({
     queryKey: ['marketInfo'],
     queryFn: async () => {
       // const response = await axios.get('http://localhost:3000/market/info');
@@ -148,7 +150,7 @@ export function StockPage() {
     staleTime: 1000 * 60 * 5
   })
 
-  const { data: userPortfolio, isLoading: isLoadingPortfolio, error } = useQuery({
+  const { data: userPortfolio } = useQuery({
     queryKey: ["userPortfolio"],
     queryFn: async () => {
       // const response = await axios.get('http://localhost:3000/api/portfolio', { withCredentials: true })
@@ -188,15 +190,21 @@ export function StockPage() {
   const nextOpeningTime = dayjs(marketInfo?.data.markets[0].status.nextChange).tz('Europe/Prague').format(`ddd DD/MM H:m`)
 
 
+  const holding = symbol && userPortfolio?.stockHoldings && typeof userPortfolio.stockHoldings === 'object' && !Array.isArray(userPortfolio.stockHoldings)
+    ? userPortfolio.stockHoldings[symbol]
+    : undefined;
+  const canSell = !!holding && Number(holding.quantity) > 0;
+
+  const todayClosePrice = Number(stockData?.data?.data?.[0]?.close ?? 0);
   const title = `Invest Point - ${symbol}`
   return (
 
     <>
 
       {isLoading ? <LoadingOverlay /> : ''}
-      {isBuying ? <BuyOverlay action={action} setIsBuying={setIsBuying} setBuyingQuantities={setBuyingQuantities} setAnimateInMessage={setAnimateInMessage} todayClosePrice={stockData?.data.data[0].close} symbol={symbol} name={stockData?.name} userCashBalance={Number((userPortfolio?.cashBalance))} transactionMessage={transactionMessage} userTotalValue={userPortfolio?.totalBalance} setTransactionMessage={setTransactionMessage} /> : ''}
+      {isBuying ? <BuyOverlay action={action} setIsBuying={setIsBuying} setBuyingQuantities={setBuyingQuantities} setAnimateInMessage={setAnimateInMessage} todayClosePrice={todayClosePrice} symbol={symbol} name={stockData?.name} userCashBalance={Number((userPortfolio?.cashBalance))} userTotalValue={Number(userPortfolio?.totalBalance ?? 0)} setTransactionMessage={setTransactionMessage} canSell={canSell} /> : ''}
 
-      {transactionMessage ? <TransactionMessage animateInMessage={animateInMessage} setAnimateInMessage={setAnimateInMessage} transactionMessage={transactionMessage} setTransactionMessage={setTransactionMessage} symbol={symbol} buyingQuantities={buyingQuantities} /> : ''}
+      {transactionMessage ? <TransactionMessage animateInMessage={animateInMessage} setTransactionMessage={setTransactionMessage} symbol={symbol} buyingQuantities={buyingQuantities} /> : ''}
 
 
 
@@ -261,7 +269,7 @@ export function StockPage() {
               </div>
             </div>
           </div>
-          <OperationTab setIsBuying={setIsBuying} isLogged={isLogged} setShowLogin={setShowLogin} showLogin={showLogin} setLoginTransition={setLoginTransiton} setAction={setAction} />
+          <OperationTab setIsBuying={setIsBuying} isLogged={isLogged} setShowLogin={setShowLogin} showLogin={showLogin} setLoginTransition={setLoginTransiton} setAction={setAction} canSell={canSell} />
         </div>
         </div>
         {/*<div className="bg-white rounded-[8px] mt-[20px] shadow-lg">

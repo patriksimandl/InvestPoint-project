@@ -1,8 +1,9 @@
-import { useEffect, useState } from "react";
+import { useContext, useEffect, useMemo, useState } from "react";
 import type { Portfolio } from "./Portfolio"
 import type { StockData } from "./types"
 import { calculateStockHoldingsValue } from "./CalculateProfit";
 import { formatPrice } from "../StocksPage/formatPrice";
+import { UserEmailContext } from "../../App";
 
 type NetProfitProps = {
   userPortfolio: Portfolio | undefined;
@@ -12,43 +13,35 @@ type NetProfitProps = {
 
 
 export function NetProfit({ userPortfolio, tableStocksData, isLogged }: NetProfitProps) {
-  const [profit,setProfit] = useState({
+  const [profit,setProfit] = useState<{profitInMoney: number,profitInPercent: number}>({
     profitInMoney: 0,
     profitInPercent: 0
   });
 
+  useEffect(()=>{
+    console.log('profit',profit);
+  },[profit])
 
 
-  useEffect(() => {
-    if (!isLogged) return;
+  const userEmail = useContext(UserEmailContext);
+
+  useMemo(()=>{ 
+    if (!isLogged) return setProfit({profitInMoney: 0,profitInPercent: 0});
     if (!tableStocksData) return;
     if (!userPortfolio) return;
     
+    const calculatedProfit = calculateStockHoldingsValue(userPortfolio,tableStocksData);
 
-    const profit = calculateStockHoldingsValue(userPortfolio,tableStocksData);
+    
+    
 
-    if(!profit || typeof profit === 'number'){return}
+    if(!calculatedProfit || typeof calculatedProfit !== 'object'){return}
 
-    setProfit(profit);
+    setProfit(calculatedProfit);
 
+  },[userEmail,userPortfolio,tableStocksData,isLogged])
 
-
-
-
-
-  }, [userPortfolio, isLogged, tableStocksData])
-
-
-
-
-
-
-
-
-
-
-
-
+  
 
   return (
     <div className="shadow-lg rounded-[12px] p-[18px] sm:p-[22px] md:p-[26px] md:pl-[36px] w-full bg-white flex flex-col">
@@ -64,12 +57,12 @@ export function NetProfit({ userPortfolio, tableStocksData, isLogged }: NetProfi
         </div>
 
       </div>
-      <div className={`font-semibold ${profit.profitInMoney < 0 ? 'text-red-700' :'text-green-700'}`}>
+      <div className={`font-semibold ${profit ? profit?.profitInMoney < 0 ? 'text-red-700' :'text-green-700' : 'text-green-700'}`}>
         <div className="text-[27px]  ">
-          {userPortfolio ? formatPrice(profit.profitInMoney) : '$0'}
+          {userPortfolio ? formatPrice(profit?.profitInMoney) : '$0'}
         </div>
         <div className="text-[20px] font-normal">
-          {userPortfolio ? `(${profit.profitInPercent.toFixed(3)}%)` : '(0%)'}
+          {profit ? `(${profit?.profitInPercent.toFixed(3)}%)` : '(0%)'}
         </div>
       </div>
     </div>
