@@ -8,11 +8,12 @@ type OperationTabProps ={
   setLoginTransition: Dispatch<SetStateAction<boolean>>
   setAction: Dispatch<SetStateAction<string>>
   canSell: boolean
+  selectedTab: 'Overview' | 'News'
+  setSelectedTab: Dispatch<SetStateAction<'Overview' | 'News'>>
 }
 
 
-export function OperationTab({setIsBuying,isLogged,setShowLogin,showLogin,setLoginTransition,setAction,canSell} : OperationTabProps) {
-  const [buttonState,setButtonState] = useState('Overview');
+export function OperationTab({setIsBuying,isLogged,setShowLogin,showLogin,setLoginTransition,setAction,canSell,selectedTab,setSelectedTab} : OperationTabProps) {
 
   function changeBuying(action :string) {
     if(isLogged){
@@ -71,15 +72,15 @@ export function OperationTab({setIsBuying,isLogged,setShowLogin,showLogin,setLog
       {/* Segmented Control: Overview/News */}
       <div className="flex rounded-lg border-2 border-slate-300 bg-white overflow-hidden w-full lg:w-auto lg:min-w-[320px] xl:min-w-[360px] h-[46px] sm:h-[50px] shadow-sm">
         <button 
-          onClick={() => {setButtonState('Overview')}} 
+          onClick={() => {setSelectedTab('Overview')}} 
           className={`flex-1 relative flex items-center justify-center px-5 sm:px-7 md:px-9 text-sm sm:text-[15px] font-semibold transition-all duration-200 ${
-            buttonState === 'Overview' 
+            selectedTab === 'Overview' 
               ? 'text-blue-900 bg-blue-50/70' 
               : 'text-slate-600 hover:bg-slate-50 hover:text-slate-900'
           }`}
         >
           Overview
-          {buttonState === 'Overview' && (
+          {selectedTab === 'Overview' && (
             <div className="absolute bottom-0 left-[50%] translate-x-[-50%] w-[70%] h-[3px] bg-blue-900 rounded-t-full"></div>
           )}
         </button>
@@ -87,15 +88,15 @@ export function OperationTab({setIsBuying,isLogged,setShowLogin,showLogin,setLog
         <div className="w-[2px] bg-slate-300"></div>
         
         <button 
-          onClick={() => {setButtonState('News')}} 
+          onClick={() => {setSelectedTab('News')}} 
           className={`flex-1 relative flex items-center justify-center px-5 sm:px-7 md:px-9 text-sm sm:text-[15px] font-semibold transition-all duration-200 ${
-            buttonState === 'News' 
+            selectedTab === 'News' 
               ? 'text-blue-900 bg-blue-50/70' 
               : 'text-slate-600 hover:bg-slate-50 hover:text-slate-900'
           }`}
         >
           News
-          {buttonState === 'News' && (
+          {selectedTab === 'News' && (
             <div className="absolute bottom-0 left-[50%] translate-x-[-50%] w-[70%] h-[3px] bg-blue-900 rounded-t-full"></div>
           )}
         </button>

@@ -1,0 +1,10 @@
+<svg viewBox="0 0 64 64" xmlns="http://www.w3.org/2000/svg">
+  <!-- Large star -->
+  <path d="M32 4L38.856 21.144L56 28L38.856 34.856L32 52L25.144 34.856L8 28L25.144 21.144Z" fill="#1f2937" />
+  
+  <!-- Top right small star -->
+  <path d="M48 12L51.428 20.572L60 24L51.428 27.428L48 36L44.572 27.428L36 24L44.572 20.572Z" fill="#6b7280" />
+  
+  <!-- Bottom right small star -->
+  <path d="M52 40L54.214 46.286L61 49L54.214 51.714L52 58L49.786 51.714L43 49L49.786 46.286Z" fill="#d1d5db" />
+</svg>

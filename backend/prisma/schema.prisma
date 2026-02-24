@@ -35,7 +35,9 @@ model Stocks {
   industry    String
   logoURL      String
   data          Json?
-  companyProfile Json?  
+  companyProfile Json?
+  overview      String?
+  lastUpdatedOverview   DateTime? 
 }
 
 model userPortfolio{

@@ -98,7 +98,9 @@ export const StocksScalarFieldEnum = {
   industry: 'industry',
   logoURL: 'logoURL',
   data: 'data',
-  companyProfile: 'companyProfile'
+  companyProfile: 'companyProfile',
+  overview: 'overview',
+  lastUpdatedOverview: 'lastUpdatedOverview'
 } as const
 
 export type StocksScalarFieldEnum = (typeof StocksScalarFieldEnum)[keyof typeof StocksScalarFieldEnum]

@@ -40,6 +40,8 @@ export type StocksMinAggregateOutputType = {
   symbol: string | null
   industry: string | null
   logoURL: string | null
+  overview: string | null
+  lastUpdatedOverview: Date | null
 }
 
 export type StocksMaxAggregateOutputType = {
@@ -48,6 +50,8 @@ export type StocksMaxAggregateOutputType = {
   symbol: string | null
   industry: string | null
   logoURL: string | null
+  overview: string | null
+  lastUpdatedOverview: Date | null
 }
 
 export type StocksCountAggregateOutputType = {
@@ -58,6 +62,8 @@ export type StocksCountAggregateOutputType = {
   logoURL: number
   data: number
   companyProfile: number
+  overview: number
+  lastUpdatedOverview: number
   _all: number
 }
 
@@ -76,6 +82,8 @@ export type StocksMinAggregateInputType = {
   symbol?: true
   industry?: true
   logoURL?: true
+  overview?: true
+  lastUpdatedOverview?: true
 }
 
 export type StocksMaxAggregateInputType = {
@@ -84,6 +92,8 @@ export type StocksMaxAggregateInputType = {
   symbol?: true
   industry?: true
   logoURL?: true
+  overview?: true
+  lastUpdatedOverview?: true
 }
 
 export type StocksCountAggregateInputType = {
@@ -94,6 +104,8 @@ export type StocksCountAggregateInputType = {
   logoURL?: true
   data?: true
   companyProfile?: true
+  overview?: true
+  lastUpdatedOverview?: true
   _all?: true
 }
 
@@ -191,6 +203,8 @@ export type StocksGroupByOutputType = {
   logoURL: string
   data: runtime.JsonValue | null
   companyProfile: runtime.JsonValue | null
+  overview: string | null
+  lastUpdatedOverview: Date | null
   _count: StocksCountAggregateOutputType | null
   _avg: StocksAvgAggregateOutputType | null
   _sum: StocksSumAggregateOutputType | null
@@ -224,6 +238,8 @@ export type StocksWhereInput = {
   logoURL?: Prisma.StringFilter<"Stocks"> | string
   data?: Prisma.JsonNullableFilter<"Stocks">
   companyProfile?: Prisma.JsonNullableFilter<"Stocks">
+  overview?: Prisma.StringNullableFilter<"Stocks"> | string | null
+  lastUpdatedOverview?: Prisma.DateTimeNullableFilter<"Stocks"> | Date | string | null
 }
 
 export type StocksOrderByWithRelationInput = {
@@ -234,6 +250,8 @@ export type StocksOrderByWithRelationInput = {
   logoURL?: Prisma.SortOrder
   data?: Prisma.SortOrderInput | Prisma.SortOrder
   companyProfile?: Prisma.SortOrderInput | Prisma.SortOrder
+  overview?: Prisma.SortOrderInput | Prisma.SortOrder
+  lastUpdatedOverview?: Prisma.SortOrderInput | Prisma.SortOrder
 }
 
 export type StocksWhereUniqueInput = Prisma.AtLeast<{
@@ -247,6 +265,8 @@ export type StocksWhereUniqueInput = Prisma.AtLeast<{
   logoURL?: Prisma.StringFilter<"Stocks"> | string
   data?: Prisma.JsonNullableFilter<"Stocks">
   companyProfile?: Prisma.JsonNullableFilter<"Stocks">
+  overview?: Prisma.StringNullableFilter<"Stocks"> | string | null
+  lastUpdatedOverview?: Prisma.DateTimeNullableFilter<"Stocks"> | Date | string | null
 }, "id" | "symbol">
 
 export type StocksOrderByWithAggregationInput = {
@@ -257,6 +277,8 @@ export type StocksOrderByWithAggregationInput = {
   logoURL?: Prisma.SortOrder
   data?: Prisma.SortOrderInput | Prisma.SortOrder
   companyProfile?: Prisma.SortOrderInput | Prisma.SortOrder
+  overview?: Prisma.SortOrderInput | Prisma.SortOrder
+  lastUpdatedOverview?: Prisma.SortOrderInput | Prisma.SortOrder
   _count?: Prisma.StocksCountOrderByAggregateInput
   _avg?: Prisma.StocksAvgOrderByAggregateInput
   _max?: Prisma.StocksMaxOrderByAggregateInput
@@ -275,6 +297,8 @@ export type StocksScalarWhereWithAggregatesInput = {
   logoURL?: Prisma.StringWithAggregatesFilter<"Stocks"> | string
   data?: Prisma.JsonNullableWithAggregatesFilter<"Stocks">
   companyProfile?: Prisma.JsonNullableWithAggregatesFilter<"Stocks">
+  overview?: Prisma.StringNullableWithAggregatesFilter<"Stocks"> | string | null
+  lastUpdatedOverview?: Prisma.DateTimeNullableWithAggregatesFilter<"Stocks"> | Date | string | null
 }
 
 export type StocksCreateInput = {
@@ -284,6 +308,8 @@ export type StocksCreateInput = {
   logoURL: string
   data?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue
   companyProfile?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue
+  overview?: string | null
+  lastUpdatedOverview?: Date | string | null
 }
 
 export type StocksUncheckedCreateInput = {
@@ -294,6 +320,8 @@ export type StocksUncheckedCreateInput = {
   logoURL: string
   data?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue
   companyProfile?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue
+  overview?: string | null
+  lastUpdatedOverview?: Date | string | null
 }
 
 export type StocksUpdateInput = {
@@ -303,6 +331,8 @@ export type StocksUpdateInput = {
   logoURL?: Prisma.StringFieldUpdateOperationsInput | string
   data?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue
   companyProfile?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue
+  overview?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  lastUpdatedOverview?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
 }
 
 export type StocksUncheckedUpdateInput = {
@@ -313,6 +343,8 @@ export type StocksUncheckedUpdateInput = {
   logoURL?: Prisma.StringFieldUpdateOperationsInput | string
   data?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue
   companyProfile?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue
+  overview?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  lastUpdatedOverview?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
 }
 
 export type StocksCreateManyInput = {
@@ -323,6 +355,8 @@ export type StocksCreateManyInput = {
   logoURL: string
   data?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue
   companyProfile?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue
+  overview?: string | null
+  lastUpdatedOverview?: Date | string | null
 }
 
 export type StocksUpdateManyMutationInput = {
@@ -332,6 +366,8 @@ export type StocksUpdateManyMutationInput = {
   logoURL?: Prisma.StringFieldUpdateOperationsInput | string
   data?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue
   companyProfile?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue
+  overview?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  lastUpdatedOverview?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
 }
 
 export type StocksUncheckedUpdateManyInput = {
@@ -342,6 +378,8 @@ export type StocksUncheckedUpdateManyInput = {
   logoURL?: Prisma.StringFieldUpdateOperationsInput | string
   data?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue
   companyProfile?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue
+  overview?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  lastUpdatedOverview?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
 }
 
 export type StocksCountOrderByAggregateInput = {
@@ -352,6 +390,8 @@ export type StocksCountOrderByAggregateInput = {
   logoURL?: Prisma.SortOrder
   data?: Prisma.SortOrder
   companyProfile?: Prisma.SortOrder
+  overview?: Prisma.SortOrder
+  lastUpdatedOverview?: Prisma.SortOrder
 }
 
 export type StocksAvgOrderByAggregateInput = {
@@ -364,6 +404,8 @@ export type StocksMaxOrderByAggregateInput = {
   symbol?: Prisma.SortOrder
   industry?: Prisma.SortOrder
   logoURL?: Prisma.SortOrder
+  overview?: Prisma.SortOrder
+  lastUpdatedOverview?: Prisma.SortOrder
 }
 
 export type StocksMinOrderByAggregateInput = {
@@ -372,10 +414,20 @@ export type StocksMinOrderByAggregateInput = {
   symbol?: Prisma.SortOrder
   industry?: Prisma.SortOrder
   logoURL?: Prisma.SortOrder
+  overview?: Prisma.SortOrder
+  lastUpdatedOverview?: Prisma.SortOrder
 }
 
 export type StocksSumOrderByAggregateInput = {
   id?: Prisma.SortOrder
+}
+
+export type NullableStringFieldUpdateOperationsInput = {
+  set?: string | null
+}
+
+export type NullableDateTimeFieldUpdateOperationsInput = {
+  set?: Date | string | null
 }
 
 
@@ -388,6 +440,8 @@ export type StocksSelect<ExtArgs extends runtime.Types.Extensions.InternalArgs =
   logoURL?: boolean
   data?: boolean
   companyProfile?: boolean
+  overview?: boolean
+  lastUpdatedOverview?: boolean
 }, ExtArgs["result"]["stocks"]>
 
 export type StocksSelectCreateManyAndReturn<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = runtime.Types.Extensions.GetSelect<{
@@ -398,6 +452,8 @@ export type StocksSelectCreateManyAndReturn<ExtArgs extends runtime.Types.Extens
   logoURL?: boolean
   data?: boolean
   companyProfile?: boolean
+  overview?: boolean
+  lastUpdatedOverview?: boolean
 }, ExtArgs["result"]["stocks"]>
 
 export type StocksSelectUpdateManyAndReturn<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = runtime.Types.Extensions.GetSelect<{
@@ -408,6 +464,8 @@ export type StocksSelectUpdateManyAndReturn<ExtArgs extends runtime.Types.Extens
   logoURL?: boolean
   data?: boolean
   companyProfile?: boolean
+  overview?: boolean
+  lastUpdatedOverview?: boolean
 }, ExtArgs["result"]["stocks"]>
 
 export type StocksSelectScalar = {
@@ -418,9 +476,11 @@ export type StocksSelectScalar = {
   logoURL?: boolean
   data?: boolean
   companyProfile?: boolean
+  overview?: boolean
+  lastUpdatedOverview?: boolean
 }
 
-export type StocksOmit<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = runtime.Types.Extensions.GetOmit<"id" | "name" | "symbol" | "industry" | "logoURL" | "data" | "companyProfile", ExtArgs["result"]["stocks"]>
+export type StocksOmit<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = runtime.Types.Extensions.GetOmit<"id" | "name" | "symbol" | "industry" | "logoURL" | "data" | "companyProfile" | "overview" | "lastUpdatedOverview", ExtArgs["result"]["stocks"]>
 
 export type $StocksPayload<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
   name: "Stocks"
@@ -433,6 +493,8 @@ export type $StocksPayload<ExtArgs extends runtime.Types.Extensions.InternalArgs
     logoURL: string
     data: runtime.JsonValue | null
     companyProfile: runtime.JsonValue | null
+    overview: string | null
+    lastUpdatedOverview: Date | null
   }, ExtArgs["result"]["stocks"]>
   composites: {}
 }
@@ -863,6 +925,8 @@ export interface StocksFieldRefs {
   readonly logoURL: Prisma.FieldRef<"Stocks", 'String'>
   readonly data: Prisma.FieldRef<"Stocks", 'Json'>
   readonly companyProfile: Prisma.FieldRef<"Stocks", 'Json'>
+  readonly overview: Prisma.FieldRef<"Stocks", 'String'>
+  readonly lastUpdatedOverview: Prisma.FieldRef<"Stocks", 'DateTime'>
 }
     
 

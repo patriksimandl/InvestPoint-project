@@ -21,10 +21,10 @@
   "license": "ISC",
   "type": "module",
   "dependencies": {
+    "@google/genai": "^1.42.0",
     "@investpoint/shared": "file:../shared",
     "@prisma/adapter-pg": "^7.3.0",
     "@prisma/client": "^7.3.0",
-    "prisma": "^7.3.0",
     "axios": "^1.13.2",
     "bcryptjs": "^3.0.3",
     "cookie-parser": "^1.4.7",
@@ -34,7 +34,8 @@
     "express": "^5.1.0",
     "jsonwebtoken": "^9.0.3",
     "node-cron": "^4.2.1",
-    "pg": "^8.17.2"
+    "pg": "^8.17.2",
+    "prisma": "^7.3.0"
   },
   "devDependencies": {
     "@types/node": "^24.10.1",

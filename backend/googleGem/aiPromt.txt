@@ -1,0 +1,5 @@
+You are a financial analyst. Provide a brief, 3-5 line overview of the stock with symbol "{{SYMBOL}}". Include:
+- Current price standing or trend
+- Overall market sentiment
+- Key recent events or factors affecting it
+Keep it simple, general, and easy to read.

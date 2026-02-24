@@ -20,6 +20,7 @@ import { TransactionMessage } from "./TransactionMessage";
 import { Portfolio } from "../PortfolioPage/Portfolio";
 import { BottomMenu } from "../../shared/BottomMenu";
 import { IsLoggedContext } from "../../App";
+import sparkleIcon from "../../assets/sparkle-icon.svg";
 
 dayjs.extend(utc);
 dayjs.extend(timezone);
@@ -52,6 +53,7 @@ export function StockPage() {
   const [loginTransition, setLoginTransiton] = useState<boolean>(false);
   const [action, setAction] = useState('');
   const [transactionMessage, setTransactionMessage] = useState<boolean>(false);
+  const [selectedTab, setSelectedTab] = useState<'Overview' | 'News'>('Overview');
   const { symbol } = useParams();
 
   const queryClient = useQueryClient();
@@ -170,6 +172,16 @@ export function StockPage() {
 
   });
 
+  const { data: overviewData, isLoading: isOverviewLoading, isError: isOverviewError } = useQuery({
+    queryKey: ['stockOverview', symbol],
+    queryFn: async () => {
+      const response = await axios.get(`${import.meta.env.VITE_BACKEND_URL}/stocks/${symbol}/overview`, { withCredentials: true })
+      return response.data
+    },
+    enabled: !!symbol && selectedTab === 'Overview',
+    staleTime: 1000 * 60 * 60
+  });
+
 
 
   useEffect(() => {
@@ -269,12 +281,79 @@ export function StockPage() {
               </div>
             </div>
           </div>
-          <OperationTab setIsBuying={setIsBuying} isLogged={isLogged} setShowLogin={setShowLogin} showLogin={showLogin} setLoginTransition={setLoginTransiton} setAction={setAction} canSell={canSell} />
+          <OperationTab setIsBuying={setIsBuying} isLogged={isLogged} setShowLogin={setShowLogin} showLogin={showLogin} setLoginTransition={setLoginTransiton} setAction={setAction} canSell={canSell} selectedTab={selectedTab} setSelectedTab={setSelectedTab} />
         </div>
         </div>
-        {/*<div className="bg-white rounded-[8px] mt-[20px] shadow-lg">
-          dadw
-        </div>*/}
+      
+
+      {/* Overview Tab as Separate Container */}
+      {selectedTab === 'Overview' && (
+        <div className=" border-slate-200">
+          <div className="max-w-7xl mx-auto px-[20px] sm:px-[20px] py-6 md:py-8">
+            <div className="w-full bg-white rounded-lg border border-slate-200 shadow-sm overflow-hidden">
+              {isOverviewLoading ? (
+                <div className="p-6 md:p-8">
+                  <div className="mb-6 flex items-center gap-3">
+                    <div className="relative w-6 h-6 flex-shrink-0 opacity-70">
+                      <img src={sparkleIcon} alt="AI" className="w-full h-full" />
+                    </div>
+                    <div>
+                      <h3 className="text-sm font-semibold tracking-wide text-slate-800">AI Overview</h3>
+                      <p className="text-xs text-slate-500">Generating insights</p>
+                    </div>
+                  </div>
+                  
+                  {/* Minimalist skeleton lines */}
+                  <div className="space-y-3">
+                    <div className="h-3.5 bg-gradient-to-r from-slate-200 via-slate-100 to-slate-200 rounded-md animate-shimmer"></div>
+                    <div className="h-3.5 bg-gradient-to-r from-slate-200 via-slate-100 to-slate-200 rounded-md animate-shimmer" style={{ width: '90%', animationDelay: '0.2s' }}></div>
+                    <div className="h-3.5 bg-gradient-to-r from-slate-200 via-slate-100 to-slate-200 rounded-md animate-shimmer" style={{ width: '78%', animationDelay: '0.4s' }}></div>
+                  </div>
+                </div>
+              ) : isOverviewError ? (
+                <div className="p-6 md:p-8">
+                  <div className="flex items-center gap-3">
+                    <div className="w-6 h-6 rounded-full border border-slate-300 flex items-center justify-center text-slate-500 text-xs">
+                      !
+                    </div>
+                    <div>
+                      <h3 className="text-sm font-semibold text-slate-800">Overview unavailable</h3>
+                      <p className="text-xs text-slate-500">Please try again in a moment.</p>
+                    </div>
+                  </div>
+                </div>
+              ) : (
+                <div className="p-6 md:p-8 bg-gradient-to-br from-white to-slate-50">
+                  <div className="flex items-center justify-between mb-6 pb-5 border-b border-slate-100">
+                    <div className="flex items-center gap-3">
+                      <div className="w-9 h-9 rounded-md bg-slate-100 border border-slate-200 flex items-center justify-center">
+                        <img src={sparkleIcon} alt="AI" className="w-5 h-5 opacity-80" />
+                      </div>
+                      <div>
+                        <h3 className="text-base font-semibold text-slate-900">Market Brief</h3>
+                        <p className="text-xs text-slate-500">Curated by Gemini AI</p>
+                      </div>
+                    </div>
+                    <div className="text-[11px] uppercase tracking-[0.2em] text-slate-500 border border-slate-200 rounded-full px-2.5 py-1">
+                      AI
+                    </div>
+                  </div>
+                  
+                  <div className="text-slate-800 text-[15px] leading-7 whitespace-pre-wrap font-light">
+                    {typeof overviewData === 'string' ? overviewData : overviewData?.overview || 'No overview available.'}
+                  </div>
+
+                  <div className="mt-6 pt-5 border-t border-slate-100">
+                    <p className="text-xs text-slate-500">
+                      Last updated: {overviewData?.lastUpdatedOverview ? dayjs(overviewData.lastUpdatedOverview).format('MMM D, YYYY') : 'Recently'}
+                    </p>
+                  </div>
+                </div>
+              )}
+            </div>
+          </div>
+        </div>
+      )}
       </div>
       <BottomMenu />
 
