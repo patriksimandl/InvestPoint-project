@@ -47,6 +47,8 @@ A full-stack virtual **investing platform**, designed to allow users manage virt
 ### **2️⃣ Set up environment variables**
 ```
   Rename .env.example in /backend to .env
+  Put there your Gemini API key there
+  Rename .env.example in /frontend to .env
 ```
 
 ### **3️⃣ Start the application and all required services (database, backend, etc.) with Docker, in the project root:**
