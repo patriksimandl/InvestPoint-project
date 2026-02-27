@@ -2,6 +2,7 @@ import { NavLink } from 'react-router';
 import { MainMenu } from '../../shared/MainMenu'
 import './HomePage.css'
 import { useContext, type Dispatch, type SetStateAction } from 'react'
+import { useInView } from 'react-intersection-observer';
 import { Features } from './Features';
 import axios from 'axios';
 import { useQuery } from '@tanstack/react-query';
@@ -9,6 +10,12 @@ import { ScrollStockPanel } from './ScrollStocksPanel.tsx';
 import { BottomMenu } from '../../shared/BottomMenu';
 
 export function HomePage() {
+  // Intersection observer refs for each section
+  const { ref: heroRef, inView: heroInView } = useInView({ threshold: 0.1, triggerOnce: true });
+  const { ref: scrollStockRef, inView: scrollStockInView } = useInView({ threshold: 0.1, triggerOnce: true });
+  const { ref: featuresRef, inView: featuresInView } = useInView({ threshold: 0.1, triggerOnce: true });
+  const { ref: analyticsRef, inView: analyticsInView } = useInView({ threshold: 0.1, triggerOnce: true });
+
   const { data: tableStocksData } = useQuery({
     queryKey: ["stocksData"],
     queryFn: async () => {
@@ -29,15 +36,15 @@ export function HomePage() {
       <title>Home</title>
       <MainMenu  />
       <div className=''>
-        
-        <div className='bg-blue-100 mt-[-120px] pt-[160px] pb-15 px-[20px] sm:px-[20px]'>
+        {/* Hero Section */}
+        <div ref={heroRef} className={`bg-blue-100 mt-[-120px] pt-[160px] pb-15 px-[20px] sm:px-[20px] transition-all duration-1000 transform ${heroInView ? 'opacity-100 translate-y-0' : 'opacity-0 translate-y-10'}`}>
           <div className='h-auto  max-w-7xl mx-auto  '>
             <div className='flex flex justify-between h-auto  gap-10 relative'>
               <div className='lg:w-1/2 flex-col text-center lg:text-left md:mt-0  mt-12'>
-                <h1 className="text-5xl sm:text-5xl lg:text-7xl font-extrabold text-slate-900 dark:text-white mb-6 leading-tight flex flex-col">
+                <h1 className="text-5xl sm:text-5xl lg:text-7xl font-extrabold text-slate-900 dark:text-white mb-6 leading-tight flex flex-col text-shadow-md">
                   Invest in Your
                   Future with
-                  <span className="text-transparent bg-linear-to-br from-blue-500 to-indigo-900 text-transparent bg-clip-text ">Confidence</span>
+                  <span className="text-transparent bg-linear-to-br from-blue-500 to-indigo-900 text-transparent bg-clip-text  ">Confidence</span>
                 </h1>
                 <p className="text-base text-lg  sm:text-lg text-slate-600 dark:text-slate-400 mb-8 md:mb-10  mx-auto lg:mx-0 md:mt-0 mt-2">
                   Join millions of investors. Track real-time stock data, manage your portfolio, and discover global opportunities with our professional-grade trading platform.
@@ -57,19 +64,47 @@ export function HomePage() {
               </div>
             </div>
           </div>
+          {/* Scroll Indicator */}
+          <div className='flex justify-center mt-12 lg:mt-3 pb-8'>
+            <div className='animate-bounce'>
+              <svg
+                className='w-6 h-6 text-slate-900 dark:text-white'
+                fill='none'
+                strokeLinecap='round'
+                strokeLinejoin='round'
+                strokeWidth='2'
+                viewBox='0 0 24 24'
+                stroke='currentColor'
+              >
+                <path d='M19 14l-7 7m0 0l-7-7m7 7V3'></path>
+              </svg>
+            </div>
+          </div>
         </div>
-        <div className="lg:hidden mt-20 mb-16">
+
+        {/* Mobile Image Section */}
+        <div className={`lg:hidden -mt-12 mb-16 transition-all duration-1000 transform ${heroInView ? 'opacity-100 scale-100' : 'opacity-0 scale-95'}`}>
           <div className="max-w-7xl mx-auto px-[20px] sm:px-[20px]">
             <img
-              className="w-[80%] max-w-[360px] mx-auto rotate-[8deg] transition animate-float rounded-[25px] outline-[8px] outline-slate-900 shadow-2xl shadow-black/25 block"
+              className="w-[80%] max-w-[360px] mx-auto rotate-[8deg] animate-float rounded-[25px] outline-[8px] outline-slate-900 shadow-2xl shadow-black/25 block"
               src="https://res.cloudinary.com/dqdwgkwfn/image/upload/v1769445595/home_page_mobile_1_s2fvz1.webp"
               alt="InvestPoint mobile preview"
             />
           </div>
         </div>
-        <ScrollStockPanel tableStocksData={tableStocksData} />
-        <Features />
-        <div className='bg-white pb-10'>
+
+        {/* Scroll Stock Panel Section */}
+        <div ref={scrollStockRef} className={`transition-all duration-1000 transform ${scrollStockInView ? 'opacity-100 translate-y-0' : 'opacity-0 translate-y-10'}`}>
+          <ScrollStockPanel tableStocksData={tableStocksData} />
+        </div>
+
+        {/* Features Section */}
+        <div ref={featuresRef} className={`transition-all duration-1000 transform ${featuresInView ? 'opacity-100 translate-y-0' : 'opacity-0 translate-y-10'}`}>
+          <Features />
+        </div>
+
+        {/* Analytics Section */}
+        <div ref={analyticsRef} className={`bg-white pb-10 transition-all duration-1000 transform ${analyticsInView ? 'opacity-100 translate-y-0' : 'opacity-0 translate-y-10'}`}>
           <div className="max-w-7xl mx-auto px-[20px] sm:px-[20px]">
             <div className="w-full rounded-[8px] bg-white shadow-lg flex flex-col h-auto md:h-[34rem] rounded-[32px] md:rounded-[60px] outline-[1px] md:outline-[2px] outline-slate-200 p-6 md:p-12 shadow-2xl shadow-black/40 flex flex-col md:flex-row gap-8 md:gap-10 relative">
             <div className='flex flex-col justify-center w-full md:w-[42%]'>

@@ -1,4 +1,7 @@
+import { useInView } from 'react-intersection-observer';
+
 export function Features() {
+  const { ref, inView } = useInView({ threshold: 0.1, triggerOnce: true });
 
   const featuresContent = [
     {
@@ -34,10 +37,24 @@ export function Features() {
       </div>
       <div className="bg-white pb-24">
         <div className="max-w-7xl mx-auto px-[20px] sm:px-[20px]">
-          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 h-auto gap-5 md:gap-6">
-        {featuresContent.map((feature) => {
+          <div ref={ref} className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 h-auto gap-5 md:gap-6">
+        {featuresContent.map((feature, i) => {
+          const delayMs = i * 250;
+          const animationStyle = inView ? {
+            transitionDelay: `${delayMs}ms`,
+            opacity: 1,
+            transform: 'translateY(0)'
+          } : {
+            opacity: 0,
+            transform: 'translateY(16px)'
+          };
+
           return (
-            <div className="flex shadow-md flex-col  transition-all hover:scale-[1.04] hover:shadow-xl w-full h-full bg-slate-100 rounded-[12px] p-5 md:p-6">
+            <div 
+              key={feature.header}
+              className="flex shadow-md flex-col transition-all duration-500 hover:scale-[1.04] hover:shadow-xl w-full h-full bg-slate-100 rounded-[12px] p-5 md:p-6"
+              style={animationStyle}
+            >
               <div className="flex items-center justify-center h-[4rem] w-[4rem] bg-blue-100 rounded-[12px]">
                 {feature.icon}
               </div>
