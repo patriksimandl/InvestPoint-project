@@ -174,7 +174,7 @@ export function StockPage() {
       )
       
     },
-    enabled: isLogged
+    enabled: !!isLogged
   });
 
   const {data: watchlist} = useQuery({
@@ -184,7 +184,7 @@ export function StockPage() {
       const {data}  =response;
       return data;
     },
-    enabled: isLogged,
+    enabled: !!isLogged,
     staleTime: 1000 * 60 * 2
   })
 

@@ -1,5 +1,7 @@
 import { NavLink } from "react-router";
 import { formatPrice } from "./formatPrice";
+import { useContext, useEffect } from "react";
+import { IsLoggedContext } from "../../App";
 
 type StockContainer =
   {
@@ -23,9 +25,13 @@ type StockContainer =
 
 
 export function StockContainer({ stock, watchlist }: StockContainer) {
+  const {isLogged} = useContext(IsLoggedContext);
+
+
   const pricesToday = stock.data['data'][0];
   const pricesYesterday = stock.data['data'][1];
-  const isInWatchlist = watchlist?.some((item) => item.symbol === stock.symbol);
+  const isInWatchlist =  isLogged && watchlist ? watchlist?.some((item) => item.symbol === stock.symbol) : false;
+  
 
   const dailyChange: number = pricesToday.close - pricesToday.open
 

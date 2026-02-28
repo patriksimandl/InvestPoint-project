@@ -43,6 +43,7 @@ export function AccountMenu() {
     if (response.status) {
       setIsLogged(false);
       queryClient.setQueryData(["verification"], () => false)
+      queryClient.setQueryData(["watchList"],()=>false)
     }
 
 
