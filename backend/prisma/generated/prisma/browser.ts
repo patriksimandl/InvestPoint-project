@@ -42,3 +42,8 @@ export type userPortfolio = Prisma.userPortfolioModel
  * 
  */
 export type transactionHistory = Prisma.transactionHistoryModel
+/**
+ * Model watchList
+ * 
+ */
+export type watchList = Prisma.watchListModel

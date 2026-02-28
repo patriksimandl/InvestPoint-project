@@ -32,17 +32,11 @@ function App() {
   const [userEmail, setUserEmail] = useState<string | undefined>(undefined);
   const { pathname } = useLocation();
 
-  /*useEffect(()=>{
-    console.log('isLogged');
-    console.log(isLogged);
-  },[isLogged])
-  */
-
   const { data: verificationEmail, isError, isSuccess, error } = useQuery({
     queryKey: ["verification"],
     queryFn: verification,
     retry: false,
-    staleTime: 1000 * 60 * 10,
+    staleTime: 1000 * 60 * 1,
   })
 
 

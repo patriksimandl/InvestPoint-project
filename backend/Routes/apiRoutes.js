@@ -6,6 +6,8 @@ import updateExistingHolding from './orders/ordersSymbolInPortfolio.js';
 import { isReqestValid } from './orders/isReqestValid.ts';
 
 
+const cache = new Map();
+
 const router = express.Router();
 
 const fetchPortfolioAndSymbolData = async (userId, symbol) => {
@@ -37,7 +39,7 @@ router.get('/portfolio', async (req, res) => {
         userId
       }
     })
-
+    console.log(userPortfolio);
 
     return res.send(userPortfolio).status(200);
 
@@ -85,6 +87,8 @@ router.get('/transactionHistory', async (req, res) => {
 
 
 
+
+
 router.post('/orders', async (req, res) => {
   console.log('hit');
   const userId = req.userId;
@@ -117,9 +121,9 @@ router.post('/orders', async (req, res) => {
 
   let updatedTotalBalance;
 
-  if(!isReqestValid(portfolio,quantity,priceOfShare,type,symbol)) return res.status(400).send('Invalid Request');
+  if (!isReqestValid(portfolio, quantity, priceOfShare, type, symbol)) return res.status(400).send('Invalid Request');
 
-  
+
 
   if (symbol in stockHoldings) {
     const result = updateExistingHolding({
@@ -127,7 +131,7 @@ router.post('/orders', async (req, res) => {
       symbol,
       type,
       priceOfShare,
-      
+
       quantity,
       prevTotalBalance
     });
@@ -148,7 +152,7 @@ router.post('/orders', async (req, res) => {
         }
 
       }
-      updatedTotalBalance = prevTotalBalance - (priceOfShare*quantity) + ((priceOfShare*quantity / quantity) * quantity)
+      updatedTotalBalance = prevTotalBalance - (priceOfShare * quantity) + ((priceOfShare * quantity / quantity) * quantity)
     }
     else {
       return res.status(400).send('Error');
@@ -175,7 +179,7 @@ router.post('/orders', async (req, res) => {
       data: {
         portfolioId,
         symbol,
-        price: priceOfShare*quantity,
+        price: priceOfShare * quantity,
         quantity: quantity,
         timestamp: date,
         type
@@ -190,6 +194,95 @@ router.post('/orders', async (req, res) => {
 
 
   res.sendStatus(201)
+})
+
+
+router.post('/watchList', async (req, res) => {
+  const {  userId } = req;
+  const { symbol } = req.body
+
+  try {
+    const portfolio = await db.userPortfolio.findUnique({
+      where: {
+        userId
+      },
+
+    })
+
+    const portfolioId = portfolio.id;
+
+    const isSymbolOnWatchList = await db.watchList.findUnique({
+      where: {
+        portfolioId_symbol: {
+          portfolioId,
+          symbol
+        }
+      }
+
+    })
+
+    if (!isSymbolOnWatchList) {
+      cache.delete(`watchList:${userId}`);
+      await db.watchList.create({
+        data: {
+          portfolioId,
+          symbol,
+
+        }
+      })
+      return res.status(200).send('Created');
+    }
+    else {
+      cache.delete(`watchList:${userId}`);
+      await db.watchList.delete({
+        where: {
+          portfolioId_symbol: {
+            portfolioId,
+            symbol
+          }
+        }
+      })
+      return res.status(204).send('Deleted');
+    }
+
+  } catch (err) {
+    return res.status(503).send(err.message);
+  }
+
+
+})
+
+router.get('/watchList', async (req,res) =>{
+  const {userId}  = req;
+
+  if(cache.has(`watchList:${userId}`)) return res.status(200).send(cache.get(`watchList:${userId}`));
+
+  try{
+    const portfolio = await db.userPortfolio.findUnique({
+      where: {
+        userId
+      },
+
+    })
+    const portfolioId = portfolio.id;  
+
+    const watchList = await db.watchList.findMany({
+      where:{
+        portfolioId
+      }
+    })
+
+    cache.set(`watchList:${userId}`,
+      watchList
+    );
+
+
+    return res.status(200).send(watchList);
+
+
+  }catch{
+    return res.status(503).send('service Unavalible')
+  }
 })
 
 

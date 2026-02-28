@@ -16,16 +16,16 @@ type StockContainer =
         }[]
       }
 
-    }
+    },
+    watchlist?: any[]
   }
 
 
 
-export function StockContainer({ stock }: StockContainer) {
+export function StockContainer({ stock, watchlist }: StockContainer) {
   const pricesToday = stock.data['data'][0];
   const pricesYesterday = stock.data['data'][1];
-
-
+  const isInWatchlist = watchlist?.some((item) => item.symbol === stock.symbol);
 
   const dailyChange: number = pricesToday.close - pricesToday.open
 
@@ -49,12 +49,26 @@ export function StockContainer({ stock }: StockContainer) {
             </div>
           </div>
         </div>
-        <div className="text-right md:hidden">
-          <div className="font-semibold text-[17px]">
-            ${(Number(pricesToday.close)).toFixed(2)}
-          </div>
-          <div className={`${dailyChange >= 0 ? 'text-green-600' : 'text-red-600'} text-[13.5px] font-semibold text-nowrap`}>
-            {formatPrice(dailyChange)} ({((dailyChange) / (pricesYesterday.close / 100)).toFixed(2)}%)
+        <div className="text-right md:hidden flex items-center gap-2 justify-end">
+          {isInWatchlist && (
+            <svg
+              xmlns="http://www.w3.org/2000/svg"
+              viewBox="0 0 24 24"
+              height="18px"
+              width="18px"
+              fill="currentColor"
+              className="text-yellow-500 flex-shrink-0"
+            >
+              <path d="M12 17.27 18.18 21l-1.64-7.03L22 9.24l-7.19-.61L12 2 9.19 8.63 2 9.24l5.46 4.73L5.82 21z" />
+            </svg>
+          )}
+          <div>
+            <div className="font-semibold text-[17px]">
+              ${(Number(pricesToday.close)).toFixed(2)}
+            </div>
+            <div className={`${dailyChange >= 0 ? 'text-green-600' : 'text-red-600'} text-[13.5px] font-semibold text-nowrap`}>
+              {formatPrice(dailyChange)} ({((dailyChange) / (pricesYesterday.close / 100)).toFixed(2)}%)
+            </div>
           </div>
         </div>
       </NavLink>
@@ -66,7 +80,19 @@ export function StockContainer({ stock }: StockContainer) {
           {formatPrice(dailyChange)} ({((dailyChange) / (pricesYesterday.close / 100)).toFixed(2)}%)
         </div>
       </div>
-      <div className="hidden md:flex items-center justify-end md:col-start-3 md:col-end-4 md:justify-self-end">
+      <div className="hidden md:flex items-center justify-end gap-3 md:col-start-3 md:col-end-4 md:justify-self-end">
+        {isInWatchlist && (
+          <svg
+            xmlns="http://www.w3.org/2000/svg"
+            viewBox="0 0 24 24"
+            height="20px"
+            width="20px"
+            fill="currentColor"
+            className="text-yellow-500 flex-shrink-0"
+          >
+            <path d="M12 17.27 18.18 21l-1.64-7.03L22 9.24l-7.19-.61L12 2 9.19 8.63 2 9.24l5.46 4.73L5.82 21z" />
+          </svg>
+        )}
         <NavLink to={`/stocks/${stock.symbol}`} className="button-secondary">
           Select
         </NavLink>

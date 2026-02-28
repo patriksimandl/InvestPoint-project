@@ -16,7 +16,8 @@ import 'dotenv/config'
 import { ai } from "./googleGem/client.ts";
 
 
-
+export const cache = new Map();
+export const inProgress = new Map();
 
 
 

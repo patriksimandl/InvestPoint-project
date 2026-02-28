@@ -85,6 +85,14 @@ export function StocksPage() {
 
   });
 
+  const { data: watchlist } = useQuery({
+    queryKey: ["watchList"],
+    queryFn: async () => {
+      const response = await axios.get(`${import.meta.env.VITE_BACKEND_URL}/api/watchList`,{withCredentials:true});
+      return response.data;
+    },
+  });
+
   const totalBalance = Number(userPortfolio?.totalBalance ?? 0);
   const cashBalance = Number(userPortfolio?.cashBalance ?? 0);
   const holdingsCount = userPortfolio?.stockHoldings
@@ -132,7 +140,7 @@ export function StocksPage() {
               {tableStocksData 
               ? 
                (filteredTableStocksData ?? []).map((stock) => {
-                return <StockContainer key={stock.symbol} stock={stock} />
+                return <StockContainer key={stock.symbol} stock={stock} watchlist={watchlist} />
               }) :
                 <div className="absolute  top-[50%] left-[50%] translate-x-[-50%] translate-y-[-50%] flex flex-col justify-center items-center">
                   <img className="w-[80px]" src={LoadingIcon}></img>
@@ -145,7 +153,7 @@ export function StocksPage() {
           {isLogged && (
             <div className="w-full lg:w-[30%] lg:sticky lg:top-[120px] h-auto lg:h-[79vh] bg-slate-50/70 rounded-[20px] p-[22px] flex flex-col shadow-md border border-slate-200/60">
               <div className="flex items-center justify-between">
-                <div className="font-semibold text-[18.5px] text-slate-900">You221[18r Portfolio</div>
+                <div className="font-semibold text-[18.5px] text-slate-900">Your Portfolio</div>
                 {dailyChange !== undefined && dailyChangePct !== undefined && (
                   <div
                     className={`text-[11.5px] font-semibold px-2.5 py-1 rounded-full border ${dailyChange >= 0 ? 'text-emerald-700 bg-emerald-50 border-emerald-200/70' : 'text-rose-700 bg-rose-50 border-rose-200/70'}`}

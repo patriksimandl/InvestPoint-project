@@ -1,4 +1,4 @@
-import { useContext, useEffect, useState } from "react";
+import { createContext, useContext, useEffect, useState } from "react";
 import { MainMenu } from "../../shared/MainMenu";
 import { useParams } from "react-router";
 import axios from "axios";
@@ -45,6 +45,10 @@ type stockDataProps = {
 
 }
 
+export const symbolContext =  createContext<undefined|string>(undefined);
+export const watchListContext = createContext<undefined | {symbol: string}[]>(undefined);
+
+
 export function StockPage() {
   const { isLogged } = useContext(IsLoggedContext)!;
   const [zoomButton, setZoomButton] = useState('6M');
@@ -58,6 +62,7 @@ export function StockPage() {
 
   const queryClient = useQueryClient();
 
+  
 
   const [animateInMessage, setAnimateInMessage] = useState(false);
   const [buyingQuantities, setBuyingQuantities] = useState({
@@ -138,8 +143,7 @@ export function StockPage() {
     })
   }, [stockData])
 
-
-
+  
 
 
   const { data: marketInfo } = useQuery({
@@ -168,9 +172,23 @@ export function StockPage() {
         data.transactionHistory
 
       )
+      
     },
-
+    enabled: isLogged
   });
+
+  const {data: watchlist} = useQuery({
+    queryKey: ["watchList"],
+    queryFn: async () =>{
+      const response = await axios.get(`${import.meta.env.VITE_BACKEND_URL}/api/watchList`,{withCredentials: true});
+      const {data}  =response;
+      return data;
+    },
+    enabled: isLogged,
+    staleTime: 1000 * 60 * 2
+  })
+
+
 
   const { data: overviewData, isLoading: isOverviewLoading, isError: isOverviewError } = useQuery({
     queryKey: ['stockOverview', symbol],
@@ -179,7 +197,7 @@ export function StockPage() {
       return response.data
     },
     enabled: !!symbol && selectedTab === 'Overview',
-    staleTime: 1000 * 60 * 60
+    staleTime: 1000 * 60 * 60 * 2
   });
 
 
@@ -212,7 +230,8 @@ export function StockPage() {
   return (
 
     <>
-
+      <watchListContext.Provider value={watchlist}>
+      <symbolContext.Provider value={symbol}>
       {isLoading ? <LoadingOverlay /> : ''}
       {isBuying ? <BuyOverlay action={action} setIsBuying={setIsBuying} setBuyingQuantities={setBuyingQuantities} setAnimateInMessage={setAnimateInMessage} todayClosePrice={todayClosePrice} symbol={symbol} name={stockData?.name} userCashBalance={Number((userPortfolio?.cashBalance))} userTotalValue={Number(userPortfolio?.totalBalance ?? 0)} setTransactionMessage={setTransactionMessage} canSell={canSell} /> : ''}
 
@@ -227,6 +246,7 @@ export function StockPage() {
       <LoginOverlay setShowLogin={setShowLogin} loginTransition={loginTransition} showLogin={showLogin} setLoginTransition={setLoginTransiton} />
 
       <MainMenu />
+      
       <div className="stock-page-container mb-10">
         <div className="max-w-7xl mx-auto px-[20px] sm:px-[20px]">
           <div className="w-full rounded-[8px] bg-white shadow-lg flex flex-col h-auto lg:h-[650px] p-4 sm:p-5 md:p-[22px]">
@@ -281,7 +301,7 @@ export function StockPage() {
               </div>
             </div>
           </div>
-          <OperationTab setIsBuying={setIsBuying} isLogged={isLogged} setShowLogin={setShowLogin} showLogin={showLogin} setLoginTransition={setLoginTransiton} setAction={setAction} canSell={canSell} selectedTab={selectedTab} setSelectedTab={setSelectedTab} />
+          <OperationTab setIsBuying={setIsBuying} isLogged={isLogged} setShowLogin={setShowLogin} showLogin={showLogin} setLoginTransition={setLoginTransiton} setAction={setAction} canSell={canSell} selectedTab={selectedTab} setSelectedTab={setSelectedTab}  />
         </div>
         </div>
       
@@ -356,6 +376,8 @@ export function StockPage() {
       )}
       </div>
       <BottomMenu />
+      </symbolContext.Provider>
+      </watchListContext.Provider>
 
     </>
 

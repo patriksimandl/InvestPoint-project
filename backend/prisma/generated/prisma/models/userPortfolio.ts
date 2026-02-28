@@ -233,6 +233,7 @@ export type userPortfolioWhereInput = {
   cashBalanceHistory?: Prisma.JsonFilter<"userPortfolio">
   stockHoldings?: Prisma.JsonFilter<"userPortfolio">
   transactionHistory?: Prisma.TransactionHistoryListRelationFilter
+  watchList?: Prisma.WatchListListRelationFilter
   user?: Prisma.XOR<Prisma.UserScalarRelationFilter, Prisma.UserWhereInput>
 }
 
@@ -245,6 +246,7 @@ export type userPortfolioOrderByWithRelationInput = {
   cashBalanceHistory?: Prisma.SortOrder
   stockHoldings?: Prisma.SortOrder
   transactionHistory?: Prisma.transactionHistoryOrderByRelationAggregateInput
+  watchList?: Prisma.watchListOrderByRelationAggregateInput
   user?: Prisma.UserOrderByWithRelationInput
 }
 
@@ -260,6 +262,7 @@ export type userPortfolioWhereUniqueInput = Prisma.AtLeast<{
   cashBalanceHistory?: Prisma.JsonFilter<"userPortfolio">
   stockHoldings?: Prisma.JsonFilter<"userPortfolio">
   transactionHistory?: Prisma.TransactionHistoryListRelationFilter
+  watchList?: Prisma.WatchListListRelationFilter
   user?: Prisma.XOR<Prisma.UserScalarRelationFilter, Prisma.UserWhereInput>
 }, "id" | "userId">
 
@@ -298,6 +301,7 @@ export type userPortfolioCreateInput = {
   cashBalanceHistory?: Prisma.JsonNullValueInput | runtime.InputJsonValue
   stockHoldings?: Prisma.JsonNullValueInput | runtime.InputJsonValue
   transactionHistory?: Prisma.transactionHistoryCreateNestedManyWithoutPortfolioInput
+  watchList?: Prisma.watchListCreateNestedManyWithoutPortfolioInput
   user: Prisma.UserCreateNestedOneWithoutStocksInput
 }
 
@@ -310,6 +314,7 @@ export type userPortfolioUncheckedCreateInput = {
   cashBalanceHistory?: Prisma.JsonNullValueInput | runtime.InputJsonValue
   stockHoldings?: Prisma.JsonNullValueInput | runtime.InputJsonValue
   transactionHistory?: Prisma.transactionHistoryUncheckedCreateNestedManyWithoutPortfolioInput
+  watchList?: Prisma.watchListUncheckedCreateNestedManyWithoutPortfolioInput
 }
 
 export type userPortfolioUpdateInput = {
@@ -319,6 +324,7 @@ export type userPortfolioUpdateInput = {
   cashBalanceHistory?: Prisma.JsonNullValueInput | runtime.InputJsonValue
   stockHoldings?: Prisma.JsonNullValueInput | runtime.InputJsonValue
   transactionHistory?: Prisma.transactionHistoryUpdateManyWithoutPortfolioNestedInput
+  watchList?: Prisma.watchListUpdateManyWithoutPortfolioNestedInput
   user?: Prisma.UserUpdateOneRequiredWithoutStocksNestedInput
 }
 
@@ -331,6 +337,7 @@ export type userPortfolioUncheckedUpdateInput = {
   cashBalanceHistory?: Prisma.JsonNullValueInput | runtime.InputJsonValue
   stockHoldings?: Prisma.JsonNullValueInput | runtime.InputJsonValue
   transactionHistory?: Prisma.transactionHistoryUncheckedUpdateManyWithoutPortfolioNestedInput
+  watchList?: Prisma.watchListUncheckedUpdateManyWithoutPortfolioNestedInput
 }
 
 export type userPortfolioCreateManyInput = {
@@ -478,6 +485,20 @@ export type userPortfolioUpdateOneRequiredWithoutTransactionHistoryNestedInput =
   update?: Prisma.XOR<Prisma.XOR<Prisma.userPortfolioUpdateToOneWithWhereWithoutTransactionHistoryInput, Prisma.userPortfolioUpdateWithoutTransactionHistoryInput>, Prisma.userPortfolioUncheckedUpdateWithoutTransactionHistoryInput>
 }
 
+export type userPortfolioCreateNestedOneWithoutWatchListInput = {
+  create?: Prisma.XOR<Prisma.userPortfolioCreateWithoutWatchListInput, Prisma.userPortfolioUncheckedCreateWithoutWatchListInput>
+  connectOrCreate?: Prisma.userPortfolioCreateOrConnectWithoutWatchListInput
+  connect?: Prisma.userPortfolioWhereUniqueInput
+}
+
+export type userPortfolioUpdateOneRequiredWithoutWatchListNestedInput = {
+  create?: Prisma.XOR<Prisma.userPortfolioCreateWithoutWatchListInput, Prisma.userPortfolioUncheckedCreateWithoutWatchListInput>
+  connectOrCreate?: Prisma.userPortfolioCreateOrConnectWithoutWatchListInput
+  upsert?: Prisma.userPortfolioUpsertWithoutWatchListInput
+  connect?: Prisma.userPortfolioWhereUniqueInput
+  update?: Prisma.XOR<Prisma.XOR<Prisma.userPortfolioUpdateToOneWithWhereWithoutWatchListInput, Prisma.userPortfolioUpdateWithoutWatchListInput>, Prisma.userPortfolioUncheckedUpdateWithoutWatchListInput>
+}
+
 export type userPortfolioCreateWithoutUserInput = {
   totalBalance?: runtime.Decimal | runtime.DecimalJsLike | number | string
   cashBalance?: runtime.Decimal | runtime.DecimalJsLike | number | string
@@ -485,6 +506,7 @@ export type userPortfolioCreateWithoutUserInput = {
   cashBalanceHistory?: Prisma.JsonNullValueInput | runtime.InputJsonValue
   stockHoldings?: Prisma.JsonNullValueInput | runtime.InputJsonValue
   transactionHistory?: Prisma.transactionHistoryCreateNestedManyWithoutPortfolioInput
+  watchList?: Prisma.watchListCreateNestedManyWithoutPortfolioInput
 }
 
 export type userPortfolioUncheckedCreateWithoutUserInput = {
@@ -495,6 +517,7 @@ export type userPortfolioUncheckedCreateWithoutUserInput = {
   cashBalanceHistory?: Prisma.JsonNullValueInput | runtime.InputJsonValue
   stockHoldings?: Prisma.JsonNullValueInput | runtime.InputJsonValue
   transactionHistory?: Prisma.transactionHistoryUncheckedCreateNestedManyWithoutPortfolioInput
+  watchList?: Prisma.watchListUncheckedCreateNestedManyWithoutPortfolioInput
 }
 
 export type userPortfolioCreateOrConnectWithoutUserInput = {
@@ -542,6 +565,7 @@ export type userPortfolioCreateWithoutTransactionHistoryInput = {
   totalBalanceHistory?: Prisma.JsonNullValueInput | runtime.InputJsonValue
   cashBalanceHistory?: Prisma.JsonNullValueInput | runtime.InputJsonValue
   stockHoldings?: Prisma.JsonNullValueInput | runtime.InputJsonValue
+  watchList?: Prisma.watchListCreateNestedManyWithoutPortfolioInput
   user: Prisma.UserCreateNestedOneWithoutStocksInput
 }
 
@@ -553,6 +577,7 @@ export type userPortfolioUncheckedCreateWithoutTransactionHistoryInput = {
   totalBalanceHistory?: Prisma.JsonNullValueInput | runtime.InputJsonValue
   cashBalanceHistory?: Prisma.JsonNullValueInput | runtime.InputJsonValue
   stockHoldings?: Prisma.JsonNullValueInput | runtime.InputJsonValue
+  watchList?: Prisma.watchListUncheckedCreateNestedManyWithoutPortfolioInput
 }
 
 export type userPortfolioCreateOrConnectWithoutTransactionHistoryInput = {
@@ -577,6 +602,7 @@ export type userPortfolioUpdateWithoutTransactionHistoryInput = {
   totalBalanceHistory?: Prisma.JsonNullValueInput | runtime.InputJsonValue
   cashBalanceHistory?: Prisma.JsonNullValueInput | runtime.InputJsonValue
   stockHoldings?: Prisma.JsonNullValueInput | runtime.InputJsonValue
+  watchList?: Prisma.watchListUpdateManyWithoutPortfolioNestedInput
   user?: Prisma.UserUpdateOneRequiredWithoutStocksNestedInput
 }
 
@@ -588,6 +614,65 @@ export type userPortfolioUncheckedUpdateWithoutTransactionHistoryInput = {
   totalBalanceHistory?: Prisma.JsonNullValueInput | runtime.InputJsonValue
   cashBalanceHistory?: Prisma.JsonNullValueInput | runtime.InputJsonValue
   stockHoldings?: Prisma.JsonNullValueInput | runtime.InputJsonValue
+  watchList?: Prisma.watchListUncheckedUpdateManyWithoutPortfolioNestedInput
+}
+
+export type userPortfolioCreateWithoutWatchListInput = {
+  totalBalance?: runtime.Decimal | runtime.DecimalJsLike | number | string
+  cashBalance?: runtime.Decimal | runtime.DecimalJsLike | number | string
+  totalBalanceHistory?: Prisma.JsonNullValueInput | runtime.InputJsonValue
+  cashBalanceHistory?: Prisma.JsonNullValueInput | runtime.InputJsonValue
+  stockHoldings?: Prisma.JsonNullValueInput | runtime.InputJsonValue
+  transactionHistory?: Prisma.transactionHistoryCreateNestedManyWithoutPortfolioInput
+  user: Prisma.UserCreateNestedOneWithoutStocksInput
+}
+
+export type userPortfolioUncheckedCreateWithoutWatchListInput = {
+  id?: number
+  userId: number
+  totalBalance?: runtime.Decimal | runtime.DecimalJsLike | number | string
+  cashBalance?: runtime.Decimal | runtime.DecimalJsLike | number | string
+  totalBalanceHistory?: Prisma.JsonNullValueInput | runtime.InputJsonValue
+  cashBalanceHistory?: Prisma.JsonNullValueInput | runtime.InputJsonValue
+  stockHoldings?: Prisma.JsonNullValueInput | runtime.InputJsonValue
+  transactionHistory?: Prisma.transactionHistoryUncheckedCreateNestedManyWithoutPortfolioInput
+}
+
+export type userPortfolioCreateOrConnectWithoutWatchListInput = {
+  where: Prisma.userPortfolioWhereUniqueInput
+  create: Prisma.XOR<Prisma.userPortfolioCreateWithoutWatchListInput, Prisma.userPortfolioUncheckedCreateWithoutWatchListInput>
+}
+
+export type userPortfolioUpsertWithoutWatchListInput = {
+  update: Prisma.XOR<Prisma.userPortfolioUpdateWithoutWatchListInput, Prisma.userPortfolioUncheckedUpdateWithoutWatchListInput>
+  create: Prisma.XOR<Prisma.userPortfolioCreateWithoutWatchListInput, Prisma.userPortfolioUncheckedCreateWithoutWatchListInput>
+  where?: Prisma.userPortfolioWhereInput
+}
+
+export type userPortfolioUpdateToOneWithWhereWithoutWatchListInput = {
+  where?: Prisma.userPortfolioWhereInput
+  data: Prisma.XOR<Prisma.userPortfolioUpdateWithoutWatchListInput, Prisma.userPortfolioUncheckedUpdateWithoutWatchListInput>
+}
+
+export type userPortfolioUpdateWithoutWatchListInput = {
+  totalBalance?: Prisma.DecimalFieldUpdateOperationsInput | runtime.Decimal | runtime.DecimalJsLike | number | string
+  cashBalance?: Prisma.DecimalFieldUpdateOperationsInput | runtime.Decimal | runtime.DecimalJsLike | number | string
+  totalBalanceHistory?: Prisma.JsonNullValueInput | runtime.InputJsonValue
+  cashBalanceHistory?: Prisma.JsonNullValueInput | runtime.InputJsonValue
+  stockHoldings?: Prisma.JsonNullValueInput | runtime.InputJsonValue
+  transactionHistory?: Prisma.transactionHistoryUpdateManyWithoutPortfolioNestedInput
+  user?: Prisma.UserUpdateOneRequiredWithoutStocksNestedInput
+}
+
+export type userPortfolioUncheckedUpdateWithoutWatchListInput = {
+  id?: Prisma.IntFieldUpdateOperationsInput | number
+  userId?: Prisma.IntFieldUpdateOperationsInput | number
+  totalBalance?: Prisma.DecimalFieldUpdateOperationsInput | runtime.Decimal | runtime.DecimalJsLike | number | string
+  cashBalance?: Prisma.DecimalFieldUpdateOperationsInput | runtime.Decimal | runtime.DecimalJsLike | number | string
+  totalBalanceHistory?: Prisma.JsonNullValueInput | runtime.InputJsonValue
+  cashBalanceHistory?: Prisma.JsonNullValueInput | runtime.InputJsonValue
+  stockHoldings?: Prisma.JsonNullValueInput | runtime.InputJsonValue
+  transactionHistory?: Prisma.transactionHistoryUncheckedUpdateManyWithoutPortfolioNestedInput
 }
 
 export type userPortfolioCreateManyUserInput = {
@@ -606,6 +691,7 @@ export type userPortfolioUpdateWithoutUserInput = {
   cashBalanceHistory?: Prisma.JsonNullValueInput | runtime.InputJsonValue
   stockHoldings?: Prisma.JsonNullValueInput | runtime.InputJsonValue
   transactionHistory?: Prisma.transactionHistoryUpdateManyWithoutPortfolioNestedInput
+  watchList?: Prisma.watchListUpdateManyWithoutPortfolioNestedInput
 }
 
 export type userPortfolioUncheckedUpdateWithoutUserInput = {
@@ -616,6 +702,7 @@ export type userPortfolioUncheckedUpdateWithoutUserInput = {
   cashBalanceHistory?: Prisma.JsonNullValueInput | runtime.InputJsonValue
   stockHoldings?: Prisma.JsonNullValueInput | runtime.InputJsonValue
   transactionHistory?: Prisma.transactionHistoryUncheckedUpdateManyWithoutPortfolioNestedInput
+  watchList?: Prisma.watchListUncheckedUpdateManyWithoutPortfolioNestedInput
 }
 
 export type userPortfolioUncheckedUpdateManyWithoutUserInput = {
@@ -634,10 +721,12 @@ export type userPortfolioUncheckedUpdateManyWithoutUserInput = {
 
 export type UserPortfolioCountOutputType = {
   transactionHistory: number
+  watchList: number
 }
 
 export type UserPortfolioCountOutputTypeSelect<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
   transactionHistory?: boolean | UserPortfolioCountOutputTypeCountTransactionHistoryArgs
+  watchList?: boolean | UserPortfolioCountOutputTypeCountWatchListArgs
 }
 
 /**
@@ -657,6 +746,13 @@ export type UserPortfolioCountOutputTypeCountTransactionHistoryArgs<ExtArgs exte
   where?: Prisma.transactionHistoryWhereInput
 }
 
+/**
+ * UserPortfolioCountOutputType without action
+ */
+export type UserPortfolioCountOutputTypeCountWatchListArgs<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
+  where?: Prisma.watchListWhereInput
+}
+
 
 export type userPortfolioSelect<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = runtime.Types.Extensions.GetSelect<{
   id?: boolean
@@ -667,6 +763,7 @@ export type userPortfolioSelect<ExtArgs extends runtime.Types.Extensions.Interna
   cashBalanceHistory?: boolean
   stockHoldings?: boolean
   transactionHistory?: boolean | Prisma.userPortfolio$transactionHistoryArgs<ExtArgs>
+  watchList?: boolean | Prisma.userPortfolio$watchListArgs<ExtArgs>
   user?: boolean | Prisma.UserDefaultArgs<ExtArgs>
   _count?: boolean | Prisma.UserPortfolioCountOutputTypeDefaultArgs<ExtArgs>
 }, ExtArgs["result"]["userPortfolio"]>
@@ -706,6 +803,7 @@ export type userPortfolioSelectScalar = {
 export type userPortfolioOmit<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = runtime.Types.Extensions.GetOmit<"id" | "userId" | "totalBalance" | "cashBalance" | "totalBalanceHistory" | "cashBalanceHistory" | "stockHoldings", ExtArgs["result"]["userPortfolio"]>
 export type userPortfolioInclude<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
   transactionHistory?: boolean | Prisma.userPortfolio$transactionHistoryArgs<ExtArgs>
+  watchList?: boolean | Prisma.userPortfolio$watchListArgs<ExtArgs>
   user?: boolean | Prisma.UserDefaultArgs<ExtArgs>
   _count?: boolean | Prisma.UserPortfolioCountOutputTypeDefaultArgs<ExtArgs>
 }
@@ -720,6 +818,7 @@ export type $userPortfolioPayload<ExtArgs extends runtime.Types.Extensions.Inter
   name: "userPortfolio"
   objects: {
     transactionHistory: Prisma.$transactionHistoryPayload<ExtArgs>[]
+    watchList: Prisma.$watchListPayload<ExtArgs>[]
     user: Prisma.$UserPayload<ExtArgs>
   }
   scalars: runtime.Types.Extensions.GetPayloadResult<{
@@ -1125,6 +1224,7 @@ readonly fields: userPortfolioFieldRefs;
 export interface Prisma__userPortfolioClient<T, Null = never, ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs, GlobalOmitOptions = {}> extends Prisma.PrismaPromise<T> {
   readonly [Symbol.toStringTag]: "PrismaPromise"
   transactionHistory<T extends Prisma.userPortfolio$transactionHistoryArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.userPortfolio$transactionHistoryArgs<ExtArgs>>): Prisma.PrismaPromise<runtime.Types.Result.GetResult<Prisma.$transactionHistoryPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
+  watchList<T extends Prisma.userPortfolio$watchListArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.userPortfolio$watchListArgs<ExtArgs>>): Prisma.PrismaPromise<runtime.Types.Result.GetResult<Prisma.$watchListPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
   user<T extends Prisma.UserDefaultArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.UserDefaultArgs<ExtArgs>>): Prisma.Prisma__UserClient<runtime.Types.Result.GetResult<Prisma.$UserPayload<ExtArgs>, T, "findUniqueOrThrow", GlobalOmitOptions> | Null, Null, ExtArgs, GlobalOmitOptions>
   /**
    * Attaches callbacks for the resolution and/or rejection of the Promise.
@@ -1579,6 +1679,30 @@ export type userPortfolio$transactionHistoryArgs<ExtArgs extends runtime.Types.E
   take?: number
   skip?: number
   distinct?: Prisma.TransactionHistoryScalarFieldEnum | Prisma.TransactionHistoryScalarFieldEnum[]
+}
+
+/**
+ * userPortfolio.watchList
+ */
+export type userPortfolio$watchListArgs<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
+  /**
+   * Select specific fields to fetch from the watchList
+   */
+  select?: Prisma.watchListSelect<ExtArgs> | null
+  /**
+   * Omit specific fields from the watchList
+   */
+  omit?: Prisma.watchListOmit<ExtArgs> | null
+  /**
+   * Choose, which related nodes to fetch as well
+   */
+  include?: Prisma.watchListInclude<ExtArgs> | null
+  where?: Prisma.watchListWhereInput
+  orderBy?: Prisma.watchListOrderByWithRelationInput | Prisma.watchListOrderByWithRelationInput[]
+  cursor?: Prisma.watchListWhereUniqueInput
+  take?: number
+  skip?: number
+  distinct?: Prisma.WatchListScalarFieldEnum | Prisma.WatchListScalarFieldEnum[]
 }
 
 /**

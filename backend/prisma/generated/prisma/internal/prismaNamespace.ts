@@ -388,7 +388,8 @@ export const ModelName = {
   lastFetch: 'lastFetch',
   Stocks: 'Stocks',
   userPortfolio: 'userPortfolio',
-  transactionHistory: 'transactionHistory'
+  transactionHistory: 'transactionHistory',
+  watchList: 'watchList'
 } as const
 
 export type ModelName = (typeof ModelName)[keyof typeof ModelName]
@@ -404,7 +405,7 @@ export type TypeMap<ExtArgs extends runtime.Types.Extensions.InternalArgs = runt
     omit: GlobalOmitOptions
   }
   meta: {
-    modelProps: "user" | "lastFetch" | "stocks" | "userPortfolio" | "transactionHistory"
+    modelProps: "user" | "lastFetch" | "stocks" | "userPortfolio" | "transactionHistory" | "watchList"
     txIsolationLevel: TransactionIsolationLevel
   }
   model: {
@@ -778,6 +779,80 @@ export type TypeMap<ExtArgs extends runtime.Types.Extensions.InternalArgs = runt
         }
       }
     }
+    watchList: {
+      payload: Prisma.$watchListPayload<ExtArgs>
+      fields: Prisma.watchListFieldRefs
+      operations: {
+        findUnique: {
+          args: Prisma.watchListFindUniqueArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$watchListPayload> | null
+        }
+        findUniqueOrThrow: {
+          args: Prisma.watchListFindUniqueOrThrowArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$watchListPayload>
+        }
+        findFirst: {
+          args: Prisma.watchListFindFirstArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$watchListPayload> | null
+        }
+        findFirstOrThrow: {
+          args: Prisma.watchListFindFirstOrThrowArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$watchListPayload>
+        }
+        findMany: {
+          args: Prisma.watchListFindManyArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$watchListPayload>[]
+        }
+        create: {
+          args: Prisma.watchListCreateArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$watchListPayload>
+        }
+        createMany: {
+          args: Prisma.watchListCreateManyArgs<ExtArgs>
+          result: BatchPayload
+        }
+        createManyAndReturn: {
+          args: Prisma.watchListCreateManyAndReturnArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$watchListPayload>[]
+        }
+        delete: {
+          args: Prisma.watchListDeleteArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$watchListPayload>
+        }
+        update: {
+          args: Prisma.watchListUpdateArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$watchListPayload>
+        }
+        deleteMany: {
+          args: Prisma.watchListDeleteManyArgs<ExtArgs>
+          result: BatchPayload
+        }
+        updateMany: {
+          args: Prisma.watchListUpdateManyArgs<ExtArgs>
+          result: BatchPayload
+        }
+        updateManyAndReturn: {
+          args: Prisma.watchListUpdateManyAndReturnArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$watchListPayload>[]
+        }
+        upsert: {
+          args: Prisma.watchListUpsertArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$watchListPayload>
+        }
+        aggregate: {
+          args: Prisma.WatchListAggregateArgs<ExtArgs>
+          result: runtime.Types.Utils.Optional<Prisma.AggregateWatchList>
+        }
+        groupBy: {
+          args: Prisma.watchListGroupByArgs<ExtArgs>
+          result: runtime.Types.Utils.Optional<Prisma.WatchListGroupByOutputType>[]
+        }
+        count: {
+          args: Prisma.watchListCountArgs<ExtArgs>
+          result: runtime.Types.Utils.Optional<Prisma.WatchListCountAggregateOutputType> | number
+        }
+      }
+    }
   }
 } & {
   other: {
@@ -873,6 +948,15 @@ export const TransactionHistoryScalarFieldEnum = {
 } as const
 
 export type TransactionHistoryScalarFieldEnum = (typeof TransactionHistoryScalarFieldEnum)[keyof typeof TransactionHistoryScalarFieldEnum]
+
+
+export const WatchListScalarFieldEnum = {
+  id: 'id',
+  portfolioId: 'portfolioId',
+  symbol: 'symbol'
+} as const
+
+export type WatchListScalarFieldEnum = (typeof WatchListScalarFieldEnum)[keyof typeof WatchListScalarFieldEnum]
 
 
 export const SortOrder = {
@@ -1112,6 +1196,7 @@ export type GlobalOmitConfig = {
   stocks?: Prisma.StocksOmit
   userPortfolio?: Prisma.userPortfolioOmit
   transactionHistory?: Prisma.transactionHistoryOmit
+  watchList?: Prisma.watchListOmit
 }
 
 /* Types for Logging */

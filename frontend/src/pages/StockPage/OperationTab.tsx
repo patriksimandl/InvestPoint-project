@@ -1,4 +1,6 @@
-import { useState, type Dispatch, type SetStateAction } from "react"
+import { useContext, useEffect, useState, type Dispatch, type SetStateAction } from "react"
+import { symbolContext, watchListContext } from "./StockPage";
+import axios from "axios";
 
 type OperationTabProps ={
   setIsBuying: Dispatch<SetStateAction<boolean>>,
@@ -14,6 +16,18 @@ type OperationTabProps ={
 
 
 export function OperationTab({setIsBuying,isLogged,setShowLogin,showLogin,setLoginTransition,setAction,canSell,selectedTab,setSelectedTab} : OperationTabProps) {
+  const [isInTheWatchList,setIsInTheWatchList] = useState(false);
+
+  const symbol = useContext(symbolContext);
+  const watchList = useContext(watchListContext);
+
+  useEffect(()=>{
+    if(!watchList) return
+
+    setIsInTheWatchList(watchList.some((item)=> item.symbol === symbol))
+  },[watchList])
+
+
 
   function changeBuying(action :string) {
     if(isLogged){
@@ -25,6 +39,17 @@ export function OperationTab({setIsBuying,isLogged,setShowLogin,showLogin,setLog
       setLoginTransition(true);
     }
     
+  }
+
+  async function toggleWatchList(){
+    if(isLogged){
+      const response = axios.post(`${import.meta.env.VITE_BACKEND_URL}/api/watchlist`,{symbol},{withCredentials:true});
+      setIsInTheWatchList(!isInTheWatchList);
+    }
+    else{
+      setShowLogin(true)
+      setLoginTransition(true);
+    }
   }
 
 
@@ -49,23 +74,30 @@ export function OperationTab({setIsBuying,isLogged,setShowLogin,showLogin,setLog
         >
           Sell
         </button>
-        <button 
-          className="flex items-center justify-center gap-2 bg-white text-slate-700 border-2 border-slate-300 rounded-lg font-semibold hover:bg-slate-50 hover:border-slate-400 transition-all px-3.5 sm:px-4 py-2.5 sm:py-3 text-sm sm:text-[15px] shadow-sm hover:shadow min-w-[48px]"
-          title="Add to watchlist"
+        <button
+          onClick={toggleWatchList} 
+          className={`flex items-center justify-center gap-2 rounded-lg font-semibold transition-all px-3.5 sm:px-4 py-2.5 sm:py-3 text-sm sm:text-[15px] shadow-sm hover:shadow min-w-[48px] border-2 ${
+            isInTheWatchList
+              ? 'bg-amber-50 text-amber-700 border-amber-300 hover:bg-amber-100 hover:border-amber-400'
+              : 'bg-white text-slate-700 border-slate-300 hover:bg-slate-50 hover:border-slate-400'
+          }`}
+          title={isInTheWatchList ? 'Remove from watchlist' : 'Add to watchlist'}
         >
           <svg 
             xmlns="http://www.w3.org/2000/svg" 
             height="19px" 
-            viewBox="0 -960 960 960" 
+            viewBox="0 0 24 24" 
             width="19px" 
-            fill="currentColor" 
-            className="sm:h-[20px] sm:w-[20px] flex-shrink-0"
+            fill={isInTheWatchList ? 'currentColor' : 'none'}
+            stroke="currentColor"
+            strokeWidth={isInTheWatchList ? 0 : 2}
+            className={`sm:h-[20px] sm:w-[20px] flex-shrink-0 ${isInTheWatchList ? 'text-yellow-500' : ''}`}
           >
-            <path d="m305-704 112-145q12-16 28.5-23.5T480-880q18 0 34.5 7.5T543-849l112 145 170 57q26 8 41 29.5t15 47.5q0 12-3.5 24T866-523L756-367l4 164q1 35-23 59t-56 24q-2 0-22-3l-179-50-179 50q-5 2-11 2.5t-11 .5q-32 0-56-24t-23-59l4-165L95-523q-8-11-11.5-23T80-570q0-25 14.5-46.5T135-647l170-57Zm49 69-194 64 124 179-4 191 200-55 200 56-4-192 124-177-194-66-126-165-126 165Zm126 135Z" />
+            <path d="M12 17.27 18.18 21l-1.64-7.03L22 9.24l-7.19-.61L12 2 9.19 8.63 2 9.24l5.46 4.73L5.82 21z" />
           </svg>
-          <span className="hidden min-[400px]:inline sm:hidden whitespace-nowrap">Add</span>
-          <span className="hidden sm:inline lg:hidden whitespace-nowrap">Watchlist</span>
-          <span className="hidden lg:inline whitespace-nowrap">Add to watchlist</span>
+          <span className="hidden min-[400px]:inline sm:hidden whitespace-nowrap">{isInTheWatchList ? 'Remove' : 'Add'}</span>
+          <span className="hidden sm:inline lg:hidden whitespace-nowrap">{isInTheWatchList ? 'Saved' : 'Watchlist'}</span>
+          <span className="hidden lg:inline whitespace-nowrap">{isInTheWatchList ? 'Remove from watchlist' : 'Add to watchlist'}</span>
         </button>
       </div>
       

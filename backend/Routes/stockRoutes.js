@@ -2,19 +2,25 @@ import express from "express";
 import dayjs from "dayjs";
 import db from "../prismaClient.ts";
 import { ai } from "../googleGem/client.ts";
+import { cache, inProgress } from "../server.js";
 
 const router = express.Router();
 
-const cache = new Map();
-const inProgress = new Map();
+
 
 
 router.get('/', async (req, res) => {
+  if(cache.has('stocks')){
+    res.status(200).json(cache.get('stocks'));
+  }
+
+
   try {
     const tableStocksData = await db.stocks.findMany();
-    res.json(tableStocksData).status(200);
+    cache.set('stocks',tableStocksData);
+    res.status(200).json(tableStocksData);
   } catch (error) {
-    console.error('Error fetching all stocks:', error);
+    console.log('Error fetching all stocks:', error);
     res.status(500).send('Error fetching stocks');
   }
 })
@@ -131,6 +137,8 @@ Keep it simple, general, and easy to read.`,
     res.status(500).send('Error fetching stock overview');
   }
 })
+
+
 
 
 

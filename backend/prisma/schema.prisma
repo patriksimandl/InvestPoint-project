@@ -49,7 +49,9 @@ model userPortfolio{
   cashBalanceHistory         Json      @default("[]")
   stockHoldings              Json      @default("{}")
   transactionHistory         transactionHistory[]
+  watchList                  watchList[]
   user                       User      @relation(fields: [userId], references: [id])
+  
 }
 
 model transactionHistory{
@@ -61,6 +63,14 @@ model transactionHistory{
   timestamp                  DateTime  
   type                       String   
   portfolio                  userPortfolio    @relation(fields:[portfolioId], references: [id])
+}
+
+model watchList{
+  id                          Int          @id @default(autoincrement())
+  portfolioId                 Int        
+  symbol                      String                  
+  portfolio                   userPortfolio            @relation(fields:[portfolioId], references:[id])
+  @@unique([portfolioId,symbol])
 }
 
 

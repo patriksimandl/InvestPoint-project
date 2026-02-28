@@ -55,7 +55,8 @@ export const ModelName = {
   lastFetch: 'lastFetch',
   Stocks: 'Stocks',
   userPortfolio: 'userPortfolio',
-  transactionHistory: 'transactionHistory'
+  transactionHistory: 'transactionHistory',
+  watchList: 'watchList'
 } as const
 
 export type ModelName = (typeof ModelName)[keyof typeof ModelName]
@@ -130,6 +131,15 @@ export const TransactionHistoryScalarFieldEnum = {
 } as const
 
 export type TransactionHistoryScalarFieldEnum = (typeof TransactionHistoryScalarFieldEnum)[keyof typeof TransactionHistoryScalarFieldEnum]
+
+
+export const WatchListScalarFieldEnum = {
+  id: 'id',
+  portfolioId: 'portfolioId',
+  symbol: 'symbol'
+} as const
+
+export type WatchListScalarFieldEnum = (typeof WatchListScalarFieldEnum)[keyof typeof WatchListScalarFieldEnum]
 
 
 export const SortOrder = {
