@@ -1,15 +1,20 @@
 import { NavLink } from 'react-router';
 import { MainMenu } from '../../shared/MainMenu'
 import './HomePage.css'
-import { useContext, type Dispatch, type SetStateAction } from 'react'
 import { useInView } from 'react-intersection-observer';
 import { Features } from './Features';
 import axios from 'axios';
 import { useQuery } from '@tanstack/react-query';
 import { ScrollStockPanel } from './ScrollStocksPanel.tsx';
 import { BottomMenu } from '../../shared/BottomMenu';
+import { useSeo } from '../../shared/useSeo';
 
 export function HomePage() {
+  useSeo({
+    title: 'InvestPoint | Stock Market & Portfolio Tracker',
+    description: 'Browse market data, track portfolio performance, and discover investment opportunities with InvestPoint.'
+  });
+
   // Intersection observer refs for each section
   const { ref: heroRef, inView: heroInView } = useInView({ threshold: 0.1, triggerOnce: true });
   const { ref: scrollStockRef, inView: scrollStockInView } = useInView({ threshold: 0.1, triggerOnce: true });
@@ -33,7 +38,6 @@ export function HomePage() {
 
   return (
     <>
-      <title>Home</title>
       <MainMenu  />
       <div className=''>
         {/* Hero Section */}

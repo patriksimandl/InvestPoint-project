@@ -21,6 +21,7 @@ import { Portfolio } from "../PortfolioPage/Portfolio";
 import { BottomMenu } from "../../shared/BottomMenu";
 import { IsLoggedContext } from "../../App";
 import sparkleIcon from "../../assets/sparkle-icon.svg";
+import { useSeo } from "../../shared/useSeo";
 
 dayjs.extend(utc);
 dayjs.extend(timezone);
@@ -231,7 +232,12 @@ export function StockPage() {
   const canSell = !!holding && Number(holding.quantity) > 0;
 
   const todayClosePrice = Number(stockData?.data?.data?.[0]?.close ?? 0);
-  const title = `Invest Point - ${symbol}`
+
+  useSeo({
+    title: `${stockData?.name ?? symbol} (${symbol}) | InvestPoint`,
+    description: `View ${stockData?.name ?? symbol} (${symbol}) live price, chart trends, and trading actions on InvestPoint.`
+  });
+
   return (
 
     <>
@@ -241,11 +247,6 @@ export function StockPage() {
       {isBuying ? <BuyOverlay action={action} setIsBuying={setIsBuying} setBuyingQuantities={setBuyingQuantities} setAnimateInMessage={setAnimateInMessage} todayClosePrice={todayClosePrice} symbol={symbol} name={stockData?.name} userCashBalance={Number((userPortfolio?.cashBalance))} userTotalValue={Number(userPortfolio?.totalBalance ?? 0)} setTransactionMessage={setTransactionMessage} setTransactionType={setTransactionType} canSell={canSell} stockHoldings={normalizedStockHoldings} /> : ''}
 
       {transactionMessage ? <TransactionMessage animateInMessage={animateInMessage} setTransactionMessage={setTransactionMessage} symbol={symbol} buyingQuantities={buyingQuantities} transactionType={transactionType} /> : ''}
-
-
-
-
-      <title>{title}</title>
 
 
       <LoginOverlay setShowLogin={setShowLogin} loginTransition={loginTransition} showLogin={showLogin} setLoginTransition={setLoginTransiton} />

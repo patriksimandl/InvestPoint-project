@@ -10,6 +10,7 @@ import { EmailInput } from "./EmailInput";
 import { NameInputs } from "./NamesInput";
 import { useNavigate } from "react-router";
 import { IsLoggedContext, UserEmailContext } from "../../App";
+import { useSeo } from "../../shared/useSeo";
 
 export type eventProps = {
   target: {
@@ -33,6 +34,13 @@ export function LoginPage() {
   const [NamesValidation, setNamesValidation] = useState({
     firstName: false,
     secondName: false
+  });
+
+  useSeo({
+    title: isRegistrating ? 'Create Account | InvestPoint' : 'Login | InvestPoint',
+    description: isRegistrating
+      ? 'Create your InvestPoint account to start tracking stocks and building your portfolio.'
+      : 'Log in to InvestPoint to manage your stock watchlist and portfolio.'
   });
 
   //valid password states
@@ -129,7 +137,6 @@ export function LoginPage() {
 
   return (
     <>
-      <title>{isRegistrating ? 'Create account' : 'Login'}</title>
       <div className="login-page-bg mt-[-120px]">
         <div className="login-page-container  relative flex flex-col lg:flex-row rounded-[28px] w-[92%] sm:w-[86%] lg:w-[80%] xl:w-[85%] max-w-[1200px] shadow-2xl max-h-[92vh] lg:max-h-[94vh] xl:max-h-[95vh] lg:min-h-[600px] overflow-hidden border border-slate-200/70 bg-white/80 backdrop-blur-sm" >
           <button onClick={() => navigate(-1)} aria-label="Close" className="absolute top-4 right-4 p-2 rounded-full hover:bg-slate-100/80 transition-colors">

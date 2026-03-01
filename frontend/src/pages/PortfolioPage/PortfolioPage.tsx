@@ -16,9 +16,15 @@ import { NetProfit } from "./NetProfit.tsx";
 import { BottomMenu } from "../../shared/BottomMenu.tsx";
 import { IsLoggedContext } from "../../App";
 import { Transaction } from "./Tranasaction.ts";
+import { useSeo } from "../../shared/useSeo.ts";
 
 
 export function PortfolioPage() {
+  useSeo({
+    title: 'Your Portfolio | InvestPoint',
+    description: 'Track portfolio value, holdings, and transaction history in your InvestPoint dashboard.'
+  });
+
   const { isLogged } = useContext(IsLoggedContext)!;
   const [activeZoomButton, setActiveZoomButton] = useState<string>('All');
   const zoomButtons = ['1M', '1Y', 'All'];
@@ -114,7 +120,6 @@ export function PortfolioPage() {
 
   return (
     <>
-      <title>Your Portfolio</title>
       <MainMenu />
 
 

@@ -11,7 +11,7 @@ import { BottomMenu } from "../../shared/BottomMenu.tsx";
 import { IsLoggedContext } from "../../App";
 import type { StockData } from "../PortfolioPage/types.ts";
 import { Transaction } from "../PortfolioPage/Tranasaction.ts";
-import dayjs from "dayjs";
+import { useSeo } from "../../shared/useSeo.ts";
 
 type StockWithLogo = StockData & {
   logoURL: string;
@@ -32,6 +32,13 @@ export function StocksPage() {
 
 
   const search = SearchParams.get('search');
+
+  useSeo({
+    title: 'Browse Stocks | InvestPoint',
+    description: search
+      ? `Browse stock search results for "${search}" on InvestPoint.`
+      : 'Browse live market stocks, prices, and performance data on InvestPoint.'
+  });
 
 
   const { data: tableStocksData } = useQuery<StockWithLogo[]>({
@@ -130,7 +137,6 @@ export function StocksPage() {
 
   return (
     <>
-      <title>Browse Stocks</title>
       <MainMenu />
       
       <div className="stocks-page-container pb-8">
