@@ -4,6 +4,7 @@ type TransactionMessageProps ={
   animateInMessage: boolean
   setTransactionMessage: Dispatch<SetStateAction<boolean>>
   symbol: string
+  transactionType: 'Buy' | 'Sell'
   buyingQuantities: {
     price: number
     numberOfShares: number
@@ -11,7 +12,7 @@ type TransactionMessageProps ={
 }
 
 
-export function TransactionMessage({ animateInMessage, setTransactionMessage, symbol, buyingQuantities }: TransactionMessageProps) {
+export function TransactionMessage({ animateInMessage, setTransactionMessage, symbol, buyingQuantities, transactionType }: TransactionMessageProps) {
   
 
 
@@ -34,10 +35,10 @@ export function TransactionMessage({ animateInMessage, setTransactionMessage, sy
       </div>
       <div className="flex flex-col w-[70%]">
         <div className="w-full text-xl flex text-blue-900 font-semibold">
-          Order Executed
+          {transactionType} Order Executed
         </div>
         <div className="text-gray-600">
-          You have successfully bought {buyingQuantities.numberOfShares} shares of {symbol} at ${buyingQuantities.price}
+          You have successfully {transactionType === 'Buy' ? 'bought' : 'sold'} {buyingQuantities.numberOfShares} shares of {symbol} at ${buyingQuantities.price}
         </div>
       </div>
 

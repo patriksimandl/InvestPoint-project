@@ -12,26 +12,33 @@ type BuyOverlayProps = {
   setIsBuying: Dispatch<SetStateAction<boolean>>
   setAnimateInMessage: Dispatch<SetStateAction<boolean>>
   setTransactionMessage: Dispatch<SetStateAction<boolean>>
+  setTransactionType: Dispatch<SetStateAction<'Buy' | 'Sell'>>
   setBuyingQuantities: Dispatch<SetStateAction<{ price: number; numberOfShares: number }>>
   userCashBalance: number,
   userTotalValue: number,
   todayClosePrice: number
   action: string
   canSell: boolean
+  stockHoldings: Record<string, { quantity: number; avgBuyPricePerShare: number }> | null
 }
 
-export function BuyOverlay({ symbol, setAnimateInMessage, name, setIsBuying, userCashBalance, userTotalValue, todayClosePrice, action, setTransactionMessage, setBuyingQuantities, canSell }: BuyOverlayProps) {
+export function BuyOverlay({ symbol, setAnimateInMessage, name, setIsBuying, userCashBalance, userTotalValue, todayClosePrice, action, setTransactionMessage, setTransactionType, setBuyingQuantities, canSell, stockHoldings }: BuyOverlayProps) {
   const [activeButton, setActiveButton] = useState<'Buy' | 'Sell'>('Buy');
   const [activeUnit, setActiveUnit] = useState<'Value' | 'Quantity'>('Value');
   const [value, setValue] = useState(0);
-  const [isLoadingTransactions,setIsLoadingTransaction] = useState(false);
+  const [isLoadingTransactions, setIsLoadingTransaction] = useState(false);
 
   const buttons: Array<'Buy' | 'Sell'> = ['Buy', 'Sell'];
 
   const queryClient = useQueryClient();
 
 
+
+
   const maxShares = Number((userCashBalance / todayClosePrice).toFixed(2));
+
+  const maxSymbolHoldingsShares = stockHoldings ? stockHoldings[symbol]?.quantity : 0;
+  const maxSymbolHoldingsPrice = stockHoldings ? todayClosePrice * stockHoldings[symbol]?.quantity : 0;
 
 
   /*useEffect(() => {
@@ -39,11 +46,19 @@ export function BuyOverlay({ symbol, setAnimateInMessage, name, setIsBuying, use
   }, [maxShares])
   */
 
+  
+
   useEffect(() => {
     if (action === 'Sell' && canSell) {
-      setActiveButton('Sell');
+      return setActiveButton('Sell');
     }
+    
   }, [action, canSell])
+
+  useEffect(()=>{
+    setValue(0);
+  },[activeButton])
+
 
   function snapZero(num: number, eps = 0.1) {
     return Math.abs(num) < eps ? 0 : num;
@@ -56,19 +71,29 @@ export function BuyOverlay({ symbol, setAnimateInMessage, name, setIsBuying, use
   const price = snapZero(
     activeUnit === 'Value'
       ? Number(value.toFixed(2))
-      : Number((value * todayClosePrice).toFixed(2)), todayClosePrice / 100)
+      : Number((value * todayClosePrice).toFixed(2))
+
+
+    , todayClosePrice / 100)
+
 
   const numberOfShares = snapZero(
     activeUnit === 'Quantity'
       ? Number(value.toFixed(2))
       : Number((value / todayClosePrice).toFixed(2))
+
   )
 
 
   const percent = snapZero(
-    activeUnit === 'Value'
-      ? (price / userCashBalance) * 100
-      : (numberOfShares / maxShares) * 100
+    activeButton === 'Buy' ?
+      activeUnit === 'Value'
+        ? (price / userCashBalance) * 100
+        : (numberOfShares / maxShares) * 100
+      :
+      activeUnit === 'Value'
+        ? (price / maxSymbolHoldingsPrice) * 100
+        : (numberOfShares / maxSymbolHoldingsShares) * 100
     , 0.1)
 
 
@@ -85,15 +110,16 @@ export function BuyOverlay({ symbol, setAnimateInMessage, name, setIsBuying, use
       queryClient.invalidateQueries({ queryKey: ['userPortfolio'] });
 
 
-      setBuyingQuantities({ price, numberOfShares }) 
+      setTransactionType(activeButton)
+      setBuyingQuantities({ price, numberOfShares })
       setTransactionMessage(true)
       setTimeout(() => {
         //animate out
         setAnimateInMessage(false)
         //hide 
-        setTimeout(()=>{
+        setTimeout(() => {
           setTransactionMessage(false)
-        },500)
+        }, 500)
       }, 4000);
 
       setIsBuying(false);
@@ -106,22 +132,34 @@ export function BuyOverlay({ symbol, setAnimateInMessage, name, setIsBuying, use
     value = Number(value);
 
 
+    if (activeButton === 'Buy') {
+      if (value > (activeUnit === 'Value' ? userCashBalance : maxShares)) {
+        setValue(activeUnit === 'Value' ? userCashBalance : maxShares);
+      }
+      else if (value < 0) {
+        setValue(0)
+      }
 
-    if (value > (activeUnit === 'Value' ? userCashBalance : maxShares)) {
-      setValue(activeUnit === 'Value' ? userCashBalance : maxShares);
+      else {
+        setValue(value);
+      }
     }
-    else if (value < 0) {
-      setValue(0)
-    }
-
-    else {
-      setValue(value);
+    else{
+      if(value > (activeUnit === 'Value' ? maxSymbolHoldingsPrice : maxSymbolHoldingsShares)){
+        setValue(activeUnit ==='Value' ? maxSymbolHoldingsPrice : maxSymbolHoldingsShares);
+      }
+      else if(value<0){
+        setValue(0);
+      }
+      else{
+        setValue(value);
+      }
     }
 
 
   }
 
-  
+
 
 
   return (
@@ -144,13 +182,12 @@ export function BuyOverlay({ symbol, setAnimateInMessage, name, setIsBuying, use
                 key={button}
                 onClick={() => { if (!isDisabled && !isLoadingTransactions) setActiveButton(button) }}
                 disabled={isDisabled || isLoadingTransactions}
-                className={`flex-1 py-2 rounded-full transition-all ${
-                  isDisabled || isLoadingTransactions
-                    ? 'text-slate-400 bg-slate-100 cursor-not-allowed'
-                    : activeButton === button
-                      ? 'bg-blue-800 text-white shadow-sm'
-                      : 'text-slate-700 hover:bg-white'
-                }`}
+                className={`flex-1 py-2 rounded-full transition-all ${isDisabled || isLoadingTransactions
+                  ? 'text-slate-400 bg-slate-100 cursor-not-allowed'
+                  : activeButton === button
+                    ? 'bg-blue-800 text-white shadow-sm'
+                    : 'text-slate-700 hover:bg-white'
+                  }`}
                 type="button"
               >
                 {button}
@@ -162,7 +199,7 @@ export function BuyOverlay({ symbol, setAnimateInMessage, name, setIsBuying, use
         <ChangeUnit activeUnit={activeUnit} setActiveUnit={setActiveUnit} setValue={setValue} />
 
         <div className="flex flex-col items-center font-normal text-3xl mt-[34px]">
-            <div className="flex justify-center">
+          <div className="flex justify-center">
 
             {activeUnit === 'Value'
               ?
@@ -186,21 +223,33 @@ export function BuyOverlay({ symbol, setAnimateInMessage, name, setIsBuying, use
             {activeUnit === 'Value' ? `≈ ${numberOfShares.toFixed(2)} shares` : `≈ $${price}`}
           </div>
         </div>
-            <div className="flex flex-col gap-3 mt-[36px] relative">
+        <div className="flex flex-col gap-3 mt-[36px] relative">
           <input onChange={(event) => {/* setSliderValue(Number(event.currentTarget.value))*/
             const pct = Number(event.target.value);
 
 
 
+            if (activeButton === 'Buy') {
 
 
 
-            if (activeUnit === 'Value') {
 
-              setValue((pct / 100) * userCashBalance)
+              if (activeUnit === 'Value') {
+                setValue((pct / 100) * userCashBalance)
+
+              }
+              else {
+                setValue((pct / 100) * maxShares)
+              }
             }
             else {
-              setValue((pct / 100) * maxShares)
+              if (activeUnit === 'Value') {
+                setValue((pct / 100) * maxSymbolHoldingsPrice);
+              }
+              else {
+                setValue((pct / 100) * maxSymbolHoldingsShares)
+              }
+
             }
 
 
@@ -225,7 +274,7 @@ export function BuyOverlay({ symbol, setAnimateInMessage, name, setIsBuying, use
         </div>
       </div>
 
-      <PortfolioOverlay userCashBalance={userCashBalance} price={price} userTotalValue={userTotalValue} />
+      <PortfolioOverlay userCashBalance={userCashBalance} price={price} userTotalValue={userTotalValue} activeButton={activeButton} />
 
     </>
 

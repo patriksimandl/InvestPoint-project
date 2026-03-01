@@ -57,6 +57,7 @@ export function StockPage() {
   const [loginTransition, setLoginTransiton] = useState<boolean>(false);
   const [action, setAction] = useState('');
   const [transactionMessage, setTransactionMessage] = useState<boolean>(false);
+  const [transactionType, setTransactionType] = useState<'Buy' | 'Sell'>('Buy');
   const [selectedTab, setSelectedTab] = useState<'Overview' | 'News'>('Overview');
   const { symbol } = useParams();
 
@@ -220,8 +221,12 @@ export function StockPage() {
   const nextOpeningTime = dayjs(marketInfo?.data.markets[0].status.nextChange).tz('Europe/Prague').format(`ddd DD/MM H:m`)
 
 
-  const holding = symbol && userPortfolio?.stockHoldings && typeof userPortfolio.stockHoldings === 'object' && !Array.isArray(userPortfolio.stockHoldings)
-    ? userPortfolio.stockHoldings[symbol]
+  const normalizedStockHoldings = userPortfolio?.stockHoldings && typeof userPortfolio.stockHoldings === 'object' && !Array.isArray(userPortfolio.stockHoldings)
+    ? userPortfolio.stockHoldings
+    : null;
+
+  const holding = symbol && normalizedStockHoldings
+    ? normalizedStockHoldings[symbol]
     : undefined;
   const canSell = !!holding && Number(holding.quantity) > 0;
 
@@ -233,9 +238,9 @@ export function StockPage() {
       <watchListContext.Provider value={watchlist}>
       <symbolContext.Provider value={symbol}>
       {isLoading ? <LoadingOverlay /> : ''}
-      {isBuying ? <BuyOverlay action={action} setIsBuying={setIsBuying} setBuyingQuantities={setBuyingQuantities} setAnimateInMessage={setAnimateInMessage} todayClosePrice={todayClosePrice} symbol={symbol} name={stockData?.name} userCashBalance={Number((userPortfolio?.cashBalance))} userTotalValue={Number(userPortfolio?.totalBalance ?? 0)} setTransactionMessage={setTransactionMessage} canSell={canSell} /> : ''}
+      {isBuying ? <BuyOverlay action={action} setIsBuying={setIsBuying} setBuyingQuantities={setBuyingQuantities} setAnimateInMessage={setAnimateInMessage} todayClosePrice={todayClosePrice} symbol={symbol} name={stockData?.name} userCashBalance={Number((userPortfolio?.cashBalance))} userTotalValue={Number(userPortfolio?.totalBalance ?? 0)} setTransactionMessage={setTransactionMessage} setTransactionType={setTransactionType} canSell={canSell} stockHoldings={normalizedStockHoldings} /> : ''}
 
-      {transactionMessage ? <TransactionMessage animateInMessage={animateInMessage} setTransactionMessage={setTransactionMessage} symbol={symbol} buyingQuantities={buyingQuantities} /> : ''}
+      {transactionMessage ? <TransactionMessage animateInMessage={animateInMessage} setTransactionMessage={setTransactionMessage} symbol={symbol} buyingQuantities={buyingQuantities} transactionType={transactionType} /> : ''}
 
 
 

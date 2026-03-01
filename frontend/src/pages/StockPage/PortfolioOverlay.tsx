@@ -2,10 +2,11 @@ type PortfolioOverlayProps ={
   price: number,
   userTotalValue: number,
   userCashBalance: number
+  activeButton: 'Buy' | 'Sell',
 }
 
-export function PortfolioOverlay({price, userTotalValue, userCashBalance}: PortfolioOverlayProps){
-  const nextCash = price > 0 ? userCashBalance - price : userCashBalance;
+export function PortfolioOverlay({price, userTotalValue, userCashBalance,activeButton}: PortfolioOverlayProps){
+  const nextCash = price > 0 ? activeButton === 'Buy' ? userCashBalance - price :userCashBalance + price  : userCashBalance;
   return (
     <div className="fixed hidden md:block z-102 right-[-90vw] sm:right-[-60vw] md:right-[-30vw] lg:right-[-20vw] shadow-md top-[50%] bg-slate-50/90 translate-y-[-50%] w-[90vw] sm:w-[60vw] md:w-[30vw] lg:w-[20vw] h-[auto] rounded-l-[16px] p-6 sm:p-7 translate-x-[-100%] transition-all border border-slate-200/70">
       <div className="text-[16px] font-semibold text-slate-900">Portfolio Overview</div>
