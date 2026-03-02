@@ -1,6 +1,7 @@
 import { useContext, useEffect, useState, type Dispatch, type SetStateAction } from "react"
 import { symbolContext, watchListContext } from "./StockPage";
 import axios from "axios";
+import { handleRateLimitError } from "../../shared/rateLimitHandler";
 
 type OperationTabProps ={
   setIsBuying: Dispatch<SetStateAction<boolean>>,
@@ -43,8 +44,12 @@ export function OperationTab({setIsBuying,isLogged,setShowLogin,showLogin,setLog
 
   async function toggleWatchList(){
     if(isLogged){
-      const response = axios.post(`${import.meta.env.VITE_BACKEND_URL}/api/watchlist`,{symbol},{withCredentials:true});
-      setIsInTheWatchList(!isInTheWatchList);
+      try {
+        const response = await axios.post(`${import.meta.env.VITE_BACKEND_URL}/api/watchlist`,{symbol},{withCredentials:true});
+        setIsInTheWatchList(!isInTheWatchList);
+      } catch (error) {
+        handleRateLimitError(error);
+      }
     }
     else{
       setShowLogin(true)

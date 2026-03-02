@@ -1,4 +1,5 @@
 import axios from "axios";
+import { handleRateLimitError } from "../../shared/rateLimitHandler";
 
 
 
@@ -29,6 +30,7 @@ export async function sendInfo(email: string, password: string, isRegistrating: 
     }
   } catch (error: any) {
 
+    handleRateLimitError(error);
 
     if (error.response) {
       if (error.response.status === 401) {

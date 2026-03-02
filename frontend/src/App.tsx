@@ -10,6 +10,7 @@ import { PortfolioPage } from './pages/PortfolioPage/PortfolioPage'
 import { StockPage } from './pages/StockPage/StockPage'
 import { verification } from './verification'
 import type { StockData } from './pages/PortfolioPage/types'
+import { RateLimitMessage } from './shared/RateLimitMessage'
 
 
 export const IsLoggedContext = createContext<{ isLogged: boolean, setIsLogged: Dispatch<SetStateAction<boolean>> }>({
@@ -82,6 +83,7 @@ function App() {
     <TableStocksDataContext.Provider value={tableStocksData} >
       <IsLoggedContext.Provider value={{ isLogged, setIsLogged }}>
         <UserEmailContext.Provider value={{ userEmail, setUserEmail }}>
+          <RateLimitMessage />
           <Routes>
             <Route path='/' element={<HomePage />} />
             <Route path='/login' element={<LoginPage />} />

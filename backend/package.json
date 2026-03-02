@@ -38,6 +38,7 @@
     "prisma": "^7.3.0"
   },
   "devDependencies": {
+    "@types/express": "^5.0.6",
     "@types/node": "^24.10.1",
     "@types/pg": "^8.15.6",
     "dotenv": "^17.2.3",

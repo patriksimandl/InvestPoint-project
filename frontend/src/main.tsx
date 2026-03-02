@@ -4,9 +4,23 @@ import { BrowserRouter } from 'react-router'
 import './index.css'
 import App from './App.tsx'
 import { QueryClient , QueryClientProvider} from '@tanstack/react-query'
+import { handleRateLimitError } from './shared/rateLimitHandler'
 
 
-const queryClient = new QueryClient();
+const queryClient = new QueryClient({
+  defaultOptions: {
+    queries: {
+      onError: (error: any) => {
+        handleRateLimitError(error);
+      },
+    },
+    mutations: {
+      onError: (error: any) => {
+        handleRateLimitError(error);
+      },
+    },
+  },
+});
 
 
 

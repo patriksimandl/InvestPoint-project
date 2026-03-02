@@ -3,6 +3,7 @@ import { } from 'react';
 import axios from 'axios';
 import { useQueryClient } from '@tanstack/react-query';
 import { IsLoggedContext, UserEmailContext } from '../App';
+import { handleRateLimitError } from './rateLimitHandler';
 
 
 
@@ -37,16 +38,18 @@ export function AccountMenu() {
 
 
   async function logOut() {
-    // const response = await axios.post('http://localhost:3000/auth/logout', {}, { withCredentials: true })
-    const response = await axios.post(`${import.meta.env.VITE_BACKEND_URL}/auth/logout`, {}, { withCredentials: true })
+    try {
+      // const response = await axios.post('http://localhost:3000/auth/logout', {}, { withCredentials: true })
+      const response = await axios.post(`${import.meta.env.VITE_BACKEND_URL}/auth/logout`, {}, { withCredentials: true })
 
-    if (response.status) {
-      setIsLogged(false);
-      queryClient.setQueryData(["verification"], () => false)
-      queryClient.setQueryData(["watchList"],()=>false)
+      if (response.status) {
+        setIsLogged(false);
+        queryClient.setQueryData(["verification"], () => false)
+        queryClient.setQueryData(["watchList"],()=>false)
+      }
+    } catch (error) {
+      handleRateLimitError(error);
     }
-
-
   }
 
 
