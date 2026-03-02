@@ -30,7 +30,7 @@ export function PortfolioPage() {
   const zoomButtons = ['1M', '1Y', 'All'];
 
 
-  const { isLoading: isVerficationLoading } = useQuery({
+  const { isLoading: isVerficationLoading, isPending: isVerificationPending } = useQuery({
     queryKey: ['verification'],
     queryFn: verification,
     retry: false,
@@ -59,6 +59,7 @@ export function PortfolioPage() {
       )
       
     },
+    enabled: !!isLogged
 
     
   });
@@ -77,6 +78,8 @@ export function PortfolioPage() {
       return transactionHistory
       
     },
+    enabled: !!isLogged,
+    staleTime: 1000*60*5
 
     
   });
@@ -105,6 +108,8 @@ export function PortfolioPage() {
       const response = await axios.get(`${import.meta.env.VITE_BACKEND_URL}/api/watchList`,{withCredentials:true});
       return response.data;
     },
+    enabled: !!isLogged,
+    staleTime: 1000 * 60 * 2
   });
 
 
@@ -124,7 +129,7 @@ export function PortfolioPage() {
 
 
 
-      {isVerficationLoading ? <LoadingOverlay /> : isLogged ? '' : <NotLoggedOverlay />}
+      {(isVerficationLoading || isVerificationPending) ? <LoadingOverlay /> : isLogged ? '' : <NotLoggedOverlay />}
 
 
 
@@ -137,7 +142,11 @@ export function PortfolioPage() {
           <div className="shadow-lg rounded-[12px] p-[18px] sm:p-[22px] md:p-[26px] md:pl-[36px] w-full bg-white flex flex-col min-h-[120px] transition-all duration-300 ease-out hover:scale-[1.03] hover:shadow-2xl active:scale-[1.01] cursor-pointer group">
             <div className="font-semibold headings-portfolio-page transition-colors duration-300 group-hover:text-green-700">Total portfolio value</div>
             <div className="text-[28px] sm:text-[32px] font-semibold text-green-700 flex items-center h-full ">
-              ${isLoading || !isLogged ? '0' : Number(userPortfolio?.totalBalance).toFixed(2)}
+              {(isLoading || isVerificationPending || !isLogged) ? (
+                <div className="h-8 w-32 bg-gradient-to-r from-gray-200 via-gray-100 to-gray-200 rounded animate-pulse"></div>
+              ) : (
+                `$${Number(userPortfolio?.totalBalance).toFixed(2)}`
+              )}
             </div>
 
           </div>
@@ -149,9 +158,11 @@ export function PortfolioPage() {
 
             </div>
             <div className="text-[28px] sm:text-[32px] font-semibold text-blue-700 flex items-center h-full ">
-
-              ${isLoading || !isLogged ? '1000' : Number(userPortfolio?.cashBalance).toFixed(2)}
-
+              {(isLoading || isVerificationPending || !isLogged) ? (
+                <div className="h-8 w-32 bg-gradient-to-r from-gray-200 via-gray-100 to-gray-200 rounded animate-pulse"></div>
+              ) : (
+                `$${Number(userPortfolio?.cashBalance).toFixed(2)}`
+              )}
             </div>
           </div>
           <div className="min-[520px]:col-span-2 lg:col-span-1">

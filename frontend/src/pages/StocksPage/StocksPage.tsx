@@ -73,6 +73,7 @@ export function StocksPage() {
 
       
     },
+    enabled: !!isLogged
 
   });
 
@@ -89,6 +90,8 @@ export function StocksPage() {
       return transactionHistory
       
     },
+    enabled: !!isLogged,
+    staleTime: 1000*60*5
 
   });
 
@@ -98,6 +101,8 @@ export function StocksPage() {
       const response = await axios.get(`${import.meta.env.VITE_BACKEND_URL}/api/watchList`,{withCredentials:true});
       return response.data;
     },
+    enabled: !!isLogged,
+    staleTime: 1000 * 60 * 2
   });
 
   const totalBalance = Number(userPortfolio?.totalBalance ?? 0);
