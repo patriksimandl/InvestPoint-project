@@ -19,7 +19,7 @@ import { LoginOverlay } from "./LoginOverlay";
 import { TransactionMessage } from "./TransactionMessage";
 import { Portfolio } from "../PortfolioPage/Portfolio";
 import { BottomMenu } from "../../shared/BottomMenu";
-import { IsLoggedContext } from "../../App";
+import { IsLoggedContext, TransactionContext } from "../../App";
 import sparkleIcon from "../../assets/sparkle-icon.svg";
 import { useSeo } from "../../shared/useSeo";
 
@@ -52,38 +52,24 @@ export const watchListContext = createContext<undefined | {symbol: string}[]>(un
 
 export function StockPage() {
   const { isLogged } = useContext(IsLoggedContext)!;
+  const { setTransactionMessage, setTransactionType, setBuyingQuantities, setSymbol } = useContext(TransactionContext)!;
   const [zoomButton, setZoomButton] = useState('6M');
   const [isBuying, setIsBuying] = useState<boolean>(false);
   const [showLogin, setShowLogin] = useState<boolean>(false);
   const [loginTransition, setLoginTransiton] = useState<boolean>(false);
   const [action, setAction] = useState('');
-  const [transactionMessage, setTransactionMessage] = useState<boolean>(false);
-  const [transactionType, setTransactionType] = useState<'Buy' | 'Sell'>('Buy');
   const [selectedTab, setSelectedTab] = useState<'Overview' | 'News'>('Overview');
   const { symbol } = useParams();
 
   const queryClient = useQueryClient();
 
-  
-
-  const [animateInMessage, setAnimateInMessage] = useState(false);
-  const [buyingQuantities, setBuyingQuantities] = useState({
-    price: 0,
-    numberOfShares: 0
-  })
-
 
   if(!symbol) return
 
   useEffect(() => {
-    if (transactionMessage) {
-      setAnimateInMessage(true);
-    }
-    else {
-
-      setAnimateInMessage(false)
-    }
-  }, [transactionMessage])
+    // Set the symbol for the transaction message
+    setSymbol(symbol);
+  }, [symbol, setSymbol]);
 
 
 
@@ -244,9 +230,7 @@ export function StockPage() {
       <watchListContext.Provider value={watchlist}>
       <symbolContext.Provider value={symbol}>
       {isLoading ? <LoadingOverlay /> : ''}
-      {isBuying ? <BuyOverlay action={action} setIsBuying={setIsBuying} setBuyingQuantities={setBuyingQuantities} setAnimateInMessage={setAnimateInMessage} todayClosePrice={todayClosePrice} symbol={symbol} name={stockData?.name} userCashBalance={Number((userPortfolio?.cashBalance))} userTotalValue={Number(userPortfolio?.totalBalance ?? 0)} setTransactionMessage={setTransactionMessage} setTransactionType={setTransactionType} canSell={canSell} stockHoldings={normalizedStockHoldings} /> : ''}
-
-      {transactionMessage ? <TransactionMessage animateInMessage={animateInMessage} setTransactionMessage={setTransactionMessage} symbol={symbol} buyingQuantities={buyingQuantities} transactionType={transactionType} /> : ''}
+      {isBuying ? <BuyOverlay action={action} setIsBuying={setIsBuying} setBuyingQuantities={setBuyingQuantities} todayClosePrice={todayClosePrice} symbol={symbol} name={stockData?.name} userCashBalance={Number((userPortfolio?.cashBalance))} userTotalValue={Number(userPortfolio?.totalBalance ?? 0)} setTransactionMessage={setTransactionMessage} setTransactionType={setTransactionType} canSell={canSell} stockHoldings={normalizedStockHoldings} /> : ''}
 
 
       <LoginOverlay setShowLogin={setShowLogin} loginTransition={loginTransition} showLogin={showLogin} setLoginTransition={setLoginTransiton} />

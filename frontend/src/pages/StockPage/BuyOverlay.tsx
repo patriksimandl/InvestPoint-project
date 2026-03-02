@@ -1,16 +1,16 @@
-import { useEffect, useState, type Dispatch, type SetStateAction } from "react";
+import { useEffect, useState, type Dispatch, type SetStateAction, useContext } from "react";
 import './BuyOverlay.css'
 import { PortfolioOverlay } from "./PortfolioOverlay";
 import { ChangeUnit } from "./ChangeUnit";
 import { transaction } from "./transaction";
 import { useQueryClient } from "@tanstack/react-query";
+import { TransactionContext } from "../../App";
 
 
 type BuyOverlayProps = {
   symbol: string,
   name: string,
   setIsBuying: Dispatch<SetStateAction<boolean>>
-  setAnimateInMessage: Dispatch<SetStateAction<boolean>>
   setTransactionMessage: Dispatch<SetStateAction<boolean>>
   setTransactionType: Dispatch<SetStateAction<'Buy' | 'Sell'>>
   setBuyingQuantities: Dispatch<SetStateAction<{ price: number; numberOfShares: number }>>
@@ -22,11 +22,12 @@ type BuyOverlayProps = {
   stockHoldings: Record<string, { quantity: number; avgBuyPricePerShare: number }> | null
 }
 
-export function BuyOverlay({ symbol, setAnimateInMessage, name, setIsBuying, userCashBalance, userTotalValue, todayClosePrice, action, setTransactionMessage, setTransactionType, setBuyingQuantities, canSell, stockHoldings }: BuyOverlayProps) {
+export function BuyOverlay({ symbol, name, setIsBuying, userCashBalance, userTotalValue, todayClosePrice, action, setTransactionMessage, setTransactionType, setBuyingQuantities, canSell, stockHoldings }: BuyOverlayProps) {
   const [activeButton, setActiveButton] = useState<'Buy' | 'Sell'>('Buy');
   const [activeUnit, setActiveUnit] = useState<'Value' | 'Quantity'>('Value');
   const [value, setValue] = useState(0);
   const [isLoadingTransactions, setIsLoadingTransaction] = useState(false);
+  const { setAnimateInMessage } = useContext(TransactionContext)!;
 
   const buttons: Array<'Buy' | 'Sell'> = ['Buy', 'Sell'];
 
@@ -109,20 +110,20 @@ export function BuyOverlay({ symbol, setAnimateInMessage, name, setIsBuying, use
     if (response.status === 201) {
       queryClient.invalidateQueries({ queryKey: ['userPortfolio'] });
 
-
       setTransactionType(activeButton)
       setBuyingQuantities({ price, numberOfShares })
       setTransactionMessage(true)
+      
+      setIsBuying(false);
+      
+      // Animate out the message after 4 seconds
       setTimeout(() => {
-        //animate out
-        setAnimateInMessage(false)
-        //hide 
+        setAnimateInMessage(false);
+        // Hide after animation completes (500ms)
         setTimeout(() => {
           setTransactionMessage(false)
         }, 500)
       }, 4000);
-
-      setIsBuying(false);
     }
   }
 

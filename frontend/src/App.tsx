@@ -11,6 +11,7 @@ import { StockPage } from './pages/StockPage/StockPage'
 import { verification } from './verification'
 import type { StockData } from './pages/PortfolioPage/types'
 import { RateLimitMessage } from './shared/RateLimitMessage'
+import { TransactionMessage } from './pages/StockPage/TransactionMessage'
 
 
 export const IsLoggedContext = createContext<{ isLogged: boolean, setIsLogged: Dispatch<SetStateAction<boolean>> }>({
@@ -25,6 +26,30 @@ export const UserEmailContext = createContext<{ userEmail: string | undefined, s
 
 export const TableStocksDataContext = createContext<null | StockData[]>(null);
 
+export const TransactionContext = createContext<{
+  transactionMessage: boolean
+  setTransactionMessage: Dispatch<SetStateAction<boolean>>
+  transactionType: 'Buy' | 'Sell'
+  setTransactionType: Dispatch<SetStateAction<'Buy' | 'Sell'>>
+  buyingQuantities: { price: number, numberOfShares: number }
+  setBuyingQuantities: Dispatch<SetStateAction<{ price: number, numberOfShares: number }>>
+  symbol: string
+  setSymbol: Dispatch<SetStateAction<string>>
+  animateInMessage: boolean
+  setAnimateInMessage: Dispatch<SetStateAction<boolean>>
+}>({
+  transactionMessage: false,
+  setTransactionMessage: () => { },
+  transactionType: 'Buy',
+  setTransactionType: () => { },
+  buyingQuantities: { price: 0, numberOfShares: 0 },
+  setBuyingQuantities: () => { },
+  symbol: '',
+  setSymbol: () => { },
+  animateInMessage: false,
+  setAnimateInMessage: () => { },
+});
+
 
 function App() {
   const [menuItems, setMenuItems] = useState([]);
@@ -32,6 +57,13 @@ function App() {
 
   const [userEmail, setUserEmail] = useState<string | undefined>(undefined);
   const { pathname } = useLocation();
+  
+  // Transaction message state
+  const [transactionMessage, setTransactionMessage] = useState<boolean>(false);
+  const [transactionType, setTransactionType] = useState<'Buy' | 'Sell'>('Buy');
+  const [buyingQuantities, setBuyingQuantities] = useState({ price: 0, numberOfShares: 0 });
+  const [symbol, setSymbol] = useState<string>('');
+  const [animateInMessage, setAnimateInMessage] = useState(false);
 
   const { data: verificationEmail, isError, isSuccess, error } = useQuery({
     queryKey: ["verification"],
@@ -68,14 +100,16 @@ function App() {
     //To refetch every 20 min
     staleTime: 1000 * 60 * 20,
   });
-
-
-  useEffect(() => {
-    window.scrollTo(0, 0);
-
-  }, [pathname])
-
-  
+useEffect(() => {
+    if (transactionMessage) {
+      setAnimateInMessage(true);
+    } else {
+      setTimeout (() => {
+        
+        setAnimateInMessage(false);
+      }, 500);
+    }
+  }, [transactionMessage])
 
 
 
@@ -83,7 +117,30 @@ function App() {
     <TableStocksDataContext.Provider value={tableStocksData} >
       <IsLoggedContext.Provider value={{ isLogged, setIsLogged }}>
         <UserEmailContext.Provider value={{ userEmail, setUserEmail }}>
-          <RateLimitMessage />
+          <TransactionContext.Provider value={{ 
+            transactionMessage, 
+            setTransactionMessage, 
+            transactionType, 
+            setTransactionType, 
+            buyingQuantities, 
+            setBuyingQuantities,
+            symbol,
+            setSymbol,
+            animateInMessage,
+            setAnimateInMessage
+          }}>
+            <RateLimitMessage />
+            {transactionMessage && (
+              <TransactionMessage 
+                animateInMessage={animateInMessage}
+                setTransactionMessage={setTransactionMessage}
+                symbol={symbol}
+                buyingQuantities={buyingQuantities}
+                transactionType={transactionType}
+              />
+            )}
+            
+          
           <Routes>
             <Route path='/' element={<HomePage />} />
             <Route path='/login' element={<LoginPage />} />
@@ -91,6 +148,7 @@ function App() {
             <Route path='/portfolio' element={<PortfolioPage />} />
             <Route path='/stocks/:symbol' element={<StockPage />} />
           </Routes>
+          </TransactionContext.Provider >
         </UserEmailContext.Provider>
       </IsLoggedContext.Provider>
     </TableStocksDataContext.Provider>
