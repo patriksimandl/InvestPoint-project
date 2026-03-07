@@ -46,8 +46,6 @@ export function LoginPage() {
   });
 
 
-  
-
   //valid password states
 
   const [passwordValidations, setPasswordValidations] = useState({
@@ -87,7 +85,7 @@ export function LoginPage() {
     setIsRegistrating(!isRegistrating);
 
     setResetKey(resetKey + 1);
-
+    setErrorMessage('');
     setPassword('');
     setEmail('');
   }
@@ -139,6 +137,30 @@ export function LoginPage() {
     setPassword('');
     setIsLoading(false);
   }
+
+  useEffect(()=>{
+    function handleEnter(event: KeyboardEvent) {
+      
+      const isEnter : boolean = event.key === 'Enter'
+      const canSubmit : boolean = ((Object.values(passwordValidations).every(Boolean) && emailCredentials && Object.values(NamesValidation).every(Boolean)) || (!isRegistrating && emailCredentials))
+
+      if(canSubmit && isEnter){
+        
+        registerUser();
+        return
+      }
+      else{
+        return
+      }
+      
+    }
+
+    document.addEventListener('keydown',handleEnter)
+
+    return () => {document.removeEventListener('keydown',handleEnter
+    )}
+  },[emailCredentials,isRegistrating,passwordValidations,emailCredentials])
+  
 
   
 

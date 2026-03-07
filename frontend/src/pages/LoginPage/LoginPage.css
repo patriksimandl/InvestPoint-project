@@ -17,6 +17,10 @@
     @apply w-full bg-white text-gray-800 p-[15px] rounded-[12px] text-[15px] font-normal border border-slate-200/80 outline-none focus:ring-2 focus:ring-blue-400/60 focus:border-blue-300 shadow-sm;
   }
 
+  .input-primary-error{
+    @apply border-red-400 ring-2 ring-red-200 focus:ring-red-300 focus:border-red-400;
+  }
+
   .input-primary:focus + .input-label,
   .input-primary:not(:placeholder-shown).input-primary:not(:focus) + .input-label
   {
