@@ -40,13 +40,6 @@ export function BuyOverlay({ symbol, name, setIsBuying, userCashBalance, userTot
 
   const maxSymbolHoldingsShares = stockHoldings ? stockHoldings[symbol]?.quantity : 0;
   const maxSymbolHoldingsPrice = stockHoldings ? todayClosePrice * stockHoldings[symbol]?.quantity : 0;
-
-
-  /*useEffect(() => {
-    console.log(maxShares);
-  }, [maxShares])
-  */
-
   
 
   useEffect(() => {
@@ -109,6 +102,7 @@ export function BuyOverlay({ symbol, name, setIsBuying, userCashBalance, userTot
 
     if (response.status === 201) {
       queryClient.invalidateQueries({ queryKey: ['userPortfolio'] });
+      queryClient.invalidateQueries({queryKey: ["transactionHistory"]});
 
       setTransactionType(activeButton)
       setBuyingQuantities({ price, numberOfShares })

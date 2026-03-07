@@ -2,10 +2,12 @@ import { defineConfig, loadEnv } from 'vite'
 import react from '@vitejs/plugin-react'
 import tailwindcss from '@tailwindcss/vite'
 
+
 // https://vite.dev/config/
 export default defineConfig(({ mode }) => {
   const env = loadEnv(mode, process.cwd(), '');
   const backendUrl = env.VITE_BACKEND_URL || 'http://localhost:3000';
+  const port = Number(env.VITE_PORT) || 5000
 
   return {
   plugins: [
@@ -23,7 +25,7 @@ export default defineConfig(({ mode }) => {
         target: backendUrl
       }
     },
-    port: 5000
+    port
   }
   }
 })

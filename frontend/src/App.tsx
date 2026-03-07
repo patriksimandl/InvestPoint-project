@@ -56,7 +56,15 @@ function App() {
   const [isLogged, setIsLogged] = useState(false);
 
   const [userEmail, setUserEmail] = useState<string | undefined>(undefined);
-  const { pathname } = useLocation();
+  const location  = useLocation();
+
+  const pathname = location.pathname;
+
+
+  useEffect(()=>{
+    window.scrollTo(0,0);
+
+  },[pathname])
   
   // Transaction message state
   const [transactionMessage, setTransactionMessage] = useState<boolean>(false);

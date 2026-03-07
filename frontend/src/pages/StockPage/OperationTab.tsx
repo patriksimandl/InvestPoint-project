@@ -2,6 +2,7 @@ import { useContext, useEffect, useState, type Dispatch, type SetStateAction } f
 import { symbolContext, watchListContext } from "./StockPage";
 import axios from "axios";
 import { handleRateLimitError } from "../../shared/rateLimitHandler";
+import { QueryClient, useQueryClient } from "@tanstack/react-query";
 
 type OperationTabProps ={
   setIsBuying: Dispatch<SetStateAction<boolean>>,
@@ -21,6 +22,8 @@ export function OperationTab({setIsBuying,isLogged,setShowLogin,showLogin,setLog
 
   const symbol = useContext(symbolContext);
   const watchList = useContext(watchListContext);
+
+  const queryClient = useQueryClient();
 
   useEffect(()=>{
     if(!watchList) return
@@ -45,7 +48,12 @@ export function OperationTab({setIsBuying,isLogged,setShowLogin,showLogin,setLog
   async function toggleWatchList(){
     if(isLogged){
       try {
+        setIsInTheWatchList(!isInTheWatchList)
         const response = await axios.post(`${import.meta.env.VITE_BACKEND_URL}/api/watchlist`,{symbol},{withCredentials:true});
+        if(response.status === 204 || response.status === 200){
+          queryClient.invalidateQueries({queryKey: ['watchList']});
+          return
+        }
         setIsInTheWatchList(!isInTheWatchList);
       } catch (error) {
         handleRateLimitError(error);

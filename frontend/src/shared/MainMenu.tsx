@@ -1,5 +1,5 @@
 import './MainMenu.css'
-import { NavLink, useNavigate } from 'react-router'
+import { NavLink, useNavigate, useNavigation } from 'react-router'
 import { AccountMenu } from './AccountMenu';
 import { useContext, useEffect, useRef, useState, type ChangeEvent } from 'react';
 import { IsLoggedContext, TableStocksDataContext } from '../App';
@@ -26,6 +26,11 @@ export function MainMenu() {
   const [isMobileSearchExpanded, setIsMobileSearchExpanded] = useState(false);
 
   const navigate = useNavigate();
+
+  
+
+
+
 
   useEffect(() => {
     async function menuTransition() {
@@ -90,6 +95,8 @@ export function MainMenu() {
 
     return setFilteredData(filteredData);
   }
+
+  
 
   function handleKeyDown(key: string) {
     if (key === 'Enter') {

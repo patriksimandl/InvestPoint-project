@@ -54,13 +54,16 @@ export const getStockOverview = async (req, res) => {
     if (cache.has(symbol)) {
       const result = cache.get(symbol);
       const overview = result.overview;
+      
       return res.status(200).send({ overview, lastUpdatedOverview: todaysDate });
     }
 
     if (inProgress.has(symbol)) {
       const existingPromise = await inProgress.get(symbol);
       const result = existingPromise;
+      
       return res.status(200).send({ overview: result.text, lastUpdatedOverview: todaysDate });
+      
     }
 
     const overview = await db.stocks.findUnique({
@@ -77,8 +80,11 @@ export const getStockOverview = async (req, res) => {
       return res.status(404).send('Stock not found');
     }
 
-    if (overview.lastUpdatedOverview && todaysDate.isSame(overview.lastUpdatedOverview, 'day')) {
+    if (overview.lastUpdatedOverview && todaysDate.isSame(overview.lastUpdatedOverview, 'day') && overview.overview) {
       cache.set(symbol, { overview: overview.overview, lastUpdatedOverview: overview.lastUpdatedOverview });
+
+            
+
       return res.status(200).send(overview);
     }
 
@@ -93,23 +99,57 @@ Keep it simple, general, and easy to read.`,
 
     inProgress.set(symbol, generatePromise);
 
-    const { text } = await generatePromise;
-    const updatedOverview = text;
+    try {
+      const { text } = await generatePromise;
+      
+      const updatedOverview = text;
 
-    inProgress.delete(symbol);
-    cache.set(symbol, { overview: updatedOverview, lastUpdatedOverview: todaysDate.toISOString() });
+      inProgress.delete(symbol);
+      cache.set(symbol, { overview: updatedOverview, lastUpdatedOverview: todaysDate.toISOString() });
 
-    await db.stocks.update({
-      where: {
-        symbol
-      },
-      data: {
-        overview: updatedOverview,
-        lastUpdatedOverview: todaysDate.toDate(),
+      await db.stocks.update({
+        where: {
+          symbol
+        },
+        data: {
+          overview: updatedOverview,
+          lastUpdatedOverview: todaysDate.toDate(),
+        }
+      });
+
+      return res.status(200).send({ overview: updatedOverview, lastUpdatedOverview: todaysDate.toISOString() });
+      
+    } catch (aiError) {
+      // Clean up inProgress on AI error
+      inProgress.delete(symbol);
+      
+      console.log('AI generation error:', aiError);
+      console.error('Attempting to fetch existing overview from database');
+      
+      // Try to fetch existing overview from database
+      const existingOverview = await db.stocks.findUnique({
+        where: {
+          symbol
+        },
+        select: {
+          lastUpdatedOverview: true,
+          overview: true
+        }
+      });
+      
+      if (existingOverview && existingOverview.overview) {
+        // Return existing overview with a 200 status since we have data
+        return res.status(200).send({
+          overview: existingOverview.overview,
+          lastUpdatedOverview: existingOverview.lastUpdatedOverview,
+          note: 'Using cached overview due to AI service unavailability'
+        });
       }
-    });
-
-    return res.status(200).send({ overview: updatedOverview, lastUpdatedOverview: todaysDate.toISOString() });
+      
+      // No overview available in database
+      return res.status(503).send('AI service unavailable and no cached overview found');
+    }
+    
   } catch (error) {
     console.error('Error fetching stock overview:', error);
     return res.status(500).send('Error fetching stock overview');

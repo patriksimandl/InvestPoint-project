@@ -20,6 +20,8 @@ export type eventProps = {
 
 let passwordArray: string[];
 
+
+
 export function LoginPage() {
   const { setIsLogged } = useContext(IsLoggedContext)!;
   const { setUserEmail } = useContext(UserEmailContext)!;
@@ -42,6 +44,9 @@ export function LoginPage() {
       ? 'Create your InvestPoint account to start tracking stocks and building your portfolio.'
       : 'Log in to InvestPoint to manage your stock watchlist and portfolio.'
   });
+
+
+  
 
   //valid password states
 
