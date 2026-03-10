@@ -1,4 +1,4 @@
-import db from "../../prismaClient.ts";
+import db from "../prismaClient.ts";
 import bcrypt from 'bcryptjs';
 import jwt from 'jsonwebtoken';
 import dayjs from 'dayjs';

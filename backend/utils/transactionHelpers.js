@@ -1,4 +1,4 @@
-import db from "../../prismaClient.ts";
+import db from "../prismaClient.ts";
 
 export const addTransactionToHistory = async ({
   portfolioId,

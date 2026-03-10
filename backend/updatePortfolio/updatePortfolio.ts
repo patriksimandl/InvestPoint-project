@@ -2,7 +2,7 @@ import dayjs from "dayjs";
 import db from "../prismaClient.ts";
 
 import { validate } from "node-cron";
-import isThereDate from "./isThereDate.ts";
+import isThereDate from "../utils/isThereDate.ts";
 import{ ValueOfPortfolioHoldings} from '@investpoint/shared'
 type TotalBalanceEntry = {
   date: string,

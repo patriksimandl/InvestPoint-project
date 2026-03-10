@@ -1,8 +1,8 @@
 import express from 'express'
-import { getPortfolio } from './controllers/portfolioController.js';
-import { getTransactionHistory } from './controllers/transactionController.js';
-import { createOrder } from './controllers/orderController.js';
-import { toggleWatchList, getWatchList } from './controllers/watchlistController.js';
+import { getPortfolio } from '../controllers/portfolioController.js';
+import { getTransactionHistory } from '../controllers/transactionController.js';
+import { createOrder } from '../controllers/orderController.js';
+import { toggleWatchList, getWatchList } from '../controllers/watchlistController.js';
 
 const router = express.Router();
 

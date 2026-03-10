@@ -1,7 +1,7 @@
-import db from "../../prismaClient.ts";
+import db from "../prismaClient.ts";
 import dayjs from 'dayjs';
-import updateExistingHolding from '../orders/ordersSymbolInPortfolio.js';
-import { isReqestValid } from '../orders/isReqestValid.ts';
+import updateExistingHolding from '../utils/ordersSymbolInPortfolio.js';
+import { isReqestValid } from '../utils/isReqestValid.ts';
 import { fetchPortfolioAndSymbolData } from '../utils/portfolioHelpers.js';
 import { addTransactionToHistory } from '../utils/transactionHelpers.js';
 

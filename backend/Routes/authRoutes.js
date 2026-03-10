@@ -1,5 +1,5 @@
 import express from "express";
-import { login, logout, register } from './controllers/authController.js';
+import { login, logout, register } from '../controllers/authController.js';
 import { rateLimitngMiddleware } from "../middlewere/rateLimitingMiddleware.ts";
 
 

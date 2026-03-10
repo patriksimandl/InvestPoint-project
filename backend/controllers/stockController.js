@@ -1,7 +1,7 @@
 import dayjs from "dayjs";
-import db from "../../prismaClient.ts";
-import { ai } from "../../googleGem/client.ts";
-import { cache, inProgress } from "../../server.js";
+import db from "../prismaClient.ts";
+import { ai } from "../googleGem/client.ts";
+import { cache, inProgress } from "../server.js";
 
 export const getAllStocks = async (req, res) => {
   if (cache.has('stocks')) {

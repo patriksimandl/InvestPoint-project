@@ -1,4 +1,4 @@
-import db from "../../prismaClient.ts";
+import db from "../prismaClient.ts";
 
 export const findPortfolioByUserId = async (userId, select = null) => {
   return await db.userPortfolio.findUnique({

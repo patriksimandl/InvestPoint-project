@@ -1,4 +1,4 @@
-import db from "../../prismaClient.ts";
+import db from "../prismaClient.ts";
 import { findPortfolioByUserId } from '../utils/portfolioHelpers.js';
 
 export const getTransactionHistory = async (req, res) => {
