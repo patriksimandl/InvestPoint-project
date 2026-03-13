@@ -12,8 +12,9 @@ function setAccessTokenCookie(res, token) {
   res.cookie("accessToken", token, {
     httpOnly: true,
     secure: true,
-    sameSite: 'none',
+    sameSite: 'lax',
     path: '/',
+    domain: process.env.DOMAIN,
     maxAge: 1000 * 60 * 20
   });
 }

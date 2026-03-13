@@ -27,7 +27,17 @@ export const inProgress = new Map();
 
 
 const app = express();
-const PORT = process.env.PORT
+const PORT = Number(process.env.PORT) || 3000;
+const HOST = "0.0.0.0";
+
+function runBackgroundJob(name, job) {
+  Promise.resolve()
+    .then(() => job())
+    .catch((error) => {
+      console.error(`[job:${name}] failed`);
+      console.error(error);
+    });
+}
 
 
 
@@ -37,9 +47,11 @@ app.use(cookieParser());
 
 app.use(cors({
   //origin: 'http://investpoint-project-backend-production.up.railway.app',
-  origin: true,
+  origin: process.env.FRONTEND_URL,
   credentials: true
 }))
+
+console.log(process.env.FRONTEND_URL || '*');
 
 
 
@@ -51,10 +63,10 @@ app.use(express.json());
 
 
 
-updatePortfolio();
+runBackgroundJob('updatePortfolio-startup', updatePortfolio);
 
 cron.schedule('10 0 * * *', () => {
-  updatePortfolio();
+  runBackgroundJob('updatePortfolio-cron', updatePortfolio);
 })
 
 
@@ -65,10 +77,10 @@ cron.schedule('10 0 * * *', () => {
 
 
 //fetch live stocks from 
-fetchStocks();
+runBackgroundJob('fetchStocks-startup', fetchStocks);
 setInterval(() => {
 
-  fetchStocks();
+  runBackgroundJob('fetchStocks-interval', fetchStocks);
 }, 1000 * 60 * 60);
 
 
@@ -86,9 +98,21 @@ app.use('/verify', authMiddlewere, verifyRoutes);
 
 app.use('/api', authMiddlewere, apiRoutes);
 
+app.get('/health', (_req, res) => {
+  res.status(200).json({ status: 'ok' });
+});
+
+process.on('unhandledRejection', (reason) => {
+  console.error('Unhandled promise rejection:', reason);
+});
+
+process.on('uncaughtException', (error) => {
+  console.error('Uncaught exception:', error);
+});
 
 
 
-app.listen(PORT, () => {
-  console.log('Server started at port', PORT);
+
+app.listen(PORT, HOST, () => {
+  console.log(`Server started at http://${HOST}:${PORT}`);
 });

@@ -13,7 +13,7 @@ type TotalBalanceEntry = {
 
 function isTotalBalanceEntry(value: unknown): value is TotalBalanceEntry {
   return (
-    typeof value === 'object' &&
+    typeof value === 'object' && 
     value !== null &&
     !Array.isArray(value) &&
     "date" in value &&

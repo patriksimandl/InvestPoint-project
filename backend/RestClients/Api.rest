@@ -19,3 +19,12 @@ Content-Type: application/json
   "email":"gilgamesh@gmail.com",
   "password": "123123123"
 }
+###
+
+POST https://api.patriksimandl.me/auth/register
+Content-Type: application/json
+
+{
+  "email":"gilgamesh@gmail.com",
+  "password": "123123123"
+}

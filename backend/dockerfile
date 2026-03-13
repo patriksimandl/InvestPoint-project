@@ -1,26 +1,26 @@
 FROM node:24-alpine
 
-WORKDIR /backend
+WORKDIR /app/shared
 
 ENV NODE_ENV=development
 
-COPY backend/package*.json ./
+RUN apk add --no-cache openssl
 
-COPY /shared/package*.json /shared/package.json
-
-
-COPY /shared /shared/
-
-
-RUN cd /shared && npm install && npm run build
-
-COPY /backend/.env ./
+COPY /shared/package*.json ./
 
 RUN npm install
 
+COPY /shared .
+
+WORKDIR /app/backend
+
+COPY backend/package*.json ./
+
+RUN npm install
+
+COPY /backend/.env .
+
 COPY /backend . 
-
-
 
 RUN npx prisma generate
 
