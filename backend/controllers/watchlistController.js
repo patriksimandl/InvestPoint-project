@@ -2,6 +2,26 @@ import db from "../prismaClient.ts";
 import { findPortfolioByUserId } from '../utils/portfolioHelpers.js';
 
 const cache = new Map();
+const WATCHLIST_CACHE_TTL_MS = 1000 * 60 * 5;
+const WATCHLIST_CACHE_KEY = (userId) => `watchlist:user:${userId}`;
+
+function setWatchlistCache(userId, value) {
+  cache.set(WATCHLIST_CACHE_KEY(userId), {
+    value,
+    expiry: Date.now() + WATCHLIST_CACHE_TTL_MS,
+  });
+}
+
+function getWatchlistCache(userId) {
+  const entry = cache.get(WATCHLIST_CACHE_KEY(userId));
+
+  if (!entry || typeof entry !== 'object' || Date.now() > entry.expiry) {
+    cache.delete(WATCHLIST_CACHE_KEY(userId));
+    return null;
+  }
+
+  return entry.value;
+}
 
 export const toggleWatchList = async (req, res) => {
   const { userId } = req;
@@ -25,7 +45,7 @@ export const toggleWatchList = async (req, res) => {
     })
 
     if (!isSymbolOnWatchList) {
-      cache.delete(`watchList:${userId}`);
+      cache.delete(WATCHLIST_CACHE_KEY(userId));
       await db.watchList.create({
         data: {
           portfolioId,
@@ -34,7 +54,7 @@ export const toggleWatchList = async (req, res) => {
       })
       return res.status(200).send('Created');
     } else {
-      cache.delete(`watchList:${userId}`);
+      cache.delete(WATCHLIST_CACHE_KEY(userId));
       await db.watchList.delete({
         where: {
           portfolioId_symbol: {
@@ -53,9 +73,10 @@ export const toggleWatchList = async (req, res) => {
 
 export const getWatchList = async (req, res) => {
   const { userId } = req;
+  const watchlistCache = getWatchlistCache(userId);
 
-  if (cache.has(`watchList:${userId}`)) {
-    return res.status(200).send(cache.get(`watchList:${userId}`));
+  if (watchlistCache) {
+    return res.status(200).send(watchlistCache);
   }
 
   try {
@@ -71,7 +92,7 @@ export const getWatchList = async (req, res) => {
       }
     })
 
-    cache.set(`watchList:${userId}`, watchList);
+    setWatchlistCache(userId, watchList);
 
     return res.status(200).send(watchList);
 

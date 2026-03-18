@@ -67,10 +67,9 @@ runBackgroundJob('updatePortfolio-startup', updatePortfolio);
 
 cron.schedule('10 0 * * *', () => {
   runBackgroundJob('updatePortfolio-cron', updatePortfolio);
+  runBackgroundJob('clear-memoryCahe',cache.clear);
+  runBackgroundJob('clear-memoryProgressCache',inProgress.clear);
 })
-
-
-
 
 
 

@@ -16,7 +16,6 @@ import { StockDetails } from "./StockDetails";
 import { GraphZoom } from "./GraphZoom";
 import { BuyOverlay } from "./BuyOverlay";
 import { LoginOverlay } from "./LoginOverlay";
-import { TransactionMessage } from "./TransactionMessage";
 import { Portfolio } from "../PortfolioPage/Portfolio";
 import { BottomMenu } from "../../shared/BottomMenu";
 import { IsLoggedContext, TransactionContext } from "../../App";
