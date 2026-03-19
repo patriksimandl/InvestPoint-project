@@ -26,6 +26,8 @@ export function BuyOverlay({ symbol, name, setIsBuying, userCashBalance, userTot
   const [activeButton, setActiveButton] = useState<'Buy' | 'Sell'>('Buy');
   const [activeUnit, setActiveUnit] = useState<'Value' | 'Quantity'>('Value');
   const [value, setValue] = useState(0);
+  const [sellAll, setSellAll] = useState(false);
+  const [valueBeforeSellAll, setValueBeforeSellAll] = useState<number | null>(null);
   const [isLoadingTransactions, setIsLoadingTransaction] = useState(false);
   const { setAnimateInMessage } = useContext(TransactionContext)!;
 
@@ -51,7 +53,31 @@ export function BuyOverlay({ symbol, name, setIsBuying, userCashBalance, userTot
 
   useEffect(()=>{
     setValue(0);
+    setSellAll(false);
+    setValueBeforeSellAll(null);
   },[activeButton])
+
+  useEffect(() => {
+    if (activeButton !== 'Sell' || !sellAll) {
+      return;
+    }
+
+    setValue(activeUnit === 'Value' ? maxSymbolHoldingsPrice : maxSymbolHoldingsShares);
+  }, [activeButton, activeUnit, sellAll, maxSymbolHoldingsPrice, maxSymbolHoldingsShares]);
+
+  useEffect(() => {
+    const handleKeyDown = (event: KeyboardEvent) => {
+      if (event.key === 'Escape') {
+        setIsBuying(false);
+      }
+    };
+
+    window.addEventListener('keydown', handleKeyDown);
+
+    return () => {
+      window.removeEventListener('keydown', handleKeyDown);
+    };
+  }, [setIsBuying]);
 
 
   function snapZero(num: number, eps = 0.1) {
@@ -200,13 +226,15 @@ export function BuyOverlay({ symbol, name, setIsBuying, userCashBalance, userTot
               ?
               <>
                 $<input value={price} type="number" step={'100'} className=" text-nowrap  outline-0" style={{ width: `${String(price).length + 1}ch` }} onChange={(event) => {
+                  setSellAll(false);
+                  setValueBeforeSellAll(null);
                   changeValue(event.target.value);
                 }} disabled={isLoadingTransactions} />
               </>
               :
 
               <>
-                <input value={numberOfShares} step={'0.1'} type="number" className=" text-nowrap1 outline-0" style={{ width: `${String(numberOfShares).length + 1}ch` }} onChange={(event) => { changeValue(event.target.value) }} disabled={isLoadingTransactions} />
+                <input value={numberOfShares} step={'0.1'} type="number" className=" text-nowrap1 outline-0" style={{ width: `${String(numberOfShares).length + 1}ch` }} onChange={(event) => { setSellAll(false); setValueBeforeSellAll(null); changeValue(event.target.value) }} disabled={isLoadingTransactions} />
                 shares
               </>
             }
@@ -220,6 +248,8 @@ export function BuyOverlay({ symbol, name, setIsBuying, userCashBalance, userTot
         </div>
         <div className="flex flex-col gap-3 mt-[36px] relative">
           <input onChange={(event) => {/* setSliderValue(Number(event.currentTarget.value))*/
+            setSellAll(false);
+            setValueBeforeSellAll(null);
             const pct = Number(event.target.value);
 
 
@@ -253,6 +283,48 @@ export function BuyOverlay({ symbol, name, setIsBuying, userCashBalance, userTot
           <div className="absolute slider-bar bg-white border border-slate-200 rounded-[8px] z-[-2] h-[10px] w-full" ></div>
 
         </div>
+
+        {activeButton === 'Sell' && canSell && (
+          <label className={`mt-4 flex items-center justify-between rounded-xl border px-3 py-2 select-none transition-all ${isLoadingTransactions ? 'opacity-60 cursor-not-allowed border-slate-200 bg-slate-50' : sellAll ? 'border-blue-300 bg-blue-50/70 cursor-pointer' : 'border-slate-200 bg-white hover:border-slate-300 cursor-pointer'}`}>
+            <span className="flex flex-col">
+              <span className="text-sm font-medium text-slate-800">Sell all</span>
+              <span className="text-xs text-slate-500">
+                {activeUnit === 'Value'
+                  ? `Use full value: $${maxSymbolHoldingsPrice.toFixed(2)}`
+                  : `Use full quantity: ${maxSymbolHoldingsShares.toFixed(2)} shares`}
+              </span>
+            </span>
+
+            <span className="relative inline-flex items-center">
+              <input
+                type="checkbox"
+                checked={sellAll}
+                onChange={(event) => {
+                  const checked = event.target.checked;
+
+                  if (checked) {
+                    setValueBeforeSellAll(value);
+                    setSellAll(true);
+                    return;
+                  }
+
+                  setSellAll(false);
+                  if (valueBeforeSellAll !== null) {
+                    setValue(valueBeforeSellAll);
+                    setValueBeforeSellAll(null);
+                    return
+                  }
+                  setValue(0);
+                  setValueBeforeSellAll(0);
+                }}
+                disabled={isLoadingTransactions}
+                className="peer sr-only"
+              />
+              <span className="h-6 w-11 rounded-full bg-slate-300 transition peer-checked:bg-blue-700 peer-disabled:bg-slate-200"></span>
+              <span className="absolute left-1 h-4 w-4 rounded-full bg-white transition-transform peer-checked:translate-x-5"></span>
+            </span>
+          </label>
+        )}
 
 
         <div className="con flex justify-center mt-[26px]">
