@@ -7,6 +7,7 @@ import type { StockData } from '../pages/PortfolioPage/types';
 import { SearchBar } from './SearchBar';
 import { MobileMenu } from './MobileMenu';
 import { SearchDropdown } from './SearchDropdown';
+import InvestPointLogo from '/InvestPoint-logo-with-blacktext-removebg-preview.png'
 
 type StockWithLogo = StockData & { logoURL: string };
 
@@ -136,7 +137,7 @@ export function MainMenu() {
           <div className={`flex flex-row justify-between w-full items-center ${isAtTop ? '' : 'max-w-7xl mx-auto px-[20px] sm:px-[20px]'} px-[14px] md:px-[22px]`}>
             <div className="main-menu-left-container flex items-center gap-[14px] md:gap-[40px]">
               <NavLink to='/'>
-                <img className={`w-[32vw] max-w-[170px] md:w-[10vw] c-sky-200`} src="/InvestPoint-logo-with-blacktext-removebg-preview.png" alt="Invest-point-logo" />
+                <img className={`w-[32vw] max-w-[170px] md:w-[10vw] c-sky-200`} src={InvestPointLogo} alt="Invest-point-logo" />
               </NavLink>
               <div className="hidden md:flex items-center gap-[40px]">
                 {menuLinks.map((item) => {

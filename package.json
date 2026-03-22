@@ -6,6 +6,7 @@
     "backend"
   ],
   "devDependencies": {
-    "@types/express": "^5.0.6"
+    "@types/express": "^5.0.6",
+    "jest": "^30.3.0"
   }
 }

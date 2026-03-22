@@ -2,6 +2,8 @@ import { NavLink } from 'react-router';
 import { useContext } from 'react';
 import axios from 'axios';
 import { IsLoggedContext, UserEmailContext } from '../App';
+import InvestPointLogo from '/InvestPoint-logo-with-blacktext-removebg-preview.png'
+
 
 type MobileMenuProps = {
   isMobileOpen: boolean;
@@ -36,7 +38,7 @@ export function MobileMenu({
       >
         <div className="flex items-center justify-between mb-5">
           <NavLink to='/' onClick={onClose}>
-            <img className='w-[140px]' src="/InvestPoint-logo-with-blacktext-removebg-preview.png" alt="Invest-point-logo" />
+            <img className='w-[140px]' src={InvestPointLogo} alt="Invest-point-logo" />
           </NavLink>
           <button
             type="button"

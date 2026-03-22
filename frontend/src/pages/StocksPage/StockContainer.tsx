@@ -3,7 +3,7 @@ import { formatPrice } from "./formatPrice";
 import { useContext, useEffect } from "react";
 import { IsLoggedContext } from "../../App";
 
-type StockContainer =
+export type StockContainer =
   {
     stock: {
       name: string,
@@ -13,8 +13,11 @@ type StockContainer =
         meta:{}
         data: {
           date:string,
+          low: number,
+          high: number,
           close: number,
           open: number,
+          volume: number,
         }[]
       }
 
@@ -99,7 +102,7 @@ export function StockContainer({ stock, watchlist }: StockContainer) {
             <path d="M12 17.27 18.18 21l-1.64-7.03L22 9.24l-7.19-.61L12 2 9.19 8.63 2 9.24l5.46 4.73L5.82 21z" />
           </svg>
         )}
-        <NavLink to={`/stocks/${stock.symbol}`} className="button-secondary">
+        <NavLink to={`/stocks/${stock.symbol}`} className="button-secondary" data-testid="select-button">
           Select
         </NavLink>
       </div>

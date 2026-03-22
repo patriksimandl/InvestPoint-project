@@ -1,6 +1,7 @@
 import { defineConfig, loadEnv } from 'vite'
 import react from '@vitejs/plugin-react'
 import tailwindcss from '@tailwindcss/vite'
+import path from 'node:path'
 
 
 // https://vite.dev/config/
@@ -14,6 +15,19 @@ export default defineConfig(({ mode }) => {
     react(),
     tailwindcss()
   ],
+  
+  test: {
+    globals: true,
+    environment: 'jsdom',
+    setupFiles: './vite.setup.ts', 
+    alias: [
+      {
+        // Make /public-style static imports work in Vitest (e.g. "/logo.png").
+        find: /^\/(.*\.(png|jpe?g|svg|webp|gif|ico))$/,
+        replacement: path.resolve(__dirname, 'public/$1'),
+      },
+    ],
+  },
   server: {
     allowedHosts: true,
     proxy:{

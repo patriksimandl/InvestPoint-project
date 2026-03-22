@@ -125,7 +125,7 @@ export default async function fetchStocks() {
       else {
         await db.lastFetch.create({
           data: {
-            lastFetch: todaysDate
+            lastFetch:  todaysDate
           }
         })
       }
