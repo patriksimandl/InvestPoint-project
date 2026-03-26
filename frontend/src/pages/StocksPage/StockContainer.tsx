@@ -82,7 +82,7 @@ export function StockContainer({ stock, watchlist }: StockContainer) {
         </div>
       </NavLink>
       <div className="hidden md:flex flex-col items-center justify-center text-center w-full md:col-start-2 md:col-end-3 md:justify-self-center md:self-center">
-        <div className="font-semibold text-[20px]">
+        <div className="font-semibold text-[20px]" data-testid="display-price">
           ${(Number(pricesToday.close)).toFixed(2)}
         </div>
         <div className={`${dailyChange >= 0 ? 'text-green-600' : 'text-red-600'} text-[15px] font-semibold text-nowrap`}>

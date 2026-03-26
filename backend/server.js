@@ -1,19 +1,16 @@
-import express, { json } from "express";
+import express from "express";
 import cors from 'cors'
 import authRoutes from './Routes/authRoutes.js'
 import fetchStocks from "./fetchStocks.ts";
-import db from "./prismaClient.ts";
 import authMiddlewere from "./middlewere/authMiddlewere.js";
 import apiRoutes from './Routes/apiRoutes.js'
 import cookieParser from 'cookie-parser';
 import verifyRoutes from './Routes/verifyRoutes.js'
 import cron from 'node-cron'
 import updatePortfolio from "./updatePortfolio/updatePortfolio.ts";
-import dayjs from "dayjs";
 import marketRoutes from './Routes/marketRoutes.js'
 import stockRoutes from './Routes/stockRoutes.js'
 import 'dotenv/config'
-import { ai } from "./googleGem/client.ts";
 
 
 export const cache = new Map();
@@ -63,7 +60,8 @@ app.use(express.json());
 
 
 
-runBackgroundJob('updatePortfolio-startup', updatePortfolio);
+if (process.env.NODE_ENV !== 'test') {
+  runBackgroundJob('updatePortfolio-startup', updatePortfolio);
 
 cron.schedule('10 0 * * *', () => {
   runBackgroundJob('updatePortfolio-cron', updatePortfolio);
@@ -75,12 +73,14 @@ cron.schedule('10 0 * * *', () => {
 
 
 
-//fetch live stocks from 
-runBackgroundJob('fetchStocks-startup', fetchStocks);
-setInterval(() => {
+  //fetch live stocks from 
+  runBackgroundJob('fetchStocks-startup', fetchStocks);
+  setInterval(() => {
 
-  runBackgroundJob('fetchStocks-interval', fetchStocks);
-}, 1000 * 60 * 60);
+    runBackgroundJob('fetchStocks-interval', fetchStocks);
+  }, 1000 * 60 * 60);
+
+}
 
 
 
@@ -112,6 +112,10 @@ process.on('uncaughtException', (error) => {
 
 
 
-app.listen(PORT, HOST, () => {
-  console.log(`Server started at http://${HOST}:${PORT}`);
-});
+if (process.env.NODE_ENV !== 'test') {
+  app.listen(PORT, HOST, () => {
+    console.log(`Server started at http://${HOST}:${PORT}`);
+  });
+}
+
+export default app
