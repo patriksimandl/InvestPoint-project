@@ -1,5 +1,5 @@
 import './MainMenu.css'
-import { NavLink, useNavigate, useNavigation } from 'react-router'
+import { NavLink, useNavigate } from 'react-router'
 import { AccountMenu } from './AccountMenu';
 import { useContext, useEffect, useRef, useState, type ChangeEvent } from 'react';
 import { IsLoggedContext, TableStocksDataContext } from '../App';
@@ -7,6 +7,7 @@ import type { StockData } from '../pages/PortfolioPage/types';
 import { SearchBar } from './SearchBar';
 import { MobileMenu } from './MobileMenu';
 import { SearchDropdown } from './SearchDropdown';
+import { SortMenu } from './SortMenu';
 import InvestPointLogo from '/InvestPoint-logo-with-blacktext-removebg-preview.png'
 
 type StockWithLogo = StockData & { logoURL: string };
@@ -25,12 +26,9 @@ export function MainMenu() {
   const [isSearchFocused, setIsSearchFocused] = useState(false);
   const [isDropDownOpen, setIsDropDownOpen] = useState(false);
   const [isMobileSearchExpanded, setIsMobileSearchExpanded] = useState(false);
+  const [isFilterOpen, setIsFilterOpen] = useState(false);
 
   const navigate = useNavigate();
-
-  
-
-
 
 
   useEffect(() => {
@@ -71,6 +69,7 @@ export function MainMenu() {
       setTimeout(() => {
         mobileSearchInputRef.current?.focus();
       }, 100);
+      
     }
   }, [isMobileSearchExpanded]);
 
@@ -97,7 +96,7 @@ export function MainMenu() {
     return setFilteredData(filteredData);
   }
 
-  
+
 
   function handleKeyDown(key: string) {
     if (key === 'Enter') {
@@ -157,7 +156,18 @@ export function MainMenu() {
                 handleKeyDown={handleKeyDown}
                 setIsSearchFocused={setIsSearchFocused}
                 onClear={handleClearSearch}
+                setIsFilterOpen={setIsFilterOpen}
+                
               />
+              {winUrl === ('/stocks') && (
+                <SortMenu
+                  isOpen={isFilterOpen}
+                  onToggle={() => {
+                    setIsFilterOpen(!isFilterOpen)
+                    setIsSearchFocused(false)
+                  }}
+                />
+              )}
               {isLogged ?
                 <AccountMenu />
                 :
@@ -208,6 +218,17 @@ export function MainMenu() {
                   )}
                 </div>
               </div>
+
+              {winUrl === ('/stocks') && (
+                <SortMenu
+                  compact
+                  isOpen={isFilterOpen}
+                  onToggle={() => {
+                    setIsFilterOpen(!isFilterOpen)
+                    setIsMobileSearchExpanded(false)
+                  }}
+                />
+              )}
 
               {/* Menu button */}
               <button

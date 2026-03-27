@@ -1,4 +1,4 @@
-type tableStocksData = {
+export type tableStocksData = {
   symbol: string;
   data: {
     data: {

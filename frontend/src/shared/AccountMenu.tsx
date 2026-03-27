@@ -1,9 +1,9 @@
 import { useState, useRef, useEffect, useContext } from 'react'
-import { } from 'react';
 import axios from 'axios';
 import { useQueryClient } from '@tanstack/react-query';
 import { IsLoggedContext, UserEmailContext } from '../App';
 import { handleRateLimitError } from './rateLimitHandler';
+import { createOutsideClickHandler } from './clickUtils';
 
 
 
@@ -14,8 +14,8 @@ export function AccountMenu() {
   const { userEmail } = useContext(UserEmailContext)!;
   const [menuActive, setMenuActive] = useState(false);
 
-  const toggleButton = useRef(null);
-  const accountMenu = useRef(null);
+  const toggleButton = useRef<HTMLDivElement | null>(null);
+  const accountMenu = useRef<HTMLDivElement | null>(null);
 
 
   const queryClient = useQueryClient();
@@ -23,12 +23,11 @@ export function AccountMenu() {
 
 
   useEffect(() => {
-    function handleClick(event: MouseEvent) {
-
-      if (menuActive && accountMenu.current && !accountMenu.current.contains(event.target) && toggleButton.current && !toggleButton.current.contains(event.target)) {
-        setMenuActive(false);
-      }
-    }
+    const handleClick = createOutsideClickHandler(
+      menuActive,
+      setMenuActive,
+      [accountMenu, toggleButton]
+    );
 
     document.addEventListener('mousedown', handleClick);
     return () => { document.removeEventListener('mousedown', handleClick) }

@@ -12,8 +12,9 @@ import { IsLoggedContext } from "../../App";
 import type { StockData } from "../PortfolioPage/types.ts";
 import { Transaction } from "../PortfolioPage/Tranasaction.ts";
 import { useSeo } from "../../shared/useSeo.ts";
+import { sortSymbols } from "./sortSymbols.ts";
 
-type StockWithLogo = StockData & {
+export type StockWithLogo = StockData & {
   logoURL: string;
   data: {
     meta: {};
@@ -32,6 +33,7 @@ export function StocksPage() {
 
 
   const search = SearchParams.get('search');
+  const sort = SearchParams.get('sort');
 
   useSeo({
     title: 'Browse Stocks | InvestPoint',
@@ -138,7 +140,9 @@ export function StocksPage() {
     filteredTableStocksData = tableStocksData ?? [];
   }
 
-  console.log(latestTotal) 
+  if(sort){
+    filteredTableStocksData = sortSymbols(sort,filteredTableStocksData);
+  }
 
   return (
     <>

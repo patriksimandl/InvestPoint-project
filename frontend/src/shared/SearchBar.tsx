@@ -8,6 +8,7 @@ type SearchBarProps = {
   handleKeyDown: (key: string) => void;
   setIsSearchFocused: (value: boolean) => void;
   onClear: () => void;
+  setIsFilterOpen: (value: boolean) => void;
 };
 
 export function SearchBar({ 
@@ -16,7 +17,8 @@ export function SearchBar({
   handleInputChange, 
   handleKeyDown,
   setIsSearchFocused, 
-  onClear 
+  onClear,
+  setIsFilterOpen
 }: SearchBarProps) {
   return (
     <div className={`search-bar-container flex relative transition-all duration-300`} style={{ width: `${isSearchFocused ? '280px' : '200px'}` }}>
@@ -24,7 +26,7 @@ export function SearchBar({
         value={inputValue}
         onChange={handleInputChange}
         onKeyDown={(event) => handleKeyDown(event.key)}
-        onFocus={() => setIsSearchFocused(true)}
+        onFocus={() => {setIsSearchFocused(true);setIsFilterOpen(false);}}
         onBlur={() => !inputValue && setIsSearchFocused(false)}
         className="rounded-[30px] p-[8px] h-[49.5px] pl-[22px] pr-[45px] bg-gray-100 outline-none text-[14.5px] transition-all focus:bg-white focus:ring-2 focus:ring-blue-400 focus:shadow-md w-full"
         placeholder='Search for Stock'
