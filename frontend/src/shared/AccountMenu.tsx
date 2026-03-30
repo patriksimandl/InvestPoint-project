@@ -45,6 +45,7 @@ export function AccountMenu() {
         setIsLogged(false);
         queryClient.setQueryData(["verification"], () => false)
         queryClient.setQueryData(["watchList"],()=>false)
+        queryClient.setQueryData(['userPortfolio'],() => false)
       }
     } catch (error) {
       handleRateLimitError(error);

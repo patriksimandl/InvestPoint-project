@@ -200,7 +200,7 @@ export function PortfolioPage() {
                     <p className="text-gray-500 text-sm mb-6 max-w-sm">
                       Add stocks to your watchlist to track them here
                     </p>
-                    <NavLink to='/stocks' className="button-primary flex items-center gap-2 px-5 py-2.5 text-sm hover:opacity-90 hover:scale-105 active:scale-95 transition-all duration-300 cursor-pointer">
+                    <NavLink to='/stocks' className="button-primary disable flex items-center gap-2 px-5 py-2.5 text-sm hover:opacity-90 hover:scale-105 active:scale-95 transition-all duration-300 cursor-pointer">
                       <span>Browse Stocks</span>
                       <svg xmlns="http://www.w3.org/2000/svg" height="18px" viewBox="0 -960 960 960" width="18px" fill="currentColor">
                         <path d="M665.08-450H180v-60h485.08L437.23-737.85 480-780l300 300-300 300-42.77-42.15L665.08-450Z" />
