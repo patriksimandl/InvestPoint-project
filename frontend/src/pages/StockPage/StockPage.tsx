@@ -189,10 +189,6 @@ export function StockPage() {
 
 
 
-  useEffect(() => {
-    if (marketInfo) {
-    }
-  }, [marketInfo])
 
 
   const dataLength = stockData?.data?.data.length
@@ -203,8 +199,13 @@ export function StockPage() {
 
   const dayChange = stockData?.data?.data && stockData?.data?.data.length > 1 ? stockData?.data.data[0].close - stockData?.data.data[0].open : null;
 
-  const marketStatus = marketInfo?.data.markets[0].status.status;
-  const nextOpeningTime = dayjs(marketInfo?.data.markets[0].status.nextChange).tz('Europe/Prague').format(`ddd DD/MM H:m`)
+  
+  
+  const marketStatus = marketInfo?.data[0].status.status;
+
+  const nextOpeningTime = marketStatus === 'open' ? '' :  dayjs(marketInfo?.data[0].status.nextChange).tz('Europe/Prague').format(`ddd DD/MM H:m`) ;
+
+  
 
 
   const normalizedStockHoldings = userPortfolio?.stockHoldings && typeof userPortfolio.stockHoldings === 'object' && !Array.isArray(userPortfolio.stockHoldings)

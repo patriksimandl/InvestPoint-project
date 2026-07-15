@@ -21,9 +21,7 @@ type MarketOpeningProps = {
 
 
 export function MarketOpening({ marketInfo, marketStatus }: MarketOpeningProps) {
-  const nextOpeningTime = dayjs(marketInfo?.data.markets[0].status.nextChange).tz('Europe/Prague').format(`ddd DD/MM H:m`)
-
-
+  
   return (
     <div className="flex mt-[6px]">
       <div className="flex flex-col">

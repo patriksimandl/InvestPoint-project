@@ -4,6 +4,7 @@ import db from "../prismaClient.ts";
 import { validate } from "node-cron";
 import isThereDate from "../utils/isThereDate.ts";
 import{ ValueOfPortfolioHoldings} from '@investpoint/shared'
+import { Decimal } from "@prisma/client/runtime/client";
 type TotalBalanceEntry = {
   date: string,
   value: number
