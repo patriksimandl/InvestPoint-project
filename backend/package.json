@@ -10,11 +10,11 @@
     }
   },
   "scripts": {
-    "dev": "node --watch server.js",
+    "dev": "tsx watch server.js",
     "test": "node --experimental-vm-modules ../node_modules/jest/bin/jest.js --runInBand --detectOpenHandles",
-    "start": "node server.js",
-    "start:docker": "npm exec prisma migrate deploy && node prisma/seed.ts && npm run start",
-    "prisma:seed": "node prisma/seed.ts"
+    "start": "tsx server.js",
+    "start:docker": "npm exec prisma migrate deploy && npm exec tsx prisma/seed.ts && npm run start",
+    "prisma:seed": "npm exec tsx prisma/seed.ts"
   },
   "keywords": [],
   "author": "",

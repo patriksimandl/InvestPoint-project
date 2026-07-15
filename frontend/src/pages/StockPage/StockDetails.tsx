@@ -1,11 +1,11 @@
-type StockDetailsProps ={
-  prevClosePrice: undefined | string 
+type StockDetailsProps = {
+  prevClosePrice: undefined | string
   openPrice: undefined | string,
   marketCap: undefined | string
 }
 
 
-export function StockDetails({prevClosePrice, openPrice,marketCap} : StockDetailsProps) {
+export function StockDetails({ prevClosePrice, openPrice, marketCap }: StockDetailsProps) {
 
   return (
     <>

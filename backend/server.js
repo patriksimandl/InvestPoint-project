@@ -11,6 +11,7 @@ import updatePortfolio from "./updatePortfolio/updatePortfolio.ts";
 import marketRoutes from './Routes/marketRoutes.js'
 import stockRoutes from './Routes/stockRoutes.js'
 import 'dotenv/config'
+import { dbQuery } from "./prismaClient.ts";
 
 
 export const cache = new Map();
@@ -28,7 +29,7 @@ const PORT = Number(process.env.PORT) || 3000;
 const HOST = "0.0.0.0";
 
 function runBackgroundJob(name, job) {
-  Promise.resolve()
+  return Promise.resolve()
     .then(() => job())
     .catch((error) => {
       console.error(`[job:${name}] failed`);
@@ -61,24 +62,19 @@ app.use(express.json());
 
 
 if (process.env.NODE_ENV !== 'test') {
-  runBackgroundJob('updatePortfolio-startup', updatePortfolio);
-
-cron.schedule('10 0 * * *', () => {
-  runBackgroundJob('updatePortfolio-cron', updatePortfolio);
-  runBackgroundJob('clear-memoryCahe',cache.clear);
-  runBackgroundJob('clear-memoryProgressCache',inProgress.clear);
-})
+  dbQuery(() => runBackgroundJob('updatePortfolio-startup', updatePortfolio));
 
 
+  cron.schedule('0 0 * * *', async () => {
+      await dbQuery(async () => {
+      await runBackgroundJob('fetchStocks-daily', fetchStocks);
+      await runBackgroundJob('updatePortfolio-cron', updatePortfolio);
+      await runBackgroundJob('clear-memoryCache', () => cache.clear());
+      await runBackgroundJob('clear-memoryProgressCache', () => inProgress.clear());
+    });
+  })
 
 
-
-  //fetch live stocks from 
-  runBackgroundJob('fetchStocks-startup', fetchStocks);
-  setInterval(() => {
-
-    runBackgroundJob('fetchStocks-interval', fetchStocks);
-  }, 1000 * 60 * 60);
 
 }
 
